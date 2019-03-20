@@ -8,6 +8,8 @@ import SingleImageInput from "../pages/Editor/inputs/SingleImageInput/SingleImag
 import SingleImageEditableInput from "../pages/Editor/inputs/SingleImageEditableInput/SingleImageEditableInput";
 import { SingleSignatureStore } from "../stores/inputs/single-signature";
 import SingleSignatureInput from "../pages/Editor/inputs/SingleSignature/SingleSignatureInput";
+import { NumberStore } from "../stores/inputs/number";
+import NumberInput from "../pages/Editor/inputs/NumberInput/NumberInput";
 
 export const storeMapping: any = {
   string: StringStore,
@@ -15,6 +17,7 @@ export const storeMapping: any = {
   "single-image": SingleImageStore,
   "single-image-editable": SingleImageEditableStore,
   "single-signature": SingleSignatureStore,
+  number: NumberStore,
 };
 
 export const componentMapping: any = {
@@ -23,6 +26,7 @@ export const componentMapping: any = {
   "single-image": SingleImageInput,
   "single-image-editable": SingleImageEditableInput,
   "single-signature": SingleSignatureInput,
+  number: NumberInput,
 };
 
 // TODO : check data file

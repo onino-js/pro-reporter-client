@@ -45,6 +45,17 @@ export const sections = [
     ],
   },
   {
+    title: "Liason",
+    pageName: "Signature",
+    id: "section-liaison",
+    subSections: [
+      {
+        title: "Débit",
+        id: "subsection-debit",
+      },
+    ],
+  },
+  {
     title: "signature",
     pageName: "Signature",
     id: "section-signature",
