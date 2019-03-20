@@ -7,10 +7,10 @@ export default [
     type: "single-image-editable",
     mandatory: true,
     value: "",
-    options : {
-      height : 60,
-      width : 195
-    }
+    options: {
+      height: 55,
+      width: 190,
+    },
   },
   {
     title: "Logo de droite",
@@ -21,8 +21,8 @@ export default [
     value: "",
     type: "single-image-editable",
     options: {
-      height: 60,
-      width: 195
-    }
+      height: 55,
+      width: 190,
+    },
   },
 ];

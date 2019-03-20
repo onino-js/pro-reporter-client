@@ -2,7 +2,7 @@ import { observable, action, toJS, computed } from "mobx";
 import uuid from "uuid/v1";
 import { CanvasStore } from "./canvas-store";
 
-export class SingleImageEditableStore {
+export class SingleSignatureStore {
   @observable public id: string = "";
   @observable public value: string = "";
   @observable public data: any = {};
@@ -74,36 +74,4 @@ export class SingleImageEditableStore {
     this.original = "";
     this.canvasStore.clearCanvas();
   }
-
-  @action.bound
-  public updateImage(e: any) {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.addEventListener(
-      "load",
-      () => {
-        this.setOriginal(reader.result as string);
-        this.canvasStore.clearCanvas();
-        this.canvasStore.addImageToCanvas(reader.result as string, () => {
-          this.setIsEditVisible(true);
-          this.canvasStore.resizeCanvas();
-          this.canvasStore.adjust();
-          this.setValue(this.canvasStore.getPng());
-          this.data = this.canvasStore.getData()[0];
-          this.tempData = this.data;
-        });
-      },
-      false,
-    );
-    if (file) {
-      reader.readAsDataURL(file);
-      this.imageName = file.name;
-    }
-  }
-
-  // @action.bound
-  // public savePhoto(photoType: keyof this) {
-  //   const dataURL = this.canvasStore.toDataURL("image/png");
-  //   this[photoType] = dataURL;
-  // }
 }

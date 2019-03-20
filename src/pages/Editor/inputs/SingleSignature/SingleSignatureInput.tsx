@@ -10,7 +10,7 @@ import { ActionIconBox } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
-import ImageEditor from "./ImageEditor";
+import SingleSignatureEditor from "./SingleSignatureEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
 
 interface Props {
@@ -42,24 +42,16 @@ const Img = styled.img`
   input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
 }))
 @observer
-class SingleImageEditableInput extends React.Component<Props> {
+class SingleSignatureInput extends React.Component<Props> {
   componentDidMount() {
     this.props.input.initialize();
   }
   componentWillUnmount() {
     this.props.input.setData();
   }
-  private requestImage = () => {
-    document.getElementById(this.props.input.id)!.click();
-  };
   private openModal = () => {
-    if (this.props.input.status === "valid") {
-      this.props.input.setIsEditVisible(true);
-      window.setTimeout(
-        () => this.props.input!.canvasStore.resizeCanvas(),
-        200,
-      );
-    }
+    this.props.input.setIsEditVisible(true);
+    window.setTimeout(() => this.props.input!.canvasStore.resizeCanvas(), 200);
   };
 
   private onEditorCancel = () => {
@@ -78,17 +70,12 @@ class SingleImageEditableInput extends React.Component<Props> {
           input={this.props.input}
           actions={
             <div style={{ display: "flex" }}>
-              <ActionIconBox active={true} onClick={this.requestImage}>
-                <FontAwesomeIcon icon="camera" />
+              <ActionIconBox active={true} onClick={this.openModal}>
+                <FontAwesomeIcon icon="edit" />
               </ActionIconBox>
             </div>
           }
         >
-          <HiddenInputFile
-            id={this.props.input!.id}
-            name="file"
-            onChange={this.props.input.updateImage}
-          />
           <InputPrimitive disabled={true} value={this.props.input.imageName} />
         </InputLayoutStandard>
         <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
@@ -101,14 +88,7 @@ class SingleImageEditableInput extends React.Component<Props> {
               justifyContent: "center",
               alignItems: "center",
             }}
-          >
-            <ActionIconBox
-              active={this.props.input.status === "valid"}
-              onClick={this.openModal}
-            >
-              <FontAwesomeIcon icon="edit" />
-            </ActionIconBox>
-          </Col>
+          />
           <Col xl={10} style={{ display: "flex", justifyContent: "center" }}>
             {this.props.input.value !== "" ? (
               <Img src={this.props.input.value} className="image-preview" />
@@ -130,7 +110,7 @@ class SingleImageEditableInput extends React.Component<Props> {
           show={this.props.input.isEditVisible}
           close={this.onEditorCancel}
         >
-          <ImageEditor
+          <SingleSignatureEditor
             input={this.props.input}
             onOk={this.onEditorOk}
             onCancel={this.onEditorCancel}
@@ -141,4 +121,4 @@ class SingleImageEditableInput extends React.Component<Props> {
   }
 }
 
-export default SingleImageEditableInput;
+export default SingleSignatureInput;

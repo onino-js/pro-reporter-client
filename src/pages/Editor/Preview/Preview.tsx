@@ -48,10 +48,15 @@ class Preview extends React.Component<Props> {
     value: any;
   }) => {
     const el = document.getElementById(id);
+    console.log(id);
     if (type === "string" || "single-select") {
       el && (el.textContent = value);
     }
-    if (type === "single-image") {
+    if (
+      type === "single-image" ||
+      "single-image-editable" ||
+      "single-signature"
+    ) {
       //@ts-ignore
       el && el.setAttribute("xlink:href", value);
     }

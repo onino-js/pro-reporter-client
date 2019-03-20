@@ -1,7 +1,8 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
 import { Button, Col } from "antd";
-import ImageEditorToolbar from "./ImageEditorToolbar";
+import { ActionIconBox } from "../layouts/InputButtons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   input: any;
@@ -63,29 +64,29 @@ const CancelButton = styled.button`
   height: 40px;
   width: 120px;
 `;
-const Clickable = styled.div`
-  width: 0px;
-  height: 0px;
-  background-color: blue;
-`;
 const Indication = styled.p`
   margin-top: 50px;
 `;
 
-class ImageEditor extends React.Component<Props> {
+class SingleSignatureEditor extends React.Component<Props> {
   public render() {
     // const canvasWidth = this.props.input.options.width;
-    const canvasWidth = 400;
+    const canvasWidth = 700;
     const canvasHeight =
-      (this.props.input.options.height * 400) / this.props.input.options.width;
+      (this.props.input.options.height * 700) / this.props.input.options.width;
     return (
       <React.Fragment>
         <Header>
           <Title>Edition</Title>
         </Header>
-        <Clickable onClick={this.props.input.canvasStore.clearSelection} />
         <Body>
-          <ImageEditorToolbar input={this.props.input} />
+          <Indication>Dessinez dans la zone ci dessous.</Indication>
+          <ActionIconBox
+            active={true}
+            onClick={this.props.input.canvasStore.clearCanvas}
+          >
+            <FontAwesomeIcon icon="sync-alt" />
+          </ActionIconBox>
           <CanvasBox
             id={"canvas-container" + this.props.input.canvasId}
             width={canvasWidth}
@@ -93,10 +94,6 @@ class ImageEditor extends React.Component<Props> {
           >
             <canvas id={this.props.input.canvasId} />
           </CanvasBox>
-          <Indication>
-            Cliquez sur l'image pour éditer la taille, la position, l'échelle et
-            la rotation mannuellement.
-          </Indication>
         </Body>
         <Footer>
           <CancelButton onClick={this.props.onCancel}>CANCEL</CancelButton>
@@ -107,4 +104,4 @@ class ImageEditor extends React.Component<Props> {
   }
 }
 
-export default ImageEditor;
+export default SingleSignatureEditor;

@@ -48,5 +48,11 @@ export const sections = [
     title: "signature",
     pageName: "Signature",
     id: "section-signature",
+    subSections: [
+      {
+        title: "Signature du client",
+        id: "subsection-signature",
+      },
+    ],
   },
 ];

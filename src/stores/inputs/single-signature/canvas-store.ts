@@ -23,6 +23,7 @@ export class CanvasStore {
     this.canvasEl = document.getElementById(this.id);
     this.canvasBox = document.getElementById("canvas-container" + this.id);
     this.canvas = new fabric.Canvas(this.id);
+    this.canvas.isDrawingMode = true;
     data && this.addObjects([data]);
   }
 
@@ -72,12 +73,6 @@ export class CanvasStore {
       },
       "",
     );
-  }
-
-  @action.bound
-  public savePhoto(photoType: keyof this) {
-    const dataURL = this.canvas.toDataURL("image/png");
-    this[photoType] = dataURL;
   }
 
   @action.bound
@@ -138,46 +133,6 @@ export class CanvasStore {
   @action.bound
   public clearSelection() {
     this.canvas.discardActiveObject();
-    this.canvas.renderAll();
-  }
-
-  // PHOTO EDITION
-
-  @action.bound
-  public rotate(sens: string) {
-    const rotateValue = sens === "right" ? 90 : -90;
-    this.rotation += rotateValue;
-    const objs = this.canvas.getObjects();
-    if (objs.length !== 0) {
-      objs[0].centeredRotation = true;
-      objs[0].rotate(this.rotation);
-      this.canvas.requestRenderAll();
-    }
-  }
-
-  @action.bound
-  public scale(payload: number) {
-    const obj = this.canvas.getObjects()[0];
-    const scale = obj.getObjectScaling().scaleX;
-    const newScale = scale + payload;
-    obj.scale(newScale);
-    this.canvas.renderAll();
-  }
-
-  @action.bound
-  public center() {
-    const obj = this.canvas.getObjects()[0];
-    obj.center();
-    this.canvas.renderAll();
-  }
-
-  @action.bound
-  public adjust() {
-    const obj = this.canvas.getObjects()[0];
-    if (obj.heigh / obj.width <= this.canvas.height / this.canvas.width) {
-      obj.scaleToWidth(this.canvas.width);
-    } else obj.scaleToHeight(this.canvas.height);
-    this.center();
     this.canvas.renderAll();
   }
 }
