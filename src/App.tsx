@@ -1,28 +1,55 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { ThemeProvider } from "styled-components";
+import { inject, observer, Provider } from "mobx-react";
+import { mainTheme } from "./assets/styles/_colors";
+import Routes from "./components/routes/Routes";
+import { startAuthListener, startAuth } from "./services/firebase.srevice";
+import { AllStores } from "./models/all-stores.model";
+import uiStore, { UiStore } from "./stores/ui.store";
+import { editorStore } from "./stores/editor.store";
 
-class App extends Component {
+interface Props {
+  uiStore?: UiStore;
+  isLogged?: boolean;
+}
+
+@inject((allStores: AllStores) => ({
+  uiStore: allStores.uiStore,
+  isLogged: allStores.uiStore.isLogged,
+}))
+@observer
+class App extends Component<Props> {
+  componentDidMount() {
+    if (!this.props.isLogged) {
+      startAuth();
+      startAuthListener(this.signIn, this.signOut);
+    }
+  }
+
+  private signIn = (payload: any) => {
+    this.props.uiStore!.setIsLogged(true);
+    this.props.uiStore!.setDisplayName(payload.displayName);
+  };
+  private signOut = () => {
+    this.props.uiStore!.setIsLogged(false);
+    this.props.uiStore!.setDisplayName("");
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <ThemeProvider theme={mainTheme}>
+        {!this.props.isLogged ? (
+          <div id="firebaseui-auth-container" />
+        ) : (
+          <Routes />
+        )}
+      </ThemeProvider>
     );
   }
 }
 
-export default App;
+export default () => (
+  <Provider uiStore={uiStore} editorStore={editorStore}>
+    <App />
+  </Provider>
+);
