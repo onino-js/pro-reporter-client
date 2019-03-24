@@ -2,9 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import styled from "../../../../styled-components";
-import { Button } from "antd/lib/radio";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import ProModal from "../../../../components/modals/ProModal";
 import FreeModal from "../../../../components/modals/FreeModal";
 import { ActionIconBox } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,11 +10,13 @@ import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import ImageEditor from "./ImageEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
+import InputLayoutModal from "../layouts/InputLayoutModal";
 
 interface Props {
   inputId: string;
   input?: any;
   image: string;
+  layout: string;
 }
 
 const HiddenInputFile = styled.input.attrs({
@@ -50,7 +50,7 @@ class SingleImageEditableInput extends React.Component<Props> {
     this.props.input.setData();
   }
   private requestImage = () => {
-    document.getElementById(this.props.input.id)!.click();
+    document.getElementById("file-input-" + this.props.input.id)!.click();
   };
   private openModal = () => {
     if (this.props.input.status === "valid") {
@@ -72,9 +72,11 @@ class SingleImageEditableInput extends React.Component<Props> {
   };
 
   public render() {
+    const Layout: any =
+      this.props.layout === "modal" ? InputLayoutModal : InputLayoutStandard;
     return (
       <React.Fragment>
-        <InputLayoutStandard
+        <Layout
           input={this.props.input}
           actions={
             <div style={{ display: "flex" }}>
@@ -83,41 +85,49 @@ class SingleImageEditableInput extends React.Component<Props> {
               </ActionIconBox>
             </div>
           }
+          additionalInfos={
+            <Row
+              type="flex"
+              style={{ paddingTop: "20px", paddingBottom: "50px" }}
+            >
+              <Col xl={6} xs={6} />
+              <Col
+                xl={3}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActionIconBox
+                  active={this.props.input.status === "valid"}
+                  onClick={this.openModal}
+                >
+                  <FontAwesomeIcon icon="edit" />
+                </ActionIconBox>
+              </Col>
+              <Col
+                xl={10}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                {this.props.input.value !== "" ? (
+                  <Img src={this.props.input.value} className="image-preview" />
+                ) : (
+                  <p>Pas d'aperçu disponible</p>
+                )}
+              </Col>
+              <Col xl={5} />
+            </Row>
+          }
         >
           <HiddenInputFile
-            id={this.props.input!.id}
+            id={"file-input-" + this.props.input!.id}
             name="file"
             onChange={this.props.input.updateImage}
           />
           <InputPrimitive disabled={true} value={this.props.input.imageName} />
-        </InputLayoutStandard>
-        <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
-          <Col xl={6} xs={6} />
-          <Col
-            xl={3}
-            style={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <ActionIconBox
-              active={this.props.input.status === "valid"}
-              onClick={this.openModal}
-            >
-              <FontAwesomeIcon icon="edit" />
-            </ActionIconBox>
-          </Col>
-          <Col xl={10} style={{ display: "flex", justifyContent: "center" }}>
-            {this.props.input.value !== "" ? (
-              <Img src={this.props.input.value} className="image-preview" />
-            ) : (
-              <p>Pas d'aperçu disponible</p>
-            )}
-          </Col>
-          <Col xl={5} />
-        </Row>
+        </Layout>
 
         <FreeModal
           style={{

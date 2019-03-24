@@ -12,7 +12,7 @@ class Step extends React.Component<Props> {
   public render() {
     return (
       <Row type="flex" justify="center">
-        <Col xl={20}>
+        <Col xl={18} md={20} sm={24} xs={24}>
           {this.props.subSections &&
             this.props.subSections.map((sub, index) => (
               <React.Fragment key={"subsection-" + index}>

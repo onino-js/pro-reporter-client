@@ -8,6 +8,7 @@ interface Props {
   // uiStore?: UiStore;
   input: any;
   actions?: React.ReactChild[] | React.ReactChild;
+  additionalInfos?: React.ReactChild;
 }
 
 const MyRow = styled(Row)`
@@ -82,6 +83,9 @@ const RefreshIcon: any = styled(FontAwesomeIcon).attrs({
 
 const col1 = {
   xl: 1,
+  md: 1,
+  sm: 1,
+  xs: 1,
   style: {
     display: "flex",
     justifyContent: "center",
@@ -89,6 +93,9 @@ const col1 = {
 };
 const col2 = {
   xl: 5,
+  md: 5,
+  sm: 5,
+  xs: 5,
   style: {
     display: "flex",
     alignItems: "center",
@@ -96,6 +103,9 @@ const col2 = {
 };
 const col3 = {
   xl: 3,
+  md: 3,
+  sm: 3,
+  xs: 3,
   style: {
     display: "flex",
     justifyContent: "center",
@@ -103,12 +113,18 @@ const col3 = {
 };
 const col4 = {
   xl: 10,
+  md: 10,
+  sm: 10,
+  xs: 10,
   style: {
     display: "flex",
   },
 };
 const col5 = {
   xl: 3,
+  md: 3,
+  sm: 3,
+  xs: 3,
   style: {
     display: "flex",
     justifyContent: "flex-end",
@@ -116,6 +132,9 @@ const col5 = {
 };
 const col6 = {
   xl: 2,
+  md: 2,
+  sm: 2,
+  xs: 2,
   style: {
     display: "flex",
     justifyContent: "flex-end",
@@ -126,71 +145,74 @@ class InputLayoutStandard extends React.Component<Props> {
   public render() {
     const { input } = this.props;
     return (
-      <MyRow type="flex" align="middle">
-        <Col {...col1}>
-          <SmallBullet mandatory={input.mandatory} />
-        </Col>
-        <Col {...col2}>
-          <InputLabel>{input.title}</InputLabel>
-          {input.documentation && (
-            <Popover
-              content={input.documentation}
-              title={input.title}
-              trigger="hover"
-            >
-              <FontAwesomeIcon
-                icon="question-circle"
-                style={{ marginLeft: "10px" }}
-              />
-            </Popover>
-          )}
-        </Col>
-        <Col {...col3}>{this.props.actions}</Col>
-        <Col {...col4}>
-          {this.props.children}
-          {input.options && input.options.list && (
-            <Dropdown
-              overlay={
-                <Menu>
-                  {input.options.list.map((item: any, index: number) => (
-                    <Menu.Item
-                      onClick={() => input.setValue(item)}
-                      key={"menu-item" + index}
-                    >
-                      {item}
-                    </Menu.Item>
-                  ))}
-                </Menu>
-              }
-              placement="bottomLeft"
-            >
-              <SearchIconBox>
-                <SearchIcon />
-              </SearchIconBox>
-            </Dropdown>
-          )}
-        </Col>
-        <Col {...col5}>
-          <RefreshIconBox
-            active={this.props.input.status !== "untouched"}
-            onClick={this.props.input.reset}
-          >
-            <RefreshIcon />
-          </RefreshIconBox>
-        </Col>
-        <Col {...col6}>
-          <StatuIconBox status={this.props.input.status}>
-            {this.props.input.status === "untouched" && (
-              <FontAwesomeIcon
-                icon="exclamation-triangle"
-                style={{ fontSize: "1.5em" }}
-                color="#FFF"
-              />
+      <React.Fragment>
+        <MyRow type="flex" align="middle">
+          <Col {...col1}>
+            <SmallBullet mandatory={input.mandatory} />
+          </Col>
+          <Col {...col2}>
+            <InputLabel>{input.title}</InputLabel>
+            {input.documentation && (
+              <Popover
+                content={input.documentation}
+                title={input.title}
+                trigger="hover"
+              >
+                <FontAwesomeIcon
+                  icon="question-circle"
+                  style={{ marginLeft: "10px" }}
+                />
+              </Popover>
             )}
-            {this.props.input.status === "valid" && <SuccessIcon />}
-          </StatuIconBox>
-        </Col>
-      </MyRow>
+          </Col>
+          <Col {...col3}>{this.props.actions}</Col>
+          <Col {...col4}>
+            {this.props.children}
+            {input.options && input.options.list && (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    {input.options.list.map((item: any, index: number) => (
+                      <Menu.Item
+                        onClick={() => input.setValue(item)}
+                        key={"menu-item" + index}
+                      >
+                        {item}
+                      </Menu.Item>
+                    ))}
+                  </Menu>
+                }
+                placement="bottomLeft"
+              >
+                <SearchIconBox>
+                  <SearchIcon />
+                </SearchIconBox>
+              </Dropdown>
+            )}
+          </Col>
+          <Col {...col5}>
+            <RefreshIconBox
+              active={this.props.input.status !== "untouched"}
+              onClick={this.props.input.reset}
+            >
+              <RefreshIcon />
+            </RefreshIconBox>
+          </Col>
+          <Col {...col6}>
+            <StatuIconBox status={this.props.input.status}>
+              {this.props.input.status === "untouched" && (
+                <FontAwesomeIcon
+                  icon="exclamation-triangle"
+                  style={{ fontSize: "1.5em" }}
+                  color="#FFF"
+                />
+              )}
+              {this.props.input.status === "valid" && <SuccessIcon />}
+            </StatuIconBox>
+          </Col>
+        </MyRow>
+        {this.props.additionalInfos && <Row>{this.props.additionalInfos}</Row>}
+      </React.Fragment>
     );
   }
 }

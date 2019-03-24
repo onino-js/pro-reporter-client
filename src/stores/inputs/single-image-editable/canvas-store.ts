@@ -174,7 +174,7 @@ export class CanvasStore {
   @action.bound
   public adjust() {
     const obj = this.canvas.getObjects()[0];
-    if (obj.heigh / obj.width <= this.canvas.height / this.canvas.width) {
+    if (obj.height / obj.width <= this.canvas.height / this.canvas.width) {
       obj.scaleToWidth(this.canvas.width);
     } else obj.scaleToHeight(this.canvas.height);
     this.center();

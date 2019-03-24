@@ -1,20 +1,30 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
-import { Button, Col } from "antd";
-import { ActionIconBox } from "../layouts/InputButtons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ImageEditorToolbar from "./ImageEditorToolbar";
+import ImageEditorSidebar from "./ImageEditorSidebar";
+import { Button } from "react-native";
+import { inject, observer } from "mobx-react";
+import { AllStores } from "../../../../models/all-stores.model";
+import { ActionButton } from "../layouts/InputButtons";
+import ObjectEditorToolbar from "./ObjectEditorToolbar";
+import ObjectEditorSidebar from "./ObjectEditorSidebar";
 
 interface Props {
+  //  inputId: any;
   input: any;
   onOk: () => void;
   onCancel: () => void;
+  isActiveSelection: boolean;
+  isSideMenuOpen: boolean;
+  isObjectEditOpen: boolean;
+  canvasMode: any;
+  addObjects?: boolean;
+  activeObjects: any[];
 }
 
-const Title = styled.div`
-  color: ${props => props.theme.font_secondary};
-  font-size: 1.5em;
-  font-weight: bolder;
-  padding-left: 20px;
+const Title = styled.h2`
+  color: ${props => props.theme.primary};
+  padding-bottom: 10px;
   width: 100%;
   border-bottom: 1px solid ${props => props.theme.bg_secondary};
 `;
@@ -34,11 +44,14 @@ const Header = styled.div`
 `;
 const Body = styled.div`
   width: 100%;
+  position: relative;
   flex: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${props => props.theme.bg_primary};
+  overflow: hidden;
 `;
 const Footer = styled.div`
   width: 100%;
@@ -66,29 +79,51 @@ const CancelButton = styled.button`
   height: 40px;
   width: 120px;
 `;
+const Clickable = styled.div`
+  width: 0px;
+  height: 0px;
+  background-color: blue;
+`;
 const Indication = styled.p`
   margin-top: 50px;
 `;
 
-class SingleSignatureEditor extends React.Component<Props> {
+// @inject((allStores: AllStores, { inputId }) => ({
+//   // uiStore: allStores.uiStore,
+//   input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+// }))
+// @observer
+class ImageEditor extends React.Component<Props> {
   public render() {
     // const canvasWidth = this.props.input.options.width;
-    const canvasWidth = 700;
+    const canvasWidth = 400;
     const canvasHeight =
-      (this.props.input.options.height * 700) / this.props.input.options.width;
+      (this.props.input.options.height * 400) / this.props.input.options.width;
     return (
       <React.Fragment>
         <Header>
-          <Title>Edition : {this.props.input.title}</Title>
+          <Title>Edition</Title>
         </Header>
+
+        <Clickable onClick={this.props.input.canvasStore.clearSelection} />
         <Body>
-          <ActionIconBox
-            active={true}
-            onClick={this.props.input.canvasStore.clearCanvas}
-          >
-            <FontAwesomeIcon icon="sync-alt" />
-          </ActionIconBox>
-          <Indication>Dessinez dans la zone ci dessous.</Indication>
+          {/* <Indication>
+            Cliquez sur l'image pour éditer la taille, la position, l'échelle et
+            la rotation mannuellement. Ou bien utilisez les commandes suivantes
+            pour modifier l'image :
+          </Indication> */}
+          {this.props.addObjects && (
+            <React.Fragment>
+              <ObjectEditorToolbar input={this.props.input} />
+              <ImageEditorSidebar input={this.props.input} />
+              <ObjectEditorSidebar
+                input={this.props.input}
+                activeObjects={this.props.input.activeObjects}
+              />
+            </React.Fragment>
+          )}
+          <ImageEditorToolbar input={this.props.input} />
+
           <CanvasBox
             id={"canvas-container" + this.props.input.canvasId}
             width={canvasWidth}
@@ -106,4 +141,4 @@ class SingleSignatureEditor extends React.Component<Props> {
   }
 }
 
-export default SingleSignatureEditor;
+export default ImageEditor;

@@ -15,14 +15,14 @@ const Modal: any = styled.div`
   display: ${(props: any) =>
     props.show ? "flex" : "none"}; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100vw; /* Full width */
   height: 100vh; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: rgba(0, 0, 0, 0.9);
 `;
 
 const ModalContent = styled.div`

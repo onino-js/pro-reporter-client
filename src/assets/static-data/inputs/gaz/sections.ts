@@ -30,21 +30,6 @@ export const sections = [
     ],
   },
   {
-    title: "liaisons",
-    pageName: "liasons",
-    id: "section-liason",
-    subSections: [
-      {
-        title: "Contact principal",
-        id: "section-liaison-contact-principal",
-      },
-      {
-        title: "Contact secondaire",
-        id: "section-liaison-contact-secondaire",
-      },
-    ],
-  },
-  {
     title: "Liason",
     pageName: "Signature",
     id: "section-liaison",
@@ -52,6 +37,17 @@ export const sections = [
       {
         title: "Débit",
         id: "subsection-debit",
+      },
+    ],
+  },
+  {
+    title: "Travaux",
+    pageName: "Travaux",
+    id: "section-travaux",
+    subSections: [
+      {
+        title: "Image travaux avant / après",
+        id: "subsection-travaux",
       },
     ],
   },
@@ -66,4 +62,5 @@ export const sections = [
       },
     ],
   },
+ 
 ];

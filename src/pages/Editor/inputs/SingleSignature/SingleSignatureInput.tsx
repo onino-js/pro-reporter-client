@@ -12,11 +12,13 @@ import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import SingleSignatureEditor from "./SingleSignatureEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
+import InputLayoutModal from "../layouts/InputLayoutModal";
 
 interface Props {
   inputId: string;
   input?: any;
   image: string;
+  layout?: string;
 }
 
 const HiddenInputFile = styled.input.attrs({
@@ -64,9 +66,11 @@ class SingleSignatureInput extends React.Component<Props> {
   };
 
   public render() {
+    const Layout =
+      this.props.layout === "modal" ? InputLayoutModal : InputLayoutStandard;
     return (
       <React.Fragment>
-        <InputLayoutStandard
+        <Layout
           input={this.props.input}
           actions={
             <div style={{ display: "flex" }}>
@@ -76,9 +80,14 @@ class SingleSignatureInput extends React.Component<Props> {
             </div>
           }
         >
-          <InputPrimitive disabled={true} value={this.props.input.imageName} />
-        </InputLayoutStandard>
-        <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
+          {/* <InputPrimitive disabled={true} value={this.props.input.imageName} /> */}
+          {this.props.input.value !== "" ? (
+            <Img src={this.props.input.value} className="image-preview" />
+          ) : (
+            <p>Pas d'aperçu disponible</p>
+          )}
+        </Layout>
+        {/* <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
           <Col xl={6} xs={6} />
           <Col
             xl={3}
@@ -97,7 +106,7 @@ class SingleSignatureInput extends React.Component<Props> {
             )}
           </Col>
           <Col xl={5} />
-        </Row>
+        </Row> */}
 
         <FreeModal
           style={{

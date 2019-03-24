@@ -4,10 +4,12 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
+import InputLayoutModal from "../layouts/InputLayoutModal";
 
 interface Props {
   inputId: string;
   input?: any;
+  layout?: any;
 }
 
 const MyInput = styled.input`
@@ -43,16 +45,17 @@ class StringInput extends React.Component<Props> {
     this.props.input.setValue(e.currentTarget.value);
   };
   public render() {
+    const Layout =
+      this.props.layout === "modal" ? InputLayoutModal : InputLayoutStandard;
     return (
-      <InputLayoutStandard input={this.props.input}>
+      <Layout input={this.props.input}>
         <MyInput
-          // allowClear={true}
           type="text"
           value={this.props.input!.value}
           // placeholder="Entrez une valeur"
           onChange={this.setValue}
         />
-      </InputLayoutStandard>
+      </Layout>
     );
   }
 }
