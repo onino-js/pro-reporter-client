@@ -104,7 +104,6 @@ class ImageEditor extends React.Component<Props> {
         <Header>
           <Title>Edition</Title>
         </Header>
-
         <Clickable onClick={this.props.input.canvasStore.clearSelection} />
         <Body>
           {/* <Indication>

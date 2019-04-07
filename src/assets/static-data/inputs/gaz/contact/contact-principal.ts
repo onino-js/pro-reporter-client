@@ -13,7 +13,7 @@ export default [
   },
   {
     title: "Prénom",
-    id: "contact-principal-firstname",
+    id: "contact-principal-complete-name",
     sectionId: "section-contact",
     subSectionId: "section-contact-contact-principal",
     type: "string",

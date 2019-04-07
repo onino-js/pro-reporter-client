@@ -1,9 +1,9 @@
 export default [
   {
     title: "Images travaux",
-    id: "travaux",
-    sectionId: "section-travaux",
-    subSectionId: "subsection-travaux",
+    id: "photo-travaux",
+    sectionId: "section-photo-travaux",
+    subSectionId: "subsection-photo-travaux",
     type: "compare-two-images",
     mandatory: true,
     value: {

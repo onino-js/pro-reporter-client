@@ -8,6 +8,8 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 interface Props extends RouteComponentProps {
   editorStore?: EditorStore;
+  showAnswer: () => void;
+  hideAnswer: () => void;
 }
 
 const Container = styled.div`
@@ -26,6 +28,12 @@ class PreviewToolbar extends React.Component<Props> {
       <Container>
         <Button onClick={() => this.props.history.push("/editor/bley")}>
           Revenir à l'éditeur
+        </Button>
+        <Button
+          onMouseOver={this.props.showAnswer}
+          onMouseOut={this.props.hideAnswer}
+        >
+          Montrer les réponses
         </Button>
       </Container>
     );

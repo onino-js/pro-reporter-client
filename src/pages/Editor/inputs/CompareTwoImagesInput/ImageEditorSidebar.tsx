@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
-import { ActionIconBox, ActionButton } from "../layouts/InputButtons";
+import { ActionButton } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {

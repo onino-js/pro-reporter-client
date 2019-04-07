@@ -54,7 +54,7 @@ class Preview extends React.Component<Props> {
   };
 
   componentDidMount() {
-    document.getElementById("bley")!.innerHTML = template;
+    document.getElementById("canvas-container")!.innerHTML = template;
     this.props.editorStore!.inputs.forEach((input, index) => {
       this.populate({ id: input.id, type: input.type, value: input.value });
       this.addListener({ id: input.id, type: input.type, value: input.value });
@@ -66,6 +66,30 @@ class Preview extends React.Component<Props> {
   };
   private closeInputModal = () => {
     this.setState({ isInputModalOpen: false });
+  };
+
+  private showAnswer = () => {
+    var elems = document.getElementsByClassName("pro-container");
+    for (let i = 0; i < elems.length; i++) {
+      const el = elems[i];
+      //@ts-ignore
+      const inputId = el.dataset.inputId;
+      console.log(inputId);
+      const status = this.props.editorStore!.inputs.find(
+        (input: any) => input.id === inputId,
+      ).status;
+      console.log(status);
+      const color = status === "valid" ? "green" : "red";
+      el.setAttribute("fill", color);
+    }
+  };
+
+  private hideAnswer = () => {
+    var elems = document.getElementsByClassName("pro-container");
+    for (let i = 0; i < elems.length; i++) {
+      const el = elems[i];
+      el.setAttribute("fill", "transparent");
+    }
   };
 
   private addListener = ({ id, type, value }: any) => {
@@ -125,8 +149,16 @@ class Preview extends React.Component<Props> {
   public render() {
     return (
       <MainLayout>
-        <SubLayout toolbar={<PreviewToolbar />} sideContent={<div />}>
-          <Container id="bley" />
+        <SubLayout
+          toolbar={
+            <PreviewToolbar
+              showAnswer={this.showAnswer}
+              hideAnswer={this.hideAnswer}
+            />
+          }
+          sideContent={<div />}
+        >
+          <Container id="canvas-container" />
           <FreeModal
             close={this.closeInputModal}
             show={this.state.isInputModalOpen}
