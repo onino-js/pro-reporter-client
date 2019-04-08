@@ -50,7 +50,7 @@ class SingleImageInput extends React.Component<Props> {
           }
         >
           <HiddenInputFile
-            id={this.props.input!.id}
+            id={"file-input-" + this.props.input!.id}
             name="file"
             onChange={this.props.input.onPhotoUpload}
           />

@@ -137,7 +137,7 @@ class InputLayoutModal extends React.Component<Props> {
     const { input } = this.props;
     return (
       <Flex dir="c">
-        <Header>{input.title.toUpperCase()}</Header>
+        <Header>{input.label.toUpperCase()}</Header>
         <Body>
           <Row>{this.props.actions}</Row>
           <Row>

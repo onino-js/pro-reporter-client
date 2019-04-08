@@ -3,10 +3,12 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
+import InputLayoutModal from "../layouts/InputLayoutModal";
 
 interface Props {
   inputId: string;
   input?: any;
+  layout?: string;
 }
 
 const SelectButton = styled.button`
@@ -38,8 +40,10 @@ class SingleSelectInput extends React.Component<Props> {
     this.props.input!.setValue(e);
   };
   public render() {
+    const Layout =
+      this.props.layout === "modal" ? InputLayoutModal : InputLayoutStandard;
     return (
-      <InputLayoutStandard input={this.props.input}>
+      <Layout input={this.props.input}>
         {this.props.input!.options.values.map((item: any, index: number) => (
           <SelectButton
             key={"single-select-input" + index}
@@ -49,7 +53,7 @@ class SingleSelectInput extends React.Component<Props> {
             {item}
           </SelectButton>
         ))}
-      </InputLayoutStandard>
+      </Layout>
     );
   }
 }

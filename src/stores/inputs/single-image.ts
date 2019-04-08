@@ -12,7 +12,7 @@ export class SingleImageStore {
 
   constructor(options: any) {
     Object.assign(this, options);
-    this.id = uuid()
+    // this.id = uuid()
   }
 
   @action
@@ -27,7 +27,7 @@ export class SingleImageStore {
 
   @action.bound
   public uploadRequest() {
-    document.getElementById(this.id)!.click();
+    document.getElementById("file-input-" + this.id)!.click();
   }
 
   @action.bound

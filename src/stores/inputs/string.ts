@@ -2,6 +2,7 @@ import { observable, action, computed } from "mobx";
 
 export class StringStore {
   @observable public value: string = "";
+  @observable public id: string = "";
   @computed
   get status() {
     return this.value === "" ? "untouched" : "valid";

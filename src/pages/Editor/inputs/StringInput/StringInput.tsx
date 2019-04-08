@@ -16,9 +16,9 @@ const MyInput = styled.input`
   width: 100%;
   flex : 1;
   border-radius: 0px;
-  height: 50px;
+  height: 40px;
   padding-left: 10px;
-  font-size: 30px;
+  font-size: 24px;
   /* font-weight : 900; */
   letter-spacing: 3px;
   /* border-width: 1px;

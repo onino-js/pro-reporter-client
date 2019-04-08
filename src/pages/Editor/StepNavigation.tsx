@@ -79,7 +79,7 @@ class StepNavigation extends React.Component<Props> {
             {/* <IconBox color={item.color}>
                 <FontAwesomeIcon className="gi-menu-icon" icon={item.icon} />
               </IconBox> */}
-            <MenuItemTitle>{item.title.toUpperCase()}</MenuItemTitle>
+            <MenuItemTitle>{item.label.toUpperCase()}</MenuItemTitle>
           </MenuItem>
         ))}
       </Menu>

@@ -50,9 +50,9 @@ class Editor extends React.Component<Props> {
         >
           <React.Fragment>
             <Step
-              subSections={
+              subsections={
                 this.props.editorStore!.sections[this.state.activeSectionIndex]
-                  .subSections
+                  .subsections
               }
               inputs={this.props.editorStore!.inputs.filter(
                 (input: any) => input.sectionId === sectionId,

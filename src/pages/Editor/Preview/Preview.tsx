@@ -53,39 +53,64 @@ class Preview extends React.Component<Props> {
     modalContent: null,
   };
 
+  public containerLayer: any = null;
+
   componentDidMount() {
     document.getElementById("canvas-container")!.innerHTML = template;
-    this.props.editorStore!.inputs.forEach((input, index) => {
+    // set container layer
+    this.containerLayer = document.getElementById("container-layer");
+    // show container layer
+    this.containerLayer!.setAttribute("display", "inline");
+    // hide containers
+    this.hideContainers();
+
+    // check if there is inputs in editor store
+    const inputs = this.props.editorStore!.inputs;
+    if (inputs.length === 0) this.buildInputList();
+    inputs.forEach((input, index) => {
       this.populate({ id: input.id, type: input.type, value: input.value });
-      this.addListener({ id: input.id, type: input.type, value: input.value });
+      this.addListener({
+        id: input.id,
+        type: input.type,
+        value: input.value,
+      });
     });
   }
 
   private showInputModal = () => {
     this.setState({ isInputModalOpen: true });
   };
+
   private closeInputModal = () => {
     this.setState({ isInputModalOpen: false });
+    const inputs = this.props.editorStore!.inputs;
+    inputs.forEach((input, index) => {
+      this.populate({ id: input.id, type: input.type, value: input.value });
+    });
   };
 
   private showAnswer = () => {
-    var elems = document.getElementsByClassName("pro-container");
+    this.containerLayer!.setAttribute("opacity", "0.5");
+    const elems = document.getElementsByClassName("pro-container");
     for (let i = 0; i < elems.length; i++) {
       const el = elems[i];
       //@ts-ignore
       const inputId = el.dataset.inputId;
-      console.log(inputId);
       const status = this.props.editorStore!.inputs.find(
         (input: any) => input.id === inputId,
       ).status;
-      console.log(status);
       const color = status === "valid" ? "green" : "red";
       el.setAttribute("fill", color);
     }
   };
 
   private hideAnswer = () => {
-    var elems = document.getElementsByClassName("pro-container");
+    this.containerLayer!.setAttribute("opacity", "1");
+    this.hideContainers();
+  };
+
+  private hideContainers = () => {
+    const elems = document.getElementsByClassName("pro-container");
     for (let i = 0; i < elems.length; i++) {
       const el = elems[i];
       el.setAttribute("fill", "transparent");
@@ -121,16 +146,29 @@ class Preview extends React.Component<Props> {
     value: any;
   }) => {
     let el: any;
-    if (type === "string" || type === "single-select") {
-      el = document.getElementById(id);
+    if (type === "string") {
+      // @ts-ignore
+      el = document.getElementById(id).getElementsByTagName("tspan")[0];
       el && (el.textContent = value);
+    }
+    if (type === "single-select") {
+      const textElems = document
+        .getElementById(id)!
+        .getElementsByTagName("text");
+      for (let i = 0; i < textElems.length; i++) {
+        //@ts-ignore
+        if (textElems[i].dataset.value === value) {
+          textElems[i].getElementsByTagName("tspan")[0].textContent = "X";
+        } else {
+          textElems[i].getElementsByTagName("tspan")[0].textContent = "";
+        }
+      }
     }
     if (
       type === "single-image" ||
       type === "single-image-editable" ||
       type === "single-signature"
     ) {
-      id === "travaux" && console.log(type, "putain");
       el = document.getElementById(id);
       //@ts-ignore
       el && el.setAttribute("xlink:href", value);
@@ -143,6 +181,135 @@ class Preview extends React.Component<Props> {
       elBefore.setAttribute("xlink:href", value.before);
       //@ts-ignore
       elAfter.setAttribute("xlink:href", value.after);
+    }
+  };
+
+  private buildInputList = () => {
+    const sections = [];
+    const sectionsElems = document.getElementsByClassName("section");
+
+    for (let i = 0; i < sectionsElems.length; i++) {
+      const sectionElem = sectionsElems[i];
+      //@ts-ignore
+      const sectionId = sectionElem.id;
+      //@ts-ignore
+      const sectionLabel = sectionElem.dataset.label;
+
+      // Check if there is subsections
+      const subsections: any[] = [];
+      const subsectionsElems = sectionElem.getElementsByClassName("subsection");
+
+      if (subsectionsElems.length !== 0) {
+        for (let i = 0; i < subsectionsElems.length; i++) {
+          const subsectionElem = subsectionsElems[i];
+          //@ts-ignore
+          const subsectionId = subsectionElem.id;
+          //@ts-ignore
+          const subsectionLabel = subsectionElem.dataset.label;
+          subsections.push({
+            id: subsectionId,
+            label: subsectionLabel,
+          });
+          const elems = subsectionElem.getElementsByClassName("pro-input");
+          this.buildInputs({
+            elems: elems,
+            sectionId: sectionId,
+            subsectionId: subsectionId,
+          });
+        }
+      } else {
+        const elems = sectionElem.getElementsByClassName("pro-input");
+        this.buildInputs({
+          elems: elems,
+          sectionId: sectionId,
+          subsectionId: false,
+        });
+      }
+
+      sections.push({
+        id: sectionId,
+        label: sectionLabel,
+        subsections: subsections,
+      });
+    }
+    this.props.editorStore!.createSections(sections);
+  };
+
+  private buildInputs = ({ elems, sectionId, subsectionId }: any) => {
+    // for each input
+    for (let i = 0; i < elems.length; i++) {
+      //  determine type, section and subsection
+      const el = elems[i];
+      //@ts-ignore
+      const id = el.id;
+      //@ts-ignore
+      const type = el.dataset.type;
+      //@ts-ignore
+      const label = el.dataset.label;
+
+      // Build input object
+      const input = {
+        id,
+        type,
+        label,
+        sectionId,
+        subsectionId,
+        value: "",
+      };
+      switch (type) {
+        case "string":
+          //@ts-ignore
+          input.value = "";
+          //input.value = el.textContent;
+          break;
+        case "number":
+          //@ts-ignore
+          input.value = 0;
+          // input.value = Number(el.textContent);
+          break;
+        case "single-image":
+          //@ts-ignore
+          input.value = "";
+          //@ts-ignore
+          // input.options = { height: el. };
+          // input.value = el.getAttribute("xlink:href");
+          break;
+        case "single-image-editable":
+          //@ts-ignore
+          input.value = "";
+          //@ts-ignore
+          input.options = {
+            height: el.getBoundingClientRect().height,
+            width: el.getBoundingClientRect().width,
+          };
+          // input.value = el.getAttribute("xlink:href");
+          break;
+        case "compare-two-images":
+          //@ts-ignore
+          input.value = "";
+          const imgEl = el.getElementsByTagName("image")[0];
+          //@ts-ignore
+          input.options = {
+            height: imgEl.getBoundingClientRect().height,
+            width: imgEl.getBoundingClientRect().width,
+          };
+          // input.value = el.getAttribute("xlink:href");
+          break;
+        case "single-select":
+          const values: string[] = [];
+          const textEls = el.getElementsByTagName("text");
+          for (let i = 0; i < textEls.length; i++) {
+            values.push(textEls[i].dataset.value);
+          }
+          //@ts-ignore
+          input.value = "";
+          //@ts-ignore
+          input.options = { values: values };
+          break;
+      }
+      // Create observable variable in store
+      this.props.editorStore!.createInput(input);
+      // this.addListener({ id: input.id, type: input.type, value: input.value });
     }
   };
 

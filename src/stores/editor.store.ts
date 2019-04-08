@@ -14,11 +14,25 @@ export class EditorStore {
 
   // For each input create the appropriate store and pus it in this.inputs
   constructor(options: any) {
-    options.inputs.forEach((input: any) => {
-      const Store = storeMapping[input.type];
-      this.inputs.push(new Store(input));
-    });
-    options.sections.forEach((section: any) => {
+    // options.inputs.forEach((input: any) => {
+    //   const Store = storeMapping[input.type];
+    //   this.inputs.push(new Store(input));
+    // });
+    // options.sections.forEach((section: any) => {
+    //   this.sections.push(section);
+    // });
+  }
+
+  @action.bound
+  public createInput(input: any) {
+    console.log(input.type);
+    const Store = storeMapping[input.type];
+    this.inputs.push(new Store(input));
+  }
+
+  @action.bound
+  public createSections(sections: any) {
+    sections.forEach((section: any) => {
       this.sections.push(section);
     });
   }

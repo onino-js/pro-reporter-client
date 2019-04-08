@@ -151,11 +151,11 @@ class InputLayoutStandard extends React.Component<Props> {
             <SmallBullet mandatory={input.mandatory} />
           </Col>
           <Col {...col2}>
-            <InputLabel>{input.title}</InputLabel>
+            <InputLabel>{input.label}</InputLabel>
             {input.documentation && (
               <Popover
                 content={input.documentation}
-                title={input.title}
+                title={input.label}
                 trigger="hover"
               >
                 <FontAwesomeIcon

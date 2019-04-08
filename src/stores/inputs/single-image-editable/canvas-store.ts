@@ -126,7 +126,7 @@ export class CanvasStore {
   @action.bound
   public getData() {
     const res: any[] = [];
-    if (!this.canvas.isEmpty()) {
+    if (this.canvas && !this.canvas.isEmpty()) {
       this.canvas.forEachObject((obj: any) => {
         // if (obj.excludeFromExport) return;
         res.push(obj.toJSON());

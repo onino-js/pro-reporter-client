@@ -20,7 +20,7 @@ class StepRoutes extends React.Component<Props> {
       <React.Fragment>
         {this.props.editorStore!.sections.map((section: any, index: number) => (
           <Step
-            subSections={section.subSections}
+            subsections={section.subsections}
             inputs={this.props.editorStore!.inputs.filter(
               (input: any) => input.sectionId === section.id,
             )}
