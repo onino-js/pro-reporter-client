@@ -6,12 +6,13 @@ import { Button } from "antd/lib/radio";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
 import ProModal from "../../../../components/modals/ProModal";
 import FreeModal from "../../../../components/modals/FreeModal";
-import { ActionIconBox, ActionButton } from "../layouts/InputButtons";
+import { ActionIconBox } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import ImageEditor from "./ImageEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
+import { ActionButton } from "../layouts/EditorButtons";
 
 interface Props {
   inputId: string;
@@ -51,7 +52,9 @@ class CompareTwoImagesInput extends React.Component<Props> {
   }
   private requestImage = () => {
     this.props.input.reset();
-    document.getElementById(this.props.input.id)!.click();
+    document
+      .getElementById("file-hidden-input-" + this.props.input.id)!
+      .click();
   };
   private openEditor = (edited: string) => {
     this.props.input.setEdited(edited);
@@ -79,35 +82,30 @@ class CompareTwoImagesInput extends React.Component<Props> {
   };
 
   public render() {
-    console.log(this.props.input.isActiveSelection);
     return (
       <React.Fragment>
-        <InputLayoutStandard
-          input={this.props.input}
-          actions={
-            <div style={{ display: "flex" }}>
-              <ActionIconBox active={true} onClick={this.requestImage}>
-                <FontAwesomeIcon icon="camera" />
-              </ActionIconBox>
-              <ActionIconBox
-                disabled={this.props.input.data.bg === false}
-                // active={this.props.input.data.bg !== false}
-                onClick={() => this.openEditor("bg")}
-              >
-                <FontAwesomeIcon icon="edit" />
-              </ActionIconBox>
-            </div>
-          }
-        >
+        <InputLayoutStandard input={this.props.input}>
           <HiddenInputFile
-            id={this.props.input!.id}
+            id={"file-hidden-input-" + this.props.input!.id}
             name="file"
             onChange={this.props.input.updateImage}
+          />
+          <ActionButton
+            active={true}
+            onClick={this.requestImage}
+            icon="camera"
           />
           <InputPrimitive disabled={true} value={this.props.input.imageName} />
         </InputLayoutStandard>
         <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
           <Col xl={12}>
+            <ActionIconBox
+              disabled={this.props.input.data.bg === false}
+              // active={this.props.input.data.bg !== false}
+              onClick={() => this.openEditor("bg")}
+            >
+              <FontAwesomeIcon icon="edit" />
+            </ActionIconBox>
             <Row type="flex" justify="center">
               <ActionButton
                 title="Editer 'Avant travaux'"

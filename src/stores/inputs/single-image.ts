@@ -1,9 +1,9 @@
 import { observable, action, computed } from "mobx";
-import uuid from "uuid/v1";
 
 export class SingleImageStore {
   @observable public id: string = "";
   @observable public value: string = "";
+  @observable public tempValue: string = "";
   @observable public imageName: string = "";
   @computed
   get status() {
@@ -12,12 +12,21 @@ export class SingleImageStore {
 
   constructor(options: any) {
     Object.assign(this, options);
-    // this.id = uuid()
   }
 
   @action
   public setValue = (value: string): void => {
     this.value = value;
+  };
+
+  @action
+  public confirmValue = (): void => {
+    this.tempValue = this.value;
+  };
+
+  @action
+  public retsoreValue = (): void => {
+    this.value = this.tempValue;
   };
 
   @action.bound

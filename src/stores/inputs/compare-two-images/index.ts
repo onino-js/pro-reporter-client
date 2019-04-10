@@ -9,6 +9,7 @@ export type Iedited = "before" | "after" | "bg";
 export class CompareTwoImagesStore {
   @observable public id: string = "";
   @observable public value: any = { before: "", after: "" };
+  @observable public tempValue: any = { before: "", after: "" };
   @observable public data: any = {
     before: false,
     after: false,
@@ -35,7 +36,7 @@ export class CompareTwoImagesStore {
 
   @computed
   get status() {
-    return this.value.before === "" && this.value.after === ""
+    return this.value.before === "" || this.value.after === ""
       ? "untouched"
       : "valid";
   }
@@ -136,6 +137,16 @@ export class CompareTwoImagesStore {
   public setValue(payload: string) {
     this.value[this.edited] = payload;
   }
+
+  @action
+  public confirmValue = (): void => {
+    this.tempValue = this.value;
+  };
+
+  @action
+  public retsoreValue = (): void => {
+    this.value = this.tempValue;
+  };
 
   @action.bound
   public validateCanvas(payload: string) {

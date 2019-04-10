@@ -1,10 +1,10 @@
 import * as React from "react";
-import styled from "../../styled-components";
-import { _measures } from "../../assets/styles/_measures";
+import styled from "../../../styled-components";
+import { _measures } from "../../../assets/styles/_measures";
 import { withRouter, RouteComponentProps } from "react-router";
 import { inject, observer } from "mobx-react";
-import { AllStores } from "../../models/all-stores.model";
-import { UiStore } from "../../stores/ui.store";
+import { AllStores } from "../../../models/all-stores.model";
+import { UiStore } from "../../../stores/ui.store";
 
 interface Props extends RouteComponentProps {
   activeSectionIndex: number;
@@ -20,7 +20,7 @@ const MenuItem = styled.div`
   align-items: center;
   width: 100%;
   overflow: hidden;
-  color: #fff;
+  color: #000;
   :hover {
     background-color: #ccc;
     cursor: pointer;
@@ -31,12 +31,18 @@ const MenuItem = styled.div`
   &.active {
     /* color: ${props => props.theme.primary}; */
     background-color: #000;
+    color: #fff;
   }
 `;
 
 const Menu = styled.div`
   display: flex;
   flex-direction: column;
+  width: 300px;
+  @media (max-width: ${_measures.tablet}px) {
+    width: 200px;
+    font-size: 0.8em;
+  }
 `;
 
 const MenuItemTitle = styled.span`
@@ -45,18 +51,9 @@ const MenuItemTitle = styled.span`
   flex: 1;
   letter-spacing: 5px;
   font-weight: bolder;
-  @media (max-width: ${_measures.tablet}px) {
+  /* @media (max-width: ${_measures.tablet}px) {
     display: none;
-  }
-`;
-
-const IconBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  background-color: ${props => props.color};
+  } */
 `;
 
 @inject((allStores: AllStores) => ({

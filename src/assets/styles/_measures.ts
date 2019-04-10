@@ -1,4 +1,4 @@
 export const _measures = {
-  tablet: 760,
+  tablet: 900,
   mobile: 400,
 };

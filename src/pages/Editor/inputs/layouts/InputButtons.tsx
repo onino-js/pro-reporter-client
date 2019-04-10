@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { _measures } from "../../../../assets/styles/_measures";
 
 export const IconBox = styled.button`
   border: none;
@@ -55,6 +56,13 @@ const ActionButtonBox: any = styled.button`
   cursor: ${(props: any) => (props.active ? "pointer" : "not-allowed")};
   .pr-icon {
     margin-left: 10px;
+  }
+  @media (max-width: ${_measures.tablet}px) {
+    font-size: 1em;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 `;
 

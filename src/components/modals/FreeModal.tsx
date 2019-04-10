@@ -1,9 +1,8 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import { UiStore } from "../../stores/ui.store";
 import { AllStores } from "../../models/all-stores.model";
 import styled from "../../styled-components";
-import { mainTheme } from "../../assets/styles/_colors";
+import { _measures } from "../../assets/styles/_measures";
 
 interface Props {
   show: boolean;
@@ -29,7 +28,7 @@ const ModalContent = styled.div`
   position: relative;
   background-color: #fefefe;
   margin: auto;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #888;
   width: 80%;
   display: flex;
@@ -46,6 +45,9 @@ const ModalContent = styled.div`
       top: 0;
       opacity: 1;
     }
+  }
+  @media (max-width: ${_measures.tablet}px) {
+    width: 100%;
   }
 `;
 

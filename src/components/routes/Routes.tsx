@@ -15,7 +15,7 @@ class Routes extends React.Component<Props> {
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route path="/contacts" component={Contacts} />
-          <Route path="/editor/:reportId" component={Editor} />
+          <Route path="/editor" component={Editor} />
           <Route path="/preview" component={Preview} />
         </React.Fragment>
       </Router>

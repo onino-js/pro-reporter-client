@@ -1,15 +1,14 @@
 import * as React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
-import SubLayout from "../../components/layouts/SubLayout";
-import StepNavigation from "./StepNavigation";
-import StepRoutes from "./StepRoutes";
-import { inject, observer } from "mobx-react";
-import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
 import { EditorStore } from "../../stores/editor.store";
-import Step from "./Step";
-import { RouteChildrenProps } from "react-router";
+import { RouteChildrenProps, Route } from "react-router";
+import FormEdition from "./FormEdition/FormEdition";
 import EditorToolbar from "./EditorToolbar";
+import Preview from "./Preview/Preview";
+import { Flex } from "../../components/ui/Flex";
+import { inject, observer } from "mobx-react";
+import { AllStores } from "../../models/all-stores.model";
 
 interface Props extends RouteChildrenProps {
   uiStore?: UiStore;
@@ -22,44 +21,18 @@ interface Props extends RouteChildrenProps {
 }))
 @observer
 class Editor extends React.Component<Props> {
-  public state = {
-    activeSectionIndex: 0,
-  };
-
-  private setActiveSectionIndex = (payload: number) =>
-    this.setState({
-      activeSectionIndex: payload,
-    });
-
+  componentDidMount() {
+    // get back template
+  }
   public render() {
-    const sectionId = this.props.editorStore!.sections[
-      this.state.activeSectionIndex
-    ].id;
     return (
       <MainLayout>
-        <SubLayout
-          activePage="editor"
-          sideContent={
-            <StepNavigation
-              menuItems={this.props.editorStore!.sections}
-              activeSectionIndex={this.state.activeSectionIndex}
-              setActiveSectionIndex={this.setActiveSectionIndex}
-            />
-          }
-          toolbar={<EditorToolbar />}
-        >
-          <React.Fragment>
-            <Step
-              subsections={
-                this.props.editorStore!.sections[this.state.activeSectionIndex]
-                  .subsections
-              }
-              inputs={this.props.editorStore!.inputs.filter(
-                (input: any) => input.sectionId === sectionId,
-              )}
-            />
-          </React.Fragment>
-        </SubLayout>
+        <Flex dir="c">
+          <EditorToolbar />
+          <Route exact path="/editor" component={Preview} />
+          <Route path="/editor/form" component={FormEdition} />
+          <Route path="/editor/direct" component={Preview} />
+        </Flex>
       </MainLayout>
     );
   }

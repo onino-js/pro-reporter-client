@@ -8,6 +8,7 @@ import { Row, Col } from "antd";
 import { ActionIconBox } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputPrimitive } from "../layouts/InputPrimitive";
+import { ActionButton, HiddenInputFile } from "../layouts/EditorButtons";
 
 interface Props {
   inputId: string;
@@ -15,44 +16,28 @@ interface Props {
   image: string;
 }
 
-const HiddenInputFile = styled.input.attrs({
-  type: "file",
-})`
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-`;
-
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
   input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
 }))
 @observer
 class SingleImageInput extends React.Component<Props> {
-  private setValue = (e: string) => {
-    this.props.input!.setValue(e);
-  };
   private addPhotoRequest = () => {
     this.props.input.uploadRequest();
   };
   public render() {
     return (
       <React.Fragment>
-        <InputLayoutStandard
-          input={this.props.input}
-          actions={
-            <ActionIconBox active={true} onClick={this.addPhotoRequest}>
-              <FontAwesomeIcon icon="camera" />
-            </ActionIconBox>
-          }
-        >
+        <InputLayoutStandard input={this.props.input}>
           <HiddenInputFile
             id={"file-input-" + this.props.input!.id}
             name="file"
             onChange={this.props.input.onPhotoUpload}
+          />
+          <ActionButton
+            active={true}
+            onClick={this.addPhotoRequest}
+            icon="camera"
           />
           <InputPrimitive disabled={true} value={this.props.input.imageName} />
         </InputLayoutStandard>

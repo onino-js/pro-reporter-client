@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Layout, Row, Col, Dropdown, Button, Menu, Popover } from "antd";
+import { Row, Col, Dropdown, Button, Menu, Popover } from "antd";
 import { SmallBullet } from "../../../../components/ui/SmallBullet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "../../../../styled-components";
+import { SearchButton, RefreshButton, StatusButton } from "./EditorButtons";
+import { InputLabel } from "./EditorTexts";
 
 interface Props {
-  // uiStore?: UiStore;
   input: any;
   actions?: React.ReactChild[] | React.ReactChild;
   additionalInfos?: React.ReactChild;
@@ -14,71 +15,7 @@ interface Props {
 const MyRow = styled(Row)`
   margin-top: 10px;
   margin-bottom: 10px;
-`;
-
-const InputLabel = styled.div`
-  letter-spacing: 5px;
-  font-size: 1.1em;
-  color: ${({ theme }) => theme.font_primary};
-`;
-
-const SuccessIcon = styled(FontAwesomeIcon).attrs({
-  icon: "check",
-})`
-  font-size: 1.5em;
-  color: ${props => props.theme.font_secondary};
-`;
-
-const SearchIconBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid ${props => props.theme.font_primary};
-  color: ${props => props.theme.font_primary};
-  height: 50px;
-  width: 50px;
-  cursor: pointer;
-`;
-
-const StatuIconBox: any = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${(props: any) =>
-    props.status === "valid" ? props.theme.success : props.theme.disabled};
-  height: 40px;
-  width: 40px;
-  cursor: pointer;
-`;
-
-const RefreshIconBox: any = styled.div`
-  /* border-color: ${({ theme }) => theme.font_primary};
-  border-width: 1px; */
-  display : flex;
-  align-items : center;
-  justify-content : center;
-  /* border-top-left-radius : 25px;
-  border-bottom-left-radius : 25px; */
-  background-color : ${(props: any) =>
-    props.active ? props.theme.font_primary : props.theme.disabled};
-  /* border-radius : 25px; */
-  height: 40px;
-  width: 40px;
-  cursor : pointer;
-`;
-
-const SearchIcon = styled(FontAwesomeIcon).attrs({
-  icon: "search",
-})`
-  font-size: 1.5em;
-`;
-
-const RefreshIcon: any = styled(FontAwesomeIcon).attrs({
-  icon: "sync-alt",
-})`
-  font-size: 1.5em;
-  cursor: pointer;
-  color: ${(props: any) => props.theme.font_secondary};
+  padding: 0px;
 `;
 
 const col1 = {
@@ -92,10 +29,10 @@ const col1 = {
   },
 };
 const col2 = {
-  xl: 5,
-  md: 5,
-  sm: 5,
-  xs: 5,
+  xl: 7,
+  md: 7,
+  sm: 7,
+  xs: 7,
   style: {
     display: "flex",
     alignItems: "center",
@@ -112,10 +49,10 @@ const col3 = {
   },
 };
 const col4 = {
-  xl: 10,
-  md: 10,
-  sm: 10,
-  xs: 10,
+  xl: 11,
+  md: 11,
+  sm: 11,
+  xs: 11,
   style: {
     display: "flex",
   },
@@ -165,7 +102,7 @@ class InputLayoutStandard extends React.Component<Props> {
               </Popover>
             )}
           </Col>
-          <Col {...col3}>{this.props.actions}</Col>
+          {/* <Col {...col3}>{this.props.actions}</Col> */}
           <Col {...col4}>
             {this.props.children}
             {input.options && input.options.list && (
@@ -184,31 +121,18 @@ class InputLayoutStandard extends React.Component<Props> {
                 }
                 placement="bottomLeft"
               >
-                <SearchIconBox>
-                  <SearchIcon />
-                </SearchIconBox>
+                <SearchButton />
               </Dropdown>
             )}
           </Col>
           <Col {...col5}>
-            <RefreshIconBox
+            <RefreshButton
               active={this.props.input.status !== "untouched"}
               onClick={this.props.input.reset}
-            >
-              <RefreshIcon />
-            </RefreshIconBox>
+            />
           </Col>
           <Col {...col6}>
-            <StatuIconBox status={this.props.input.status}>
-              {this.props.input.status === "untouched" && (
-                <FontAwesomeIcon
-                  icon="exclamation-triangle"
-                  style={{ fontSize: "1.5em" }}
-                  color="#FFF"
-                />
-              )}
-              {this.props.input.status === "valid" && <SuccessIcon />}
-            </StatuIconBox>
+            <StatusButton status={this.props.input.status} />
           </Col>
         </MyRow>
         {this.props.additionalInfos && <Row>{this.props.additionalInfos}</Row>}

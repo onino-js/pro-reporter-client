@@ -2,9 +2,12 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../models/all-stores.model";
 import { EditorStore } from "../../../stores/editor.store";
-import { Button } from "antd";
+import { Button, Row, Col } from "antd";
 import styled from "../../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
+import { ActionButton } from "../inputs/layouts/EditorButtons";
+
+const ZOOM_STEP: number = 5;
 
 interface Props extends RouteComponentProps {
   editorStore?: EditorStore;
@@ -13,8 +16,10 @@ interface Props extends RouteComponentProps {
 }
 
 const Container = styled.div`
-  width: 100%;
-  height: 40px;
+  height: 100%;
+  width: 250px;
+  padding: 20px;
+  background-color: ${props => props.theme.bg_secondary};
 `;
 
 @inject((allStores: AllStores) => ({
@@ -23,18 +28,45 @@ const Container = styled.div`
 }))
 @observer
 class PreviewToolbar extends React.Component<Props> {
+  public zoom: number = 100;
+
+  private zoomIn = () => {
+    const el = document.getElementById("canvas-container");
+    el!.style.width = `${this.zoom + ZOOM_STEP}%`;
+    this.zoom += ZOOM_STEP;
+  };
+  private zoomOut = () => {
+    const el = document.getElementById("canvas-container");
+    el!.style.width = `${this.zoom - ZOOM_STEP}%`;
+    this.zoom -= ZOOM_STEP;
+  };
+
   public render() {
     return (
       <Container>
-        <Button onClick={() => this.props.history.push("/editor/bley")}>
-          Revenir à l'éditeur
-        </Button>
-        <Button
-          onMouseOver={this.props.showAnswer}
-          onMouseOut={this.props.hideAnswer}
-        >
-          Montrer les réponses
-        </Button>
+        <Row>
+          <Col>
+            <ActionButton
+              onMouseOver={this.props.showAnswer}
+              onMouseOut={this.props.hideAnswer}
+              label="Montrer les champs"
+            >
+              Montrer les réponses
+            </ActionButton>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <ActionButton
+              onClick={() => this.props.history.push("/editor/form")}
+              label="Revenir à l'éditeur"
+            />
+          </Col>
+        </Row>
+        <Row type="flex">
+          <ActionButton icon="minus" onClick={this.zoomOut} />
+          <ActionButton icon="plus" onClick={this.zoomIn} />
+        </Row>
       </Container>
     );
   }

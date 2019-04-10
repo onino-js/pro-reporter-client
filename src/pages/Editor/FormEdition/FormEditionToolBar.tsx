@@ -1,9 +1,9 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import { AllStores } from "../../models/all-stores.model";
-import { EditorStore } from "../../stores/editor.store";
+import { AllStores } from "../../../models/all-stores.model";
+import { EditorStore } from "../../../stores/editor.store";
 import { Button } from "antd";
-import styled from "../../styled-components";
+import styled from "../../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
 
 interface Props extends RouteComponentProps {
@@ -13,7 +13,6 @@ interface Props extends RouteComponentProps {
 const Container = styled.div`
   width: 100%;
   height: 40px;
-  background-color: ${props => props.theme.secondary};
 `;
 
 @inject((allStores: AllStores) => ({
@@ -21,7 +20,7 @@ const Container = styled.div`
   editorStore: allStores.editorStore,
 }))
 @observer
-class EditorToolbar extends React.Component<Props> {
+class FormEditionToolBar extends React.Component<Props> {
   public render() {
     return (
       <Container>
@@ -33,4 +32,4 @@ class EditorToolbar extends React.Component<Props> {
   }
 }
 
-export default withRouter(EditorToolbar);
+export default withRouter(FormEditionToolBar);

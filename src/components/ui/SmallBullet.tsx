@@ -5,5 +5,5 @@ export const SmallBullet: any = styled.div`
   height: 8px;
   border-radius: 4px;
   background-color: ${(props: any) =>
-    props.mandatory ? props.theme.danger : "transparent"};
+    props.mandatory ? props.theme.danger : props.theme.grey};
 `;

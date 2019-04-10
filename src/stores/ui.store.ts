@@ -7,6 +7,7 @@ export class UiStore {
   @observable public email: string = "";
   @observable public password: string = "";
   @observable public showNewReport: boolean = false;
+  @observable public isInputModalOpen: boolean = false;
 
   @action
   public setState = (key: keyof UiStore, value: boolean): void => {
@@ -32,6 +33,10 @@ export class UiStore {
   @action
   public setDisplayName = (displayName: string): void => {
     this.displayName = displayName;
+  };
+  @action
+  public setIsInputModalOpen = (payload: boolean): void => {
+    this.isInputModalOpen = payload;
   };
 }
 
