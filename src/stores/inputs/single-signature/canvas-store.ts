@@ -105,7 +105,7 @@ export class CanvasStore {
 
   @action.bound
   public clearCanvas() {
-    this.canvas.clear();
+    this.canvas && this.canvas.clear();
   }
 
   @action.bound

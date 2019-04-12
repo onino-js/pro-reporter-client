@@ -11,7 +11,7 @@ interface Props {
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
 }))
 @observer
 class SingleSelectInput extends React.Component<Props> {

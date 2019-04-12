@@ -3,7 +3,12 @@ import { Row, Col, Dropdown, Button, Menu, Popover } from "antd";
 import { SmallBullet } from "../../../../components/ui/SmallBullet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "../../../../styled-components";
-import { SearchButton, RefreshButton, StatusButton } from "./EditorButtons";
+import {
+  SearchButton,
+  RefreshButton,
+  StatusButton,
+  SearchIconBox,
+} from "./EditorButtons";
 import { InputLabel } from "./EditorTexts";
 
 interface Props {
@@ -18,44 +23,42 @@ const MyRow = styled(Row)`
   padding: 0px;
 `;
 
+// Change button to div to enable antd dropdown
+const SearchBox = SearchIconBox.withComponent("div");
+
+const flexCenter = {
+  style: {
+    display: "flex",
+    justifyContent: "center",
+  },
+};
+
 const col1 = {
   xl: 1,
   md: 1,
   sm: 1,
   xs: 1,
-  style: {
-    display: "flex",
-    justifyContent: "center",
-  },
+  ...flexCenter,
 };
 const col2 = {
   xl: 7,
   md: 7,
   sm: 7,
   xs: 7,
-  style: {
-    display: "flex",
-    alignItems: "center",
-  },
 };
 const col3 = {
   xl: 3,
   md: 3,
   sm: 3,
   xs: 3,
-  style: {
-    display: "flex",
-    justifyContent: "center",
-  },
+  ...flexCenter,
 };
 const col4 = {
   xl: 11,
   md: 11,
   sm: 11,
   xs: 11,
-  style: {
-    display: "flex",
-  },
+  ...flexCenter,
 };
 const col5 = {
   xl: 3,
@@ -121,7 +124,9 @@ class InputLayoutStandard extends React.Component<Props> {
                 }
                 placement="bottomLeft"
               >
-                <SearchButton />
+                <SearchBox>
+                  <FontAwesomeIcon icon="search" />
+                </SearchBox>
               </Dropdown>
             )}
           </Col>

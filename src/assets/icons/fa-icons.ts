@@ -60,6 +60,9 @@ import {
   faQuestion,
   faChartPie,
   faMinus,
+  faFileExport,
+  faDoorOpen,
+  faSave,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faTachometerAlt);
@@ -123,3 +126,6 @@ library.add(faClone);
 library.add(faQuestion);
 library.add(faChartPie);
 library.add(faMinus);
+library.add(faFileExport);
+library.add(faDoorOpen);
+library.add(faSave);

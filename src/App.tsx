@@ -7,6 +7,7 @@ import { startAuthListener, startAuth } from "./services/firebase.srevice";
 import { AllStores } from "./models/all-stores.model";
 import uiStore, { UiStore } from "./stores/ui.store";
 import { editorStore } from "./stores/editor.store";
+import reportStore from "./stores/report.store";
 
 interface Props {
   uiStore?: UiStore;
@@ -49,7 +50,11 @@ class App extends Component<Props> {
 }
 
 export default () => (
-  <Provider uiStore={uiStore} editorStore={editorStore}>
+  <Provider
+    uiStore={uiStore}
+    editorStore={editorStore}
+    reportStore={reportStore}
+  >
     <App />
   </Provider>
 );

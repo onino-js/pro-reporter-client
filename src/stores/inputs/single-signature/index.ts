@@ -5,6 +5,7 @@ import { CanvasStore } from "./canvas-store";
 export class SingleSignatureStore {
   @observable public id: string = "";
   @observable public value: string = "";
+  @observable public tempValue: string = "";
   @observable public data: any = {};
   @observable public tempData: any = {};
   @observable public canvasId: string = "";
@@ -42,6 +43,16 @@ export class SingleSignatureStore {
     this.value = payload;
   }
 
+  @action
+  public confirmValue = (): void => {
+    this.tempValue = this.value;
+  };
+
+  @action
+  public retsoreValue = (): void => {
+    this.value = this.tempValue;
+  };
+
   @action.bound
   public validateCanvas(payload: string) {
     this.setData();
@@ -56,7 +67,7 @@ export class SingleSignatureStore {
 
   @action.bound
   public setData() {
-    this.data = this.canvasStore.getData()[0];
+    this.canvasStore.canvas && (this.data = this.canvasStore.getData()[0]);
   }
 
   @action.bound

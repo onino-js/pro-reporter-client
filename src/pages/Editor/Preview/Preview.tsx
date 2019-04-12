@@ -8,16 +8,23 @@ import styled from "styled-components";
 import PreviewToolbar from "./PreviewToolbar";
 import { componentDirectMapping } from "../../../services/input-mapping.service";
 import { Flex } from "../../../components/ui/Flex";
+import { _measures } from "../../../assets/styles/_measures";
+import template2 from "../../../assets/static-data/templates/gaz-template.svg";
 
 interface Props extends RouteChildrenProps {
   uiStore?: UiStore;
   editorStore?: EditorStore;
+  activeReport?: EditorStore;
 }
 
 const CanvasContainer = styled.div`
-  width: 100%;
+  width: 60%;
   height: 100%;
+  margin: auto;
   overflow-x: auto;
+  @media (max-width: ${_measures.tablet}px) {
+    width: 100%;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -32,7 +39,8 @@ const Wrapper = styled.div`
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  editorStore: allStores.editorStore,
+  editorStore: allStores.reportStore.activeReport,
+  activeReport: allStores.reportStore.activeReport,
 }))
 @observer
 class Preview extends React.Component<Props> {
@@ -45,52 +53,67 @@ class Preview extends React.Component<Props> {
   public editedInput: any = null;
 
   componentDidMount() {
-    this.props.editorStore!.getTemplate();
-    this.props.editorStore!.mountTemplate("canvas-container");
+    this.props.activeReport && this.initialize(this.props.activeReport);
+  }
 
+  componentWillReceiveProps(newProps: any) {
+    const render = newProps.activeReport.id !== this.props.activeReport!.id;
+    render && this.initialize(newProps.activeReport);
+  }
+
+  private initialize = (report: EditorStore) => {
+    report.mountTemplate("canvas-container");
     // set container layer
     this.containerLayer = document.getElementById("container-layer");
     // show container layer
     this.containerLayer!.setAttribute("display", "inline");
     // hide containers
     this.hideContainers();
-
     // check if there is inputs in editor store
-    const inputs = this.props.editorStore!.inputs;
-    if (inputs.length === 0) this.props.editorStore!.buildInputAndSections();
-
-    this.props.editorStore!.renderCanvas();
+    const inputs = report.inputs;
+    if (inputs.length === 0) report.buildInputAndSections();
+    report.renderCanvas();
     this.addListeners();
-  }
-
-  private addListeners = () => {
-    this.props.editorStore!.inputs.forEach((input, index) => {
-      this.addListener({
-        id: input.id,
-        type: input.type,
-        value: input.value,
-      });
-    });
   };
 
-  private showAnswer = () => {
-    this.containerLayer!.setAttribute("opacity", "0.3");
+  private addListeners = () => {
     const elems = document.getElementsByClassName("pro-container");
     for (let i = 0; i < elems.length; i++) {
       const el = elems[i];
-      //@ts-ignore
-      const inputId = el.dataset.inputId;
-      const status = this.props.editorStore!.inputs.find(
-        (input: any) => input.id === inputId,
-      ).status;
-      const color = status === "valid" ? "green" : "red";
-      el.setAttribute("fill", color);
+      if (el) {
+        // get back corrspondant input
+        //@ts-ignore
+        const inputId = el.dataset.inputId;
+        const inputEl = document.getElementById(inputId);
+        console.log(inputId);
+        //@ts-ignore
+        const type: string = inputEl.dataset.type;
+        el.addEventListener("click", () => {
+          const Input = componentDirectMapping[type];
+          this.setState({
+            modalContent: (
+              <Input inputId={inputId} reportId={this.props.activeReport!.id} />
+            ),
+          });
+          this.props.uiStore!.setIsInputModalOpen(true);
+        });
+        el.addEventListener("mouseover", () => {
+          el.setAttribute("stroke", "red");
+          el.setAttribute("stroke-width", "5px");
+        });
+        el.addEventListener("mouseout", () => {
+          el.setAttribute("stroke", "none");
+          el.setAttribute("stroke-width", "0px");
+        });
+      }
     }
-  };
-
-  private hideAnswer = () => {
-    this.containerLayer!.setAttribute("opacity", "0.3");
-    this.hideContainers();
+    // this.props.editorStore!.inputs.forEach((input, index) => {
+    //   this.addListener({
+    //     id: input.id,
+    //     type: input.type,
+    //     value: input.value,
+    //   });
+    // });
   };
 
   private hideContainers = () => {
@@ -128,10 +151,10 @@ class Preview extends React.Component<Props> {
           <CanvasContainer>
             <div id="canvas-container" />
           </CanvasContainer>
-          <PreviewToolbar
+          {/* <PreviewToolbar
             showAnswer={this.showAnswer}
             hideAnswer={this.hideAnswer}
-          />
+          /> */}
         </Wrapper>
         {this.state.modalContent}
       </Flex>

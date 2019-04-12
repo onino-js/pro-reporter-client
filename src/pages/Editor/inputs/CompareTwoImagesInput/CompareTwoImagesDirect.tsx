@@ -13,6 +13,7 @@ import {
   CancelButton,
   ActionButton,
   HiddenInputFile,
+  ActionLink,
 } from "../layouts/EditorButtons";
 import { Col, Row } from "antd";
 import FreeModal from "../../../../components/modals/FreeModal";
@@ -48,14 +49,32 @@ const InputContainer: any = styled.div`
 
 const Img = styled.img`
   border: 6px solid ${props => props.theme.disabled};
-  width: "100%";
+  max-width: 90%;
   height: auto;
-  max-width: 100%;
+  cursor: pointer;
+`;
+
+const UpperRow = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const MiddleRow = styled.div`
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+`;
+
+const BottomRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
   editorStore: allStores.editorStore,
 }))
 @observer
@@ -102,7 +121,7 @@ class CompareTwoImagesDirect extends React.Component<Props> {
           close={this.onCancel}
           visible={this.props.uiStore!.isInputModalOpen}
         >
-          <Row type="flex">
+          <UpperRow>
             <Col xl={16}>
               <InputLayoutStandard input={this.props.input}>
                 <HiddenInputFile
@@ -121,71 +140,67 @@ class CompareTwoImagesDirect extends React.Component<Props> {
                 />
               </InputLayoutStandard>
             </Col>
-          </Row>
-          <Row
-            type="flex"
-            style={{ paddingTop: "20px", paddingBottom: "50px" }}
-          >
-            <Col xl={6}>
-              <Row>
-                <ActionButton
-                  disabled={this.props.input.data.bg === false}
-                  onClick={() => this.openEditor("bg")}
-                  label="Editer le fond"
-                  icon="edit"
-                />
-                <ActionButton
-                  disabled={this.props.input.data.bg === false}
-                  onClick={() => this.openEditor("before")}
-                  label="Editer 'Avant travaux'"
-                  icon="edit"
-                />
-                <ActionButton
-                  disabled={this.props.input.data.bg === false}
-                  onClick={() => this.openEditor("after")}
-                  label="Editer 'Après travaux'"
-                  icon="edit"
-                />
-              </Row>
-            </Col>
-            <Col xl={8}>
-              <Row type="flex" justify="center">
-                {this.props.input.value.before !== "" ? (
-                  <Img
-                    src={this.props.input.value.before}
-                    className="image-preview"
+          </UpperRow>
+          <MiddleRow>
+            <Col xl={16}>
+              <Col xl={6}>
+                <Row>
+                  <ActionLink
+                    disabled={this.props.input.data.bg === false}
+                    onClick={() => this.openEditor("bg")}
+                    label="Editer le fond"
+                    icon="edit"
                   />
-                ) : (
+                </Row>
+              </Col>
+              <Col xl={8}>
+                {this.props.input.value.before === "" && (
                   <p>Aucun apperçu disponible</p>
                 )}
-              </Row>
-            </Col>
-            <Col xl={8}>
-              <Row type="flex" justify="center">
-                {this.props.input.value.after !== "" ? (
-                  <Img
-                    src={this.props.input.value.after}
-                    className="image-preview"
+                {this.props.input.value.before === false && (
+                  <ActionLink
+                    disabled={this.props.input.data.bg === false}
+                    onClick={() => this.openEditor("before")}
+                    label="Editer 'Avant travaux'"
+                    icon="edit"
                   />
-                ) : (
+                )}
+                {this.props.input.value.before !== "" &&
+                  this.props.input.value.before !== false && (
+                    <Img
+                      src={this.props.input.value.before}
+                      onClick={() => this.openEditor("before")}
+                      alt="#"
+                    />
+                  )}
+              </Col>
+              <Col xl={8}>
+                {this.props.input.value.after === "" && (
                   <p>Aucun apperçu disponible</p>
                 )}
-              </Row>
+                {this.props.input.value.after === false && (
+                  <ActionLink
+                    disabled={this.props.input.data.bg === false}
+                    onClick={() => this.openEditor("after")}
+                    label="Editer 'Après travaux'"
+                    icon="edit"
+                  />
+                )}
+                {this.props.input.value.after !== "" &&
+                  this.props.input.value.after !== false && (
+                    <Img
+                      src={this.props.input.value.after}
+                      onClick={() => this.openEditor("after")}
+                      alt="#"
+                    />
+                  )}
+              </Col>
             </Col>
-          </Row>
-          <Row>
-            <Col
-              xl={24}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
-              <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
-            </Col>
-          </Row>
+          </MiddleRow>
+          <BottomRow>
+            <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
+            <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
+          </BottomRow>
         </InputContainer>
         <FreeModal
           style={{

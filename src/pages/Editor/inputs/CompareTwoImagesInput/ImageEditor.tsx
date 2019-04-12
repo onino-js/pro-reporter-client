@@ -32,7 +32,8 @@ const CanvasBox: any = styled.div`
   width: ${(props: any) => props.width}px;
   height: ${(props: any) => props.height}px;
   outline: 1px dashed ${props => props.theme.secondary};
-  margin-top: 50px;
+  margin: auto;
+  /* margin-top: 50px; */
 `;
 const Header = styled.div`
   width: 100%;
@@ -53,6 +54,12 @@ const Body = styled.div`
   background-color: ${props => props.theme.bg_primary};
   overflow: hidden;
 `;
+
+const CanvasContainer = styled.div`
+  flex: 1;
+  width: 100%;
+`;
+
 const Footer = styled.div`
   width: 100%;
   height: 50px;
@@ -95,10 +102,35 @@ const Indication = styled.p`
 // @observer
 class ImageEditor extends React.Component<Props> {
   public render() {
-    // const canvasWidth = this.props.input.options.width;
-    const canvasWidth = 400;
-    const canvasHeight =
-      (this.props.input.options.height * 400) / this.props.input.options.width;
+    // let maxHeight: number = 300;
+    // let maxWidth: number = 300;
+    // let canvasWidth: number = 300;
+    // let canvasHeight: number = 300;
+    // const imageRatio =
+    //   this.props.input.options.height / this.props.input.options.width;
+    // let currentRation = 1;
+    // const boxEl = document.getElementById("canvas-wrapper");
+
+    // if (boxEl) {
+    //   maxHeight = boxEl!.getBoundingClientRect().height;
+    //   maxWidth = boxEl!.getBoundingClientRect().width;
+    //   if (maxHeight > 0 && maxWidth > 0) {
+    //     currentRation = maxHeight / maxWidth;
+    //     if (currentRation >= imageRatio) {
+    //       canvasWidth = maxWidth;
+    //       canvasHeight = maxWidth * imageRatio;
+    //     } else {
+    //       canvasHeight = maxHeight;
+    //       canvasWidth = maxHeight / imageRatio;
+    //     }
+    //   }
+    // }
+
+    const imageRatio =
+      this.props.input.options.height / this.props.input.options.width;
+    const canvasWidth = 600;
+    const canvasHeight = 600 * imageRatio;
+
     return (
       <React.Fragment>
         <Header>
@@ -106,11 +138,11 @@ class ImageEditor extends React.Component<Props> {
         </Header>
         <Clickable onClick={this.props.input.canvasStore.clearSelection} />
         <Body>
-          {/* <Indication>
+          <Indication>
             Cliquez sur l'image pour éditer la taille, la position, l'échelle et
             la rotation mannuellement. Ou bien utilisez les commandes suivantes
             pour modifier l'image :
-          </Indication> */}
+          </Indication>
           {this.props.addObjects && (
             <React.Fragment>
               <ObjectEditorToolbar input={this.props.input} />
@@ -122,14 +154,15 @@ class ImageEditor extends React.Component<Props> {
             </React.Fragment>
           )}
           <ImageEditorToolbar input={this.props.input} />
-
-          <CanvasBox
-            id={"canvas-container" + this.props.input.canvasId}
-            width={canvasWidth}
-            height={canvasHeight}
-          >
-            <canvas id={this.props.input.canvasId} />
-          </CanvasBox>
+          <CanvasContainer id={"canvas-wrapper"}>
+            <CanvasBox
+              id={"canvas-container" + this.props.input.canvasId}
+              width={canvasWidth}
+              height={canvasHeight}
+            >
+              <canvas id={this.props.input.canvasId} />
+            </CanvasBox>
+          </CanvasContainer>
         </Body>
         <Footer>
           <CancelButton onClick={this.props.onCancel}>CANCEL</CancelButton>

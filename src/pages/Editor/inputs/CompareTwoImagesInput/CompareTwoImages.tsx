@@ -12,7 +12,7 @@ import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import ImageEditor from "./ImageEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
-import { ActionButton } from "../layouts/EditorButtons";
+import { ActionButton, ActionLink } from "../layouts/EditorButtons";
 
 interface Props {
   inputId: string;
@@ -38,9 +38,15 @@ const Img = styled.img`
   max-width: 100%;
 `;
 
+const MiddleRow = styled.div`
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+`;
+
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
 }))
 @observer
 class CompareTwoImagesInput extends React.Component<Props> {
@@ -97,53 +103,62 @@ class CompareTwoImagesInput extends React.Component<Props> {
           />
           <InputPrimitive disabled={true} value={this.props.input.imageName} />
         </InputLayoutStandard>
-        <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
-          <Col xl={12}>
-            <ActionIconBox
-              disabled={this.props.input.data.bg === false}
-              // active={this.props.input.data.bg !== false}
-              onClick={() => this.openEditor("bg")}
-            >
-              <FontAwesomeIcon icon="edit" />
-            </ActionIconBox>
-            <Row type="flex" justify="center">
-              <ActionButton
-                title="Editer 'Avant travaux'"
-                disabled={this.props.input.data.bg === false}
-                onClick={() => this.openEditor("before")}
-              />
-            </Row>
-            <Row type="flex" justify="center">
-              {this.props.input.value.before !== "" ? (
-                <Img
-                  src={this.props.input.value.before}
-                  className="image-preview"
+        <MiddleRow>
+          <Col xl={24}>
+            <Col xl={6}>
+              <Row>
+                <ActionLink
+                  disabled={this.props.input.data.bg === false}
+                  onClick={() => this.openEditor("bg")}
+                  label="Editer le fond"
+                  icon="edit"
                 />
-              ) : (
+              </Row>
+            </Col>
+            <Col xl={8}>
+              {this.props.input.value.before === "" && (
                 <p>Aucun apperçu disponible</p>
               )}
-            </Row>
-          </Col>
-          <Col xl={12}>
-            <Row type="flex" justify="center">
-              <ActionButton
-                title="Editer 'Après travaux'"
-                disabled={this.props.input.data.bg === false}
-                onClick={() => this.openEditor("after")}
-              />
-            </Row>
-            <Row type="flex" justify="center">
-              {this.props.input.value.after !== "" ? (
-                <Img
-                  src={this.props.input.value.after}
-                  className="image-preview"
+              {this.props.input.value.before === false && (
+                <ActionLink
+                  disabled={this.props.input.data.bg === false}
+                  onClick={() => this.openEditor("before")}
+                  label="Editer 'Avant travaux'"
+                  icon="edit"
                 />
-              ) : (
+              )}
+              {this.props.input.value.before !== "" &&
+                this.props.input.value.before !== false && (
+                  <Img
+                    src={this.props.input.value.before}
+                    onClick={() => this.openEditor("before")}
+                    alt="#"
+                  />
+                )}
+            </Col>
+            <Col xl={8}>
+              {this.props.input.value.after === "" && (
                 <p>Aucun apperçu disponible</p>
               )}
-            </Row>
+              {this.props.input.value.after === false && (
+                <ActionLink
+                  disabled={this.props.input.data.bg === false}
+                  onClick={() => this.openEditor("after")}
+                  label="Editer 'Après travaux'"
+                  icon="edit"
+                />
+              )}
+              {this.props.input.value.after !== "" &&
+                this.props.input.value.after !== false && (
+                  <Img
+                    src={this.props.input.value.after}
+                    onClick={() => this.openEditor("after")}
+                    alt="#"
+                  />
+                )}
+            </Col>
           </Col>
-        </Row>
+        </MiddleRow>
 
         <FreeModal
           style={{

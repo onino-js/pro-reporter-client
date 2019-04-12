@@ -39,7 +39,7 @@ const Img = styled.img`
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
 }))
 @observer
 class SingleImageEditableInput extends React.Component<Props> {

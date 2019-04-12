@@ -20,6 +20,7 @@ import StringInputDirect from "../pages/Editor/inputs/StringInput/StringInputDir
 import SingleSelectDirect from "../pages/Editor/inputs/SingleSelectInput/SingleSelectDirect";
 import SingleImageDirect from "../pages/Editor/inputs/SingleImageInput/SingleImageDirect";
 import CompareTwoImagesDirect from "../pages/Editor/inputs/CompareTwoImagesInput/CompareTwoImagesDirect";
+import SingleSignatureDirect from "../pages/Editor/inputs/SingleSignature/SingleSignatureDirect";
 
 export const storeMapping: any = {
   string: StringStore,
@@ -59,7 +60,7 @@ export const componentDirectMapping: any = {
   "single-select": SingleSelectDirect,
   "single-image": SingleImageDirect,
   "single-image-editable": SingleImageEditableInput,
-  "single-signature": SingleSignatureInput,
+  "single-signature": SingleSignatureDirect,
   number: NumberInput,
   slider: SliderInput,
   "compare-two-images": CompareTwoImagesDirect,

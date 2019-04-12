@@ -10,6 +10,7 @@ import Step from "./Step";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Flex } from "../../../components/ui/Flex";
 import { ProContainer } from "../../../components/layouts/ProContainer";
+import FormComplete from "./FormComplete";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -18,7 +19,7 @@ interface Props extends RouteComponentProps {
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  editorStore: allStores.editorStore,
+  editorStore: allStores.reportStore.activeReport,
 }))
 @observer
 class FormEdition extends React.Component<Props> {
@@ -53,7 +54,11 @@ class FormEdition extends React.Component<Props> {
             />
             {/* <FormEditionToolBar /> */}
             <ProContainer>
-              <Step
+              <FormComplete
+                sections={this.props.editorStore!.sections}
+                inputs={this.props.editorStore!.inputs}
+              />
+              {/* <Step
                 subsections={
                   this.props.editorStore!.sections[
                     this.state.activeSectionIndex
@@ -62,7 +67,7 @@ class FormEdition extends React.Component<Props> {
                 inputs={this.props.editorStore!.inputs.filter(
                   (input: any) => input.sectionId === sectionId,
                 )}
-              />
+              /> */}
             </ProContainer>
           </React.Fragment>
         ) : (

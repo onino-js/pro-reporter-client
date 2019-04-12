@@ -50,9 +50,7 @@ class PreviewToolbar extends React.Component<Props> {
               onMouseOver={this.props.showAnswer}
               onMouseOut={this.props.hideAnswer}
               label="Montrer les champs"
-            >
-              Montrer les réponses
-            </ActionButton>
+            />
           </Col>
         </Row>
         <Row>

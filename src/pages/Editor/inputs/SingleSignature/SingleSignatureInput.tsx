@@ -13,6 +13,7 @@ import { Row, Col } from "antd";
 import SingleSignatureEditor from "./SingleSignatureEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
 import InputLayoutModal from "../layouts/InputLayoutModal";
+import { ActionButton } from "../layouts/EditorButtons";
 
 interface Props {
   inputId: string;
@@ -41,7 +42,7 @@ const Img = styled.img`
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
 }))
 @observer
 class SingleSignatureInput extends React.Component<Props> {
@@ -66,28 +67,12 @@ class SingleSignatureInput extends React.Component<Props> {
   };
 
   public render() {
-    const Layout =
-      this.props.layout === "modal" ? InputLayoutModal : InputLayoutStandard;
     return (
       <React.Fragment>
-        <Layout
-          input={this.props.input}
-          actions={
-            <div style={{ display: "flex" }}>
-              <ActionIconBox active={true} onClick={this.openModal}>
-                <FontAwesomeIcon icon="edit" />
-              </ActionIconBox>
-            </div>
-          }
-        >
-          {/* <InputPrimitive disabled={true} value={this.props.input.imageName} /> */}
-          {this.props.input.value !== "" ? (
-            <Img src={this.props.input.value} className="image-preview" />
-          ) : (
-            <p>Pas d'aperçu disponible</p>
-          )}
-        </Layout>
-        {/* <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
+        <InputLayoutStandard input={this.props.input}>
+          <ActionButton icon="edit" active={true} onClick={this.openModal} />
+        </InputLayoutStandard>
+        <Row type="flex" style={{ paddingTop: "20px", paddingBottom: "50px" }}>
           <Col xl={6} xs={6} />
           <Col
             xl={3}
@@ -98,15 +83,20 @@ class SingleSignatureInput extends React.Component<Props> {
               alignItems: "center",
             }}
           />
-          <Col xl={10} style={{ display: "flex", justifyContent: "center" }}>
+          <Col xl={10}>
             {this.props.input.value !== "" ? (
-              <Img src={this.props.input.value} className="image-preview" />
+              <Img
+                src={this.props.input.value}
+                style={{}}
+                width="100%"
+                className="image-preview"
+              />
             ) : (
               <p>Pas d'aperçu disponible</p>
             )}
           </Col>
           <Col xl={5} />
-        </Row> */}
+        </Row>
 
         <FreeModal
           style={{

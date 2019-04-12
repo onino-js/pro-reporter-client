@@ -1,12 +1,16 @@
+import uuid from "uuid/v1";
 import { observable, action, computed } from "mobx";
 import { storeMapping } from "../services/input-mapping.service";
 import { gazInputs } from "./../assets/static-data/inputs/gaz/index";
-import { template } from "../assets/static-data/templates/gaz-linking-1";
+
+const ZOOM_STEP: number = 5;
 
 export class EditorStore {
   @observable public inputs: any[] = [];
+  @observable public id: string = "";
   @observable public sections: any[] = [];
   @observable public template: string = "";
+  @observable public zoom: number = 100;
 
   @computed
   get status() {
@@ -14,13 +18,21 @@ export class EditorStore {
     return res;
   }
 
-  constructor(options: any) {
-
+  constructor({ template, id }: any) {
+    this.template = template;
+    this.id = id;
   }
 
   @action.bound
-  public getTemplate() {
-    this.template = template;
+  public initialize() {
+    this.mountTemplate("canvas-container");
+    this.buildInputAndSections();
+  }
+
+  @action.bound
+  public reset() {
+    this.inputs.forEach(input => input.reset());
+    this.renderCanvas();
   }
 
   @action.bound
@@ -124,6 +136,12 @@ export class EditorStore {
         case "string":
           //@ts-ignore
           input.value = "";
+          if (el.dataset.list) {
+            //@ts-ignore
+            input.options = {
+              list: el.dataset.list.split(","),
+            };
+          }
           //input.value = el.textContent;
           break;
         case "number":
@@ -139,6 +157,16 @@ export class EditorStore {
           // input.value = el.getAttribute("xlink:href");
           break;
         case "single-image-editable":
+          //@ts-ignore
+          input.value = "";
+          //@ts-ignore
+          input.options = {
+            height: el.getBoundingClientRect().height,
+            width: el.getBoundingClientRect().width,
+          };
+          // input.value = el.getAttribute("xlink:href");
+          break;
+        case "single-signature":
           //@ts-ignore
           input.value = "";
           //@ts-ignore
@@ -227,11 +255,61 @@ export class EditorStore {
   }
 
   @action.bound
-  public renderCanvas(){
-    this.inputs.forEach((input, index) => {
-      this.renderInput({ id: input.id, type: input.type, value: input.value });
-    });
-  };
+  public renderCanvas() {
+    // Do not render if the svg is not rendered in document
+    const el = document.getElementById("canvas-container");
+    if (!el) return;
+    const svgEls = el.getElementsByTagName("svg");
+    if (svgEls.length === 1) {
+      this.inputs.forEach((input, index) => {
+        this.renderInput({
+          id: input.id,
+          type: input.type,
+          value: input.value,
+        });
+      });
+    }
+  }
+
+  // TEMPLATE EDITION
+
+  @action.bound
+  public zoomIn() {
+    const el = document.getElementById("canvas-container");
+    el && (el!.style.width = `${this.zoom + ZOOM_STEP}%`);
+    this.zoom += ZOOM_STEP;
+  }
+
+  @action.bound
+  public zoomOut() {
+    const el = document.getElementById("canvas-container");
+    el && (el!.style.width = `${this.zoom - ZOOM_STEP}%`);
+    this.zoom -= ZOOM_STEP;
+  }
+
+  @action.bound
+  public showInputs() {
+    const elems = document.getElementsByClassName("pro-container");
+    for (let i = 0; i < elems.length; i++) {
+      const el = elems[i];
+      //@ts-ignore
+      const inputId = el.dataset.inputId;
+      const inputStatus = this.inputs.find((input: any) => input.id === inputId)
+        .status;
+      const color = inputStatus === "valid" ? "green" : "red";
+      el.setAttribute("fill", color);
+      el.setAttribute("opacity", "0.3");
+    }
+  }
+
+  @action.bound
+  public hideInputs() {
+    const elems = document.getElementsByClassName("pro-container");
+    for (let i = 0; i < elems.length; i++) {
+      const el = elems[i];
+      el.setAttribute("fill", "transparent");
+    }
+  }
 }
 
 export const editorStore = new EditorStore(gazInputs);

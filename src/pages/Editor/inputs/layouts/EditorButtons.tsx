@@ -36,7 +36,7 @@ const IconBox = styled.button`
 `;
 
 export const SearchIconBox = IconBox.extend`
-  border-bottom: 1px solid ${props => props.theme.font_primary};
+  /* border-bottom: 1px solid ${props => props.theme.font_primary}; */
   color: ${props => props.theme.font_primary};
 `;
 
@@ -58,6 +58,16 @@ export const ActionIconBox: any = IconBox.extend`
       ? props.theme[props.color || "secondary"]
       : props.theme[props.color || "disabled"]};
   color: ${props => props.theme.font_secondary};
+  cursor: ${(props: any) => (!props.disabled ? "pointer" : "not-allowed")};
+`;
+
+export const ActionLinkBox: any = styled.a`
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  height: 40px;
+  color: ${(props: any) =>
+    !props.disabled ? props.theme["secondary"] : props.theme["disabled"]};
   cursor: ${(props: any) => (!props.disabled ? "pointer" : "not-allowed")};
 `;
 
@@ -93,10 +103,26 @@ export const ActionButton = (props: any) => (
     disabled={props.disabled}
     onMouseOver={props.onMouseOver}
     onMouseOut={props.onMouseOut}
+    style={{ margin: props.m }}
   >
     {props.label && <TextAction>{props.label}</TextAction>}
-    {props.icon && <FontAwesomeIcon icon={props.icon} />}
+    {props.icon && (
+      <FontAwesomeIcon icon={props.icon} style={{ fontSize: "14px" }} />
+    )}
   </ActionIconBox>
+);
+
+export const ActionLink = (props: any) => (
+  <ActionLinkBox
+    onClick={props.onClick}
+    disabled={props.disabled}
+    //style={{ margin: props.m }}
+  >
+    {props.label && <TextAction>{props.label}</TextAction>}
+    {props.icon && (
+      <FontAwesomeIcon icon={props.icon} style={{ fontSize: "14px" }} />
+    )}
+  </ActionLinkBox>
 );
 
 export const SelectButton = styled.button`
