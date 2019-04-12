@@ -6,8 +6,11 @@ import Item from "antd/lib/list/Item";
 
 export class ReportStore {
   @observable public reports: EditorStore[] = [];
+  @observable public sections: EditorStore[] = [];
+  @observable public inputs: EditorStore[] = [];
   @observable public activeReport: EditorStore | null = null;
   @observable public activeReportId: string = "";
+  @observable public fieldHighlighted: boolean = false;
 
   @action.bound
   public create() {
@@ -50,6 +53,11 @@ export class ReportStore {
   @action.bound
   public setActiveReport(id: string) {
     this.activeReport = this.reports.find(report => report.id === id)!;
+  }
+  
+  @action.bound
+  public setFieldHighlighted(payload: boolean) {
+    this.fieldHighlighted = payload;
   }
 }
 

@@ -31,6 +31,12 @@ export class SingleSelectStore {
   public reset() {
     this.value = "";
   }
+
+  @action.bound
+  public clone(input: SingleSelectStore) {
+    this.value = input.value;
+    this.tempValue = input.tempValue;
+  }
 }
 
 export default SingleSelectStore;

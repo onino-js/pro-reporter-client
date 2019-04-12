@@ -63,6 +63,7 @@ import {
   faFileExport,
   faDoorOpen,
   faSave,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faTachometerAlt);
@@ -129,3 +130,4 @@ library.add(faMinus);
 library.add(faFileExport);
 library.add(faDoorOpen);
 library.add(faSave);
+library.add(faEyeSlash);

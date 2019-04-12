@@ -2,11 +2,37 @@ import * as React from "react";
 import { Row, Col } from "antd";
 import { componentMapping } from "../../../services/input-mapping.service";
 import { SubsectionLabel } from "./../inputs/layouts/EditorTexts";
+import styled from "../../../styled-components";
 
 interface Props {
   inputs: any;
   sections?: any[];
 }
+
+const SectionContainer = styled.div`
+  width: 100%;
+  padding: 20px;
+  background-color: ${props => props.theme.disabled};
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
+const SectionTitle = styled.div`
+  font-size: 24px;
+  height: 24px;
+  padding: 0px;
+  margin-bottom: 20px;
+`;
+
+const SubsectionTitle = styled.div`
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid ${props => props.theme.bg_primary};
+  font-size: 1.3em;
+  margin-bottom: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+`;
 
 class FormComplete extends React.Component<Props> {
   public render() {
@@ -15,13 +41,15 @@ class FormComplete extends React.Component<Props> {
         <Col xl={14} md={24} sm={24} xs={24}>
           {this.props.sections &&
             this.props.sections.map((section, index) => (
-              <React.Fragment key={"subsection-" + index}>
-                <SubsectionLabel>{section.label}</SubsectionLabel>
+              <SectionContainer key={"section-" + index}>
+                <SectionTitle id={section.label}>
+                  {section.label.toUpperCase()}
+                </SectionTitle>
                 {section.subsections &&
                   section.subsections.map((sub: any, index: number) => (
                     <React.Fragment key={"subsection-" + index}>
-                      <SubsectionLabel>{sub.label}</SubsectionLabel>
-                      <div style={{ paddingBottom: "50px" }}>
+                      <SubsectionTitle>{sub.label}</SubsectionTitle>
+                      <div>
                         {this.props.inputs
                           .filter(
                             (input: any) =>
@@ -40,7 +68,7 @@ class FormComplete extends React.Component<Props> {
                       </div>
                     </React.Fragment>
                   ))}
-                <div style={{ paddingBottom: "50px" }}>
+                <div>
                   {this.props.inputs
                     .filter(
                       (input: any) =>
@@ -53,7 +81,7 @@ class FormComplete extends React.Component<Props> {
                       );
                     })}
                 </div>
-              </React.Fragment>
+              </SectionContainer>
             ))}
           {/* <React.Fragment key={"subsection-0"}>
             {this.props.inputs

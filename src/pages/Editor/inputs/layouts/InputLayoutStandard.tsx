@@ -58,7 +58,11 @@ const col4 = {
   md: 11,
   sm: 11,
   xs: 11,
-  ...flexCenter,
+  style: {
+    display: "flex",
+    flexWrap: "wrap" as "wrap",
+  },
+  // ...flexCenter,
 };
 const col5 = {
   xl: 3,

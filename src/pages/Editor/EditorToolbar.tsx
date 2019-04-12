@@ -43,7 +43,6 @@ const MenuItem = styled(Menu.Item)`
 }))
 @observer
 class EditorToolbar extends React.Component<Props> {
-  private createReport = () => this.props.reportStore!.create();
   private formEditionMode = () => {
     this.props.history.push("/editor/form");
   };
@@ -53,8 +52,15 @@ class EditorToolbar extends React.Component<Props> {
   private zoomIn = () => this.props.editorStore!.zoomIn();
   private zoomOut = () => this.props.editorStore!.zoomOut();
 
-  private showInputs = () => this.props.editorStore!.showInputs();
-  private hideInputs = () => this.props.editorStore!.hideInputs();
+  private hightlight = () => {
+    if (this.props.reportStore!.fieldHighlighted) {
+      this.props.reportStore!.setFieldHighlighted(false);
+      this.props.editorStore!.hideInputs();
+    } else {
+      this.props.reportStore!.setFieldHighlighted(true);
+      this.props.editorStore!.showInputs();
+    }
+  };
   private reset = () => this.props.editorStore!.reset();
   private deleteReport = () =>
     this.props.reportStore!.delete(this.props.editorStore!.id);
@@ -63,27 +69,50 @@ class EditorToolbar extends React.Component<Props> {
 
   public render() {
     const isDirectMode = this.props.location.pathname === "/editor/direct";
+    const isEditedReport = this.props.reportStore!.activeReport !== null;
     const fileMenu = (
       <Menu>
-        <MenuItem>
+        <MenuItem disabled={true}>
           <div>Enregistrer</div>
           <MenuIcon icon="save" />
         </MenuItem>
-        <MenuItem onClick={this.duplicate}>
-          <div>Dupliquer</div>
-          <MenuIcon icon="clone" />
-        </MenuItem>
-        <MenuItem>
+        <MenuItem disabled={!isEditedReport}>
           <div>Exporter</div>
           <MenuIcon icon="file-export" />
         </MenuItem>
-        <MenuItem onClick={this.deleteReport}>
-          <div>Supprimer</div>
+        <MenuItem disabled={!isEditedReport}>
+          <div>Importer</div>
+          <MenuIcon icon="file-export" />
+        </MenuItem>
+        <MenuItem disabled={!isEditedReport}>
+          <div>Vider</div>
           <MenuIcon icon="trash" />
         </MenuItem>
         <MenuItem>
           <div>Quitter mode édition</div>
           <MenuIcon icon="door-open" />
+        </MenuItem>
+      </Menu>
+    );
+    const reportMenu = (
+      <Menu>
+        <MenuItem onClick={this.duplicate} disabled={!isEditedReport}>
+          <div>Dupliquer</div>
+          <MenuIcon icon="clone" />
+        </MenuItem>
+        <MenuItem disabled={!isEditedReport}>
+          <div>Exporter</div>
+          <MenuIcon icon="file-export" />
+        </MenuItem>
+        <MenuItem onClick={this.deleteReport} disabled={!isEditedReport}>
+          <div>Supprimer</div>
+          <MenuIcon icon="trash" />
+        </MenuItem>
+        <MenuItem>
+          <div>Cloner les champs</div>
+        </MenuItem>
+        <MenuItem onClick={this.reset}>
+          <div>Vider les champs</div>
         </MenuItem>
       </Menu>
     );
@@ -105,35 +134,19 @@ class EditorToolbar extends React.Component<Props> {
         </MenuItem>
       </Menu>
     );
-    const fieldMenu = (
-      <Menu>
-        <MenuItem onClick={this.showInputs}>
-          <div>Montrer les champs</div>
-        </MenuItem>
-        <MenuItem onClick={this.hideInputs}>
-          <div>Masquer les champs</div>
-        </MenuItem>
-        <MenuItem>
-          <div>Récupérer</div>
-        </MenuItem>
-        <MenuItem onClick={this.reset}>
-          <div>Vider</div>
-        </MenuItem>
-      </Menu>
-    );
     return (
       <Container>
-        <a onClick={this.createReport}>
+        {/* <a onClick={this.createReport}>
           Nouveau <Icon type="plus" />
-        </a>
+        </a> */}
         <Dropdown overlay={fileMenu}>
           <a className="ant-dropdown-link" href="#">
-            Fichier <Icon type="down" />
+            Fichiers <Icon type="down" />
           </a>
         </Dropdown>
-        <Dropdown overlay={fieldMenu}>
+        <Dropdown overlay={reportMenu}>
           <a className="ant-dropdown-link" href="#">
-            Champs <Icon type="down" />
+            Rapport <Icon type="down" />
           </a>
         </Dropdown>
         <Dropdown overlay={displayMenu}>
@@ -141,6 +154,19 @@ class EditorToolbar extends React.Component<Props> {
             Affichage <Icon type="down" />
           </a>
         </Dropdown>
+
+        {isDirectMode && (
+          <a className="ant-dropdown-link" href="#" onClick={this.hightlight}>
+            {this.props.reportStore!.fieldHighlighted ? "Masquer" : "Montrer"}{" "}
+            les champs
+            <FontAwesomeIcon
+              style={{ marginLeft: "5px" }}
+              icon={
+                this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
+              }
+            />
+          </a>
+        )}
       </Container>
     );
   }

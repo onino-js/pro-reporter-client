@@ -149,6 +149,26 @@ export class CompareTwoImagesStore {
   };
 
   @action.bound
+  public clone(input: CompareTwoImagesStore) {
+    this.value = {...input.value};
+    this.data = { ...input.data };
+    this.tempData = { ...input.tempData };
+    this.imageName = input.imageName;
+    this.original = input.original;
+  }
+
+  @action.bound
+  public toJS() {
+    return {
+      value : this.value,
+      data : { ...this.data },
+      tempData : { ...this.tempData },
+      imageName : this.imageName,
+      original : this.original,
+    }
+  }
+
+  @action.bound
   public validateCanvas(payload: string) {
     this.setData();
     this.tempData[this.edited] = this.data[this.edited];

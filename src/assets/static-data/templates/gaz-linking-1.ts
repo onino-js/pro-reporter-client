@@ -396,15 +396,15 @@ export const template = `
    <g id="g26601" data-label="Détente" class="subsection">
     <text id="detente-type" style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-label="Type" xml:space="preserve" class="pro-input" data-type="string" y="445.69803" x="570.48468" type="string"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7" style="text-anchor:middle;text-align:center" font-size="12.5px" y="445.69803" x="570.48468">XXX</tspan></text>
     <g id="detente-nature" class="pro-input" data-type="single-select">
-     <text style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-value="existante" data-label="Existante?" y="463.41458" x="570.48468" type="string" xml:space="preserve"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-6" style="text-anchor:middle;text-align:center" font-size="12.5px" y="463.41458" x="570.48468">XXX</tspan></text>
-     <text style="word-spacing:0px;letter-spacing:0px" data-value="a-poser" xml:space="preserve" line-height="125%" y="481.1311" x="570.48468"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-63" style="text-anchor:middle;text-align:center" font-size="12.5px" y="481.1311" x="570.48468">XXX</tspan></text>
+     <text id="text435" style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-value="existante" data-label="Existante?" y="463.41458" x="570.48468" type="string" xml:space="preserve"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-6" style="text-anchor:middle;text-align:center" font-size="12.5px" y="463.41458" x="570.48468">XXX</tspan></text>
+     <text id="text438" style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-value="a-poser" xml:space="preserve" y="481.1311" x="570.48468"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-63" style="text-anchor:middle;text-align:center" font-size="12.5px" y="481.1311" x="570.48468">XXX</tspan></text>
     </g>
    </g>
-   <g data-label="Arrivée" class="subsection">
+   <g id="g441" data-label="Arrivée" class="subsection">
     <text id="arrivee-nature" style="word-spacing:0px;letter-spacing:0px" line-height="125%" xml:space="preserve" data-label="Nature" data-type="string" y="335.8555" x="632.49243" type="string" class="pro-input"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-3" style="text-anchor:middle;text-align:center" font-size="12.5px" y="335.8555" x="632.49243">XXX</tspan></text>
     <text id="arrivee-diameter" style="word-spacing:0px;letter-spacing:0px" line-height="125%" xml:space="preserve" data-label="Diamètre" data-type="string" y="335.8555" x="694.50037" type="string" class="pro-input"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-8" style="text-anchor:middle;text-align:center" font-size="12.5px" y="335.8555" x="694.50037">XXX</tspan></text>
    </g>
-   <g data-label="Pénétration" class="subsection">
+   <g id="g447" data-label="Pénétration" class="subsection">
     <text id="penetration-nature" style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-label="Nature" xml:space="preserve" class="pro-input" data-type="string" y="392.54843" x="632.49249" type="string"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-3-8" style="text-anchor:middle;text-align:center" font-size="12.5px" y="392.54843" x="632.49249">XXX</tspan></text>
     <text id="penetration-diameter" style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-label="Diamètre" xml:space="preserve" class="pro-input" data-type="string" y="392.54843" x="694.50043" type="string"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-3-0" style="text-anchor:middle;text-align:center" font-size="12.5px" y="392.54843" x="694.50043">XXX</tspan></text>
     <text id="penetration-conserv" style="word-spacing:0px;letter-spacing:0px" line-height="125%" data-label="Conservée?" xml:space="preserve" class="pro-input" data-type="string" y="427.98145" x="664.38226" type="string"><tspan id="tspan5652-6-5-6-5-9-9-7-1-7-3-04" style="text-anchor:middle;text-align:center" font-size="12.5px" y="427.98145" x="664.38226">XXX</tspan></text>
@@ -502,7 +502,7 @@ export const template = `
   <rect id="rect26525-1" data-input-id="compteur-conserv" display="inline" height="17.72" width="124" y="361.4" x="478.3" class="pro-container"/>
   <rect id="rect26525-5" data-input-id="compteur-date" display="inline" height="17.72" width="124" y="379.1" x="478.3" class="pro-container"/>
   <rect id="rect26525-9" data-input-id="compteur-number" display="inline" height="17.72" width="124" y="396.9" x="478.3" class="pro-container"/>
-  <rect data-input-id="detente-type" display="inline" height="17.72" width="124" y="432.3" x="478.3" class="pro-container"/>
+  <rect id="rect563" data-input-id="detente-type" display="inline" height="17.72" width="124" y="432.3" x="478.3" class="pro-container"/>
   <rect id="rect26525-9-1" data-input-id="detente-nature" display="inline" height="35.43" width="124" y="450" x="478.3" class="pro-container"/>
   <rect id="rect27909" data-input-id="arrivee-nature" display="inline" class="pro-container" height="35.43" width="60.24" y="304.7" x="602.4"/>
   <rect id="rect27909-5" data-input-id="arrivee-diameter" display="inline" class="pro-container" height="35.43" width="63.78" y="304.7" x="662.6"/>

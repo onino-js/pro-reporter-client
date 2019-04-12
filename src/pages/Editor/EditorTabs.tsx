@@ -14,16 +14,20 @@ interface Props {
 
 const Container = styled.div`
   width: 100%;
-  height: 40px;
+  height: auto;
+  padding-bottom : 10px;
   background-color: ${props => props.theme.disabled};
   border-top : 5px solid ${props => props.theme.secondary}
   display: flex;
+  flex-wrap : wrap;
 `;
 
 const Tab: any = styled.div.attrs({
   className: (props: any) => (props.active ? "active" : ""),
 })`
-  width: 70px;
+  flex: 1;
+  max-width: 70px;
+  min-width: 40px;
   height: 30px;
   line-height: 30px;
   text-align: center;
@@ -38,6 +42,10 @@ const Tab: any = styled.div.attrs({
   }
 `;
 
+const PlusTab = Tab.extend`
+  width: 70px;
+`;
+
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
   editorStore: allStores.editorStore,
@@ -49,9 +57,9 @@ class EditorTabs extends React.Component<Props> {
   public render() {
     return (
       <Container>
-        <Tab active={true} onClick={this.props.reportStore!.create}>
+        <PlusTab active={true} onClick={this.props.reportStore!.create}>
           <FontAwesomeIcon icon="plus" />
-        </Tab>
+        </PlusTab>
         {this.props.reportStore!.reports.map(
           (report: EditorStore, index: number) => (
             <Tab

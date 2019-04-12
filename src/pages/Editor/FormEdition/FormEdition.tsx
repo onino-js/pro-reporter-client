@@ -11,6 +11,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { Flex } from "../../../components/ui/Flex";
 import { ProContainer } from "../../../components/layouts/ProContainer";
 import FormComplete from "./FormComplete";
+import FormNavigation from "./FormNavigation";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -47,8 +48,13 @@ class FormEdition extends React.Component<Props> {
       <Flex>
         {sectionId ? (
           <React.Fragment>
-            <StepNavigation
+            {/* <StepNavigation
               menuItems={this.props.editorStore!.sections}
+              activeSectionIndex={this.state.activeSectionIndex}
+              setActiveSectionIndex={this.setActiveSectionIndex}
+            /> */}
+            <FormNavigation
+              sections={this.props.editorStore!.sections}
               activeSectionIndex={this.state.activeSectionIndex}
               setActiveSectionIndex={this.setActiveSectionIndex}
             />

@@ -85,7 +85,6 @@ class Preview extends React.Component<Props> {
         //@ts-ignore
         const inputId = el.dataset.inputId;
         const inputEl = document.getElementById(inputId);
-        console.log(inputId);
         //@ts-ignore
         const type: string = inputEl.dataset.type;
         el.addEventListener("click", () => {

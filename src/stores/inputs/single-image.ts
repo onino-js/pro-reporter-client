@@ -59,6 +59,13 @@ export class SingleImageStore {
   public onPhotoUpload(e: any) {
     this.addPhoto(e.target.files[0]);
   }
+
+  @action.bound
+  public clone(input: SingleImageStore) {
+    this.value = input.value;
+    this.tempValue = input.tempValue;
+    this.imageName = input.imageName;
+  }
 }
 
 export default SingleImageStore;

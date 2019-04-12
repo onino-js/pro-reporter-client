@@ -32,6 +32,12 @@ export class StringStore {
   public reset() {
     this.value = "";
   }
+
+  @action.bound
+  public clone(input : StringStore) {
+    this.value = input.value;
+    this.tempValue = input.tempValue;
+  }
 }
 
 export default StringStore;

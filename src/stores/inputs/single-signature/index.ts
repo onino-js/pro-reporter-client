@@ -85,4 +85,13 @@ export class SingleSignatureStore {
     this.original = "";
     this.canvasStore.clearCanvas();
   }
+
+  @action.bound
+  public clone(input: SingleSignatureStore) {
+    this.value = input.value;
+    this.data = { ...input.data };
+    this.tempData = { ...input.tempData };
+    this.imageName = input.imageName;
+    this.original = input.original;
+  }
 }
