@@ -25,7 +25,6 @@ const IconBox = styled.button`
   min-width: 40px;
   outline: none;
   border: none;
-  flex: 0;
   font-size: 1.5em;
   cursor: pointer;
   @media (max-width: ${_measures.tablet}px) {
@@ -157,6 +156,31 @@ export const OkButton = styled.button`
   height: 40px;
   cursor: pointer;
   width: 120px;
+  @media (max-width: ${_measures.tablet}px) {
+    font-size: 1em;
+    height: 30px;
+    width: 90px;
+  }
+`;
+
+export const NormalButton: any = styled.button.attrs({
+  className: (props: any) => (props.disabled ? "disabled" : ""),
+  disabled: (props: any) => props.disabled,
+})`
+  background-color: ${props => props.theme.primary};
+  border: none;
+  color: ${props => props.theme.font_secondary};
+  height: 40px;
+  cursor: pointer;
+  width: 120px;
+  &.disabled {
+    color: #fff;
+    background-color: ${props => props.theme.disabled};
+  }
+  @media (max-width: ${_measures.tablet}px) {
+    font-size: 1em;
+    height: 30px;
+  }
 `;
 
 export const CancelButton = styled.button`
@@ -168,6 +192,11 @@ export const CancelButton = styled.button`
   cursor: pointer;
   height: 40px;
   width: 120px;
+  @media (max-width: ${_measures.tablet}px) {
+    font-size: 1em;
+    height: 30px;
+    width: 90px;
+  }
 `;
 
 export const HiddenInputFile = styled.input.attrs({

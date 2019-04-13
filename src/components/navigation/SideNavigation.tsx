@@ -21,7 +21,7 @@ const menuItems = [
     page: "dashboard",
   },
   {
-    title: "Liste des rapports",
+    title: "Archives",
     icon: "tachometer-alt",
     color: "transparent",
     page: "reports-list",
@@ -36,7 +36,7 @@ const menuItems = [
     title: "Editeur",
     icon: "users",
     color: "transparent",
-    page: "editor/bley",
+    page: "editor/direct",
   },
 ];
 
@@ -111,12 +111,12 @@ class SideNavigation extends React.Component<Props> {
   public render() {
     return (
       <React.Fragment>
-        <MainMenuButton
+        {/* <MainMenuButton
           onClick={() => this.props.uiStore!.setState("showNewReport", true)}
         >
           <FontAwesomeIcon icon="plus" style={{ fontSize: "1.6em" }} />
           <div style={{ paddingLeft: "20px" }}>NOUVEAU RAPPORT</div>
-        </MainMenuButton>
+        </MainMenuButton> */}
         <NewReport />
         <Menu>
           {menuItems.map((item: any, index) => (

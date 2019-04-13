@@ -15,19 +15,21 @@ import {
   HiddenInputFile,
 } from "../layouts/EditorButtons";
 import { Col, Row } from "antd";
+import { ReportStore } from "../../../../stores/report.store";
+import { _measures } from "../../../../assets/styles/_measures";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
   input?: any;
-  editorStore?: EditorStore;
+  reportStore?: ReportStore;
 }
 
 const InputContainer: any = styled.div`
   display: ${(props: any) => (props.visible ? "flex" : "none")};
   background-color: ${props => props.theme.bg_secondary};
   border-top: 5px solid ${props => props.theme.secondary};
-  padding: 50px;
+  padding: 30px;
   flex-direction: column;
   justify-content: space-between;
   animation-name: animatetop;
@@ -40,12 +42,21 @@ const InputContainer: any = styled.div`
       opacity: 1;
     }
   }
+  @media (max-width: ${_measures.tablet}px) {
+    padding: 20px;
+  }
+  @media (max-width: 500px) {
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
 `;
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
-  editorStore: allStores.editorStore,
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
+  reportStore: allStores.reportStore,
 }))
 @observer
 class SingleImageDirect extends React.Component<Props> {
@@ -55,7 +66,7 @@ class SingleImageDirect extends React.Component<Props> {
   public onOk = () => {
     this.props.input.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
-    this.props.editorStore!.renderInput({
+    this.props.reportStore!.renderInput({
       id: this.props.input.id,
       type: this.props.input.type,
       value: this.props.input.value,
@@ -72,7 +83,7 @@ class SingleImageDirect extends React.Component<Props> {
         visible={this.props.uiStore!.isInputModalOpen}
       >
         <Row type="flex">
-          <Col xl={16}>
+          <Col xl={16} md={16} xs={24}>
             <InputLayoutStandard input={this.props.input}>
               <HiddenInputFile
                 id={"file-input-" + this.props.input!.id}
@@ -92,6 +103,8 @@ class SingleImageDirect extends React.Component<Props> {
           </Col>
           <Col
             xl={8}
+            md={8}
+            xs={24}
             style={{
               display: "flex",
               alignItems: "center",

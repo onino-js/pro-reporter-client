@@ -44,25 +44,21 @@ const col2 = {
   xl: 7,
   md: 7,
   sm: 7,
-  xs: 7,
-};
-const col3 = {
-  xl: 3,
-  md: 3,
-  sm: 3,
-  xs: 3,
-  ...flexCenter,
+  xs: 23,
+  style: {
+    height: "30px",
+    lineHeight: "30px",
+  },
 };
 const col4 = {
   xl: 11,
   md: 11,
   sm: 11,
-  xs: 11,
+  xs: 18,
   style: {
     display: "flex",
     flexWrap: "wrap" as "wrap",
   },
-  // ...flexCenter,
 };
 const col5 = {
   xl: 3,
@@ -78,7 +74,7 @@ const col6 = {
   xl: 2,
   md: 2,
   sm: 2,
-  xs: 2,
+  xs: 3,
   style: {
     display: "flex",
     justifyContent: "flex-end",

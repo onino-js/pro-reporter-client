@@ -3,8 +3,6 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import { EditorStore } from "../../../../stores/editor.store";
-import { ActionIconBox } from "../layouts/InputButtons";
 
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
@@ -19,13 +17,13 @@ import { Col, Row } from "antd";
 import FreeModal from "../../../../components/modals/FreeModal";
 import ImageEditor from "./ImageEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ReportStore } from "../../../../stores/report.store";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
   input?: any;
-  editorStore?: EditorStore;
+  reportStore?: ReportStore;
 }
 
 const InputContainer: any = styled.div`
@@ -75,14 +73,14 @@ const BottomRow = styled.div`
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
   input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
-  editorStore: allStores.editorStore,
+  reportStore: allStores.reportStore,
 }))
 @observer
 class CompareTwoImagesDirect extends React.Component<Props> {
   public onOk = () => {
     this.props.input.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
-    this.props.editorStore!.renderInput({
+    this.props.reportStore!.renderInput({
       id: this.props.input.id,
       type: this.props.input.type,
       value: this.props.input.value,

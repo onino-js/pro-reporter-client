@@ -7,8 +7,25 @@ export class UiStore {
   @observable public email: string = "";
   @observable public password: string = "";
   @observable public showNewReport: boolean = false;
+  @observable public showInfoModal: boolean = false;
   @observable public isInputModalOpen: boolean = false;
 
+  @action.bound 
+  public showModal(modal : string){
+    switch (modal){
+      case  "info" :
+      this.showInfoModal = true;
+      break;
+    }
+  }
+  @action.bound 
+  public hideModal(modal : string){
+    switch (modal){
+      case  "info" :
+      this.showInfoModal = false;
+      break;
+    }
+  }
   @action
   public setState = (key: keyof UiStore, value: boolean): void => {
     this[key] = value;

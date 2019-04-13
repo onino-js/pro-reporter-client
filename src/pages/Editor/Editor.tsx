@@ -2,7 +2,12 @@ import * as React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import { UiStore } from "../../stores/ui.store";
 import { EditorStore } from "../../stores/editor.store";
-import { RouteChildrenProps, Route } from "react-router";
+import {
+  RouteChildrenProps,
+  Route,
+  withRouter,
+  RouteComponentProps,
+} from "react-router";
 import FormEdition from "./FormEdition/FormEdition";
 import EditorToolbar from "./EditorToolbar";
 import Preview from "./Preview/Preview";
@@ -13,7 +18,7 @@ import EditorTabs from "./EditorTabs";
 import { ReportStore } from "../../stores/report.store";
 import { NoReport } from "./NoReport";
 
-interface Props extends RouteChildrenProps {
+interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   editorStore?: EditorStore;
   reportStore?: ReportStore;
@@ -28,6 +33,12 @@ interface Props extends RouteChildrenProps {
 class Editor extends React.Component<Props> {
   componentDidMount() {
     // get back template
+    if (
+      this.props.reportStore!.sections.length === 0 ||
+      this.props.reportStore!.inputs.length === 0
+    ) {
+      this.props.history.push("/dashboard");
+    }
   }
   public render() {
     const reports = this.props.reportStore!.reports;
@@ -51,4 +62,4 @@ class Editor extends React.Component<Props> {
   }
 }
 
-export default Editor;
+export default withRouter(Editor);

@@ -5,16 +5,16 @@ import { UiStore } from "../../../stores/ui.store";
 import { EditorStore } from "../../../stores/editor.store";
 import { RouteChildrenProps } from "react-router";
 import styled from "styled-components";
-import PreviewToolbar from "./PreviewToolbar";
 import { componentDirectMapping } from "../../../services/input-mapping.service";
 import { Flex } from "../../../components/ui/Flex";
 import { _measures } from "../../../assets/styles/_measures";
-import template2 from "../../../assets/static-data/templates/gaz-template.svg";
+import { ReportStore } from "../../../stores/report.store";
 
 interface Props extends RouteChildrenProps {
   uiStore?: UiStore;
   editorStore?: EditorStore;
   activeReport?: EditorStore;
+  reportStore?: ReportStore;
 }
 
 const CanvasContainer = styled.div`
@@ -40,6 +40,7 @@ const Wrapper = styled.div`
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
   editorStore: allStores.reportStore.activeReport,
+  reportStore: allStores.reportStore,
   activeReport: allStores.reportStore.activeReport,
 }))
 @observer
@@ -58,21 +59,18 @@ class Preview extends React.Component<Props> {
 
   componentWillReceiveProps(newProps: any) {
     const render = newProps.activeReport.id !== this.props.activeReport!.id;
-    render && this.initialize(newProps.activeReport);
+    render && this.props.reportStore!.renderCanvas();
   }
 
   private initialize = (report: EditorStore) => {
-    report.mountTemplate("canvas-container");
+    this.props.reportStore!.mountTemplate("canvas-container");
     // set container layer
     this.containerLayer = document.getElementById("container-layer");
     // show container layer
     this.containerLayer!.setAttribute("display", "inline");
     // hide containers
     this.hideContainers();
-    // check if there is inputs in editor store
-    const inputs = report.inputs;
-    if (inputs.length === 0) report.buildInputAndSections();
-    report.renderCanvas();
+    this.props.reportStore!.renderCanvas();
     this.addListeners();
   };
 
@@ -106,13 +104,6 @@ class Preview extends React.Component<Props> {
         });
       }
     }
-    // this.props.editorStore!.inputs.forEach((input, index) => {
-    //   this.addListener({
-    //     id: input.id,
-    //     type: input.type,
-    //     value: input.value,
-    //   });
-    // });
   };
 
   private hideContainers = () => {
@@ -123,26 +114,6 @@ class Preview extends React.Component<Props> {
     }
   };
 
-  private addListener = ({ id, type, value }: any) => {
-    const el = document.getElementById(id + "-container");
-    if (el) {
-      el.addEventListener("click", () => {
-        const Input = componentDirectMapping[type];
-        this.setState({
-          modalContent: <Input inputId={id} />,
-        });
-        this.props.uiStore!.setIsInputModalOpen(true);
-      });
-      el.addEventListener("mouseover", () => {
-        el.setAttribute("fill", "red");
-        el.setAttribute("opacity", "0.3");
-      });
-      el.addEventListener("mouseout", () => {
-        el.setAttribute("fill", "transparent");
-      });
-    }
-  };
-
   public render() {
     return (
       <Flex dir="c">
@@ -150,10 +121,6 @@ class Preview extends React.Component<Props> {
           <CanvasContainer>
             <div id="canvas-container" />
           </CanvasContainer>
-          {/* <PreviewToolbar
-            showAnswer={this.showAnswer}
-            hideAnswer={this.hideAnswer}
-          /> */}
         </Wrapper>
         {this.state.modalContent}
       </Flex>

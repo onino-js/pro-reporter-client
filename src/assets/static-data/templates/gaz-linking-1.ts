@@ -1,5 +1,5 @@
 export const template = `
-<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="297mm" width="210mm" version="1.1" enable-background="new" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 744.09448819 1052.3622047" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg"  width="100%" version="1.1" enable-background="new" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 744.09448819 1052.3622047" xmlns:dc="http://purl.org/dc/elements/1.1/">
  <defs id="defs4">
   <filter id="filter16285" style="color-interpolation-filters:sRGB">
    <feBlend id="feBlend16287" in2="BackgroundImage" mode="lighten"/>

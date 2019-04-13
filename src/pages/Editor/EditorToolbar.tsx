@@ -49,16 +49,16 @@ class EditorToolbar extends React.Component<Props> {
   private templateEditionMode = () => {
     this.props.history.push("/editor/direct");
   };
-  private zoomIn = () => this.props.editorStore!.zoomIn();
-  private zoomOut = () => this.props.editorStore!.zoomOut();
+  private zoomIn = () => this.props.reportStore!.zoomIn();
+  private zoomOut = () => this.props.reportStore!.zoomOut();
 
   private hightlight = () => {
     if (this.props.reportStore!.fieldHighlighted) {
       this.props.reportStore!.setFieldHighlighted(false);
-      this.props.editorStore!.hideInputs();
+      this.props.reportStore!.hideInputs();
     } else {
       this.props.reportStore!.setFieldHighlighted(true);
-      this.props.editorStore!.showInputs();
+      this.props.reportStore!.showInputs();
     }
   };
   private reset = () => this.props.editorStore!.reset();
@@ -136,9 +136,6 @@ class EditorToolbar extends React.Component<Props> {
     );
     return (
       <Container>
-        {/* <a onClick={this.createReport}>
-          Nouveau <Icon type="plus" />
-        </a> */}
         <Dropdown overlay={fileMenu}>
           <a className="ant-dropdown-link" href="#">
             Fichiers <Icon type="down" />
@@ -162,7 +159,7 @@ class EditorToolbar extends React.Component<Props> {
             <FontAwesomeIcon
               style={{ marginLeft: "5px" }}
               icon={
-                this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
+                !this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
               }
             />
           </a>

@@ -8,6 +8,8 @@ import { AllStores } from "../../../../models/all-stores.model";
 import { ActionButton } from "../layouts/InputButtons";
 import ObjectEditorToolbar from "./ObjectEditorToolbar";
 import ObjectEditorSidebar from "./ObjectEditorSidebar";
+import { CancelButton, OkButton } from "../layouts/EditorButtons";
+import { _measures } from "../../../../assets/styles/_measures";
 
 interface Props {
   //  inputId: any;
@@ -29,11 +31,19 @@ const Title = styled.h2`
   border-bottom: 1px solid ${props => props.theme.bg_secondary};
 `;
 const CanvasBox: any = styled.div`
-  width: ${(props: any) => props.width}px;
-  height: ${(props: any) => props.height}px;
+  width: 700px;
+  height: ${(props: any) => 700 * props.ratio}px;
   outline: 1px dashed ${props => props.theme.secondary};
   margin: auto;
   /* margin-top: 50px; */
+  @media (max-width: ${_measures.tablet}px) {
+    width: 400px;
+    height: ${(props: any) => 400 * props.ratio}px;
+  }
+  @media (max-width: 500px) {
+    width: 300px;
+    height: ${(props: any) => 300 * props.ratio}px;
+  }
 `;
 const Header = styled.div`
   width: 100%;
@@ -67,24 +77,6 @@ const Footer = styled.div`
   display: flex;
   justify-content: center;
   background-color: ${props => props.theme.bg_secondary};
-`;
-const OkButton = styled.button`
-  background-color: ${props => props.theme.primary};
-  border: none;
-  color: ${props => props.theme.font_secondary};
-  height: 40px;
-  cursor: pointer;
-  width: 120px;
-`;
-const CancelButton = styled.button`
-  background-color: transparent;
-  margin-left: 10px;
-  margin-right: 10px;
-  border: 1px solid ${props => props.theme.font_secondary};
-  color: ${props => props.theme.font_secondary};
-  cursor: pointer;
-  height: 40px;
-  width: 120px;
 `;
 const Clickable = styled.div`
   width: 0px;
@@ -125,7 +117,6 @@ class ImageEditor extends React.Component<Props> {
     //     }
     //   }
     // }
-
     const imageRatio =
       this.props.input.options.height / this.props.input.options.width;
     const canvasWidth = 600;
@@ -159,6 +150,7 @@ class ImageEditor extends React.Component<Props> {
               id={"canvas-container" + this.props.input.canvasId}
               width={canvasWidth}
               height={canvasHeight}
+              ratio={imageRatio}
             >
               <canvas id={this.props.input.canvasId} />
             </CanvasBox>

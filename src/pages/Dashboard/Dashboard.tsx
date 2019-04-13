@@ -2,21 +2,30 @@ import * as React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import SubLayout from "../../components/layouts/SubLayout";
 import SideNavigation from "../../components/navigation/SideNavigation";
-import { checkTemplate } from "../../services/template.service";
-import { template } from "../../assets/static-data/templates/gaz-linking-1";
+import { ProContainer } from "../../components/layouts/ProContainer";
+import { withRouter, RouteComponentProps } from "react-router";
+import { ReportStore } from "../../stores/report.store";
+import { inject, observer } from "mobx-react";
+import { AllStores } from "../../models/all-stores.model";
+import SelectTemplate from "./SelectTemplate";
+import ReportList from "./ReportList";
 
-interface Props {
+interface Props extends RouteComponentProps {
   uiStore?: any;
+  reportStore: ReportStore;
 }
+
+@inject((allStores: AllStores) => ({
+  uiStore: allStores.uiStore,
+  reportStore: allStores.reportStore,
+}))
+@observer
 class Dashboard extends React.Component<Props> {
   public state = {
-    activeItemIndex: 0,
+    selectedTemplateId: null,
   };
 
-  componentDidMount() {
-    const res = checkTemplate(template);
-    console.log(res);
-  }
+  componentDidMount() {}
 
   public render() {
     return (
@@ -25,11 +34,17 @@ class Dashboard extends React.Component<Props> {
           activePage="dashboard"
           sideContent={<SideNavigation activePage={"dashboard"} />}
         >
-          <React.Fragment>bley</React.Fragment>
+          <ProContainer>
+            {this.props.reportStore!.reports.length === 0 ? (
+              <SelectTemplate />
+            ) : (
+              <ReportList />
+            )}
+          </ProContainer>
         </SubLayout>
       </MainLayout>
     );
   }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);

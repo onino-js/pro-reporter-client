@@ -9,12 +9,10 @@ import { inject, observer, Provider } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
 import logo from "../../assets/images/LOGO_PROREPORTER_light.png";
+import { withRouter, RouteComponentProps } from "react-router";
+import InfoModal from "../modals/InfoModal";
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
-// import { inject, observer } from "mobx-react";
-
-interface Props {
+interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   isLogged?: boolean;
 }
@@ -27,6 +25,7 @@ const Logo = styled.div`
   z-index: 100;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const Container = styled.div`
@@ -130,22 +129,32 @@ class MainHeader extends React.Component<Props> {
     this.props.uiStore!.setIsLogged(false);
     signOut();
   };
+  private goHome = () => {
+    this.props.history.push("/");
+  };
+  private showInfoModal = () => this.props.uiStore!.showModal("info");
+  private closeInfoModal = () => this.props.uiStore!.hideModal("info");
+
   public render() {
     return (
       <Container>
         <RightBox>
-          <Logo>
+          <Logo onClick={this.goHome}>
             <img src={logo} width="150px" />
           </Logo>
-          <HeaderButton>
+          {/* <HeaderButton>
             LEXIQUE <FontAwesomeIcon icon="book-open" className="gi-icon" />
           </HeaderButton>
           <HeaderButton>
             AIDE <FontAwesomeIcon icon="question-circle" className="gi-icon" />
-          </HeaderButton>
+          </HeaderButton> */}
         </RightBox>
         <LeftBox>
-          <Dropdown
+          <HeaderButton onClick={this.showInfoModal}>
+            A propod
+            <FontAwesomeIcon icon="question-circle" className="gi-icon" />
+          </HeaderButton>
+          {/* <Dropdown
             overlay={<UserMenu onClick={this.signOut} />}
             placement="bottomRight"
           >
@@ -155,7 +164,7 @@ class MainHeader extends React.Component<Props> {
                 <div>seba.pinard@gmail.com</div>
               </div>
             </HeaderButton>
-          </Dropdown>
+          </Dropdown> */}
         </LeftBox>
         <Band1 n={0} />
         <Band2 n={1} />
@@ -163,9 +172,13 @@ class MainHeader extends React.Component<Props> {
         <Band2 n={3} />
         <Band1 n={4} />
         <Band2 n={5} />
+        <InfoModal
+          show={this.props.uiStore!.showInfoModal}
+          close={this.closeInfoModal}
+        />
       </Container>
     );
   }
 }
 
-export default MainHeader;
+export default withRouter(MainHeader);
