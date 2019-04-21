@@ -1,28 +1,36 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
-import { EditorStore } from "../../stores/editor.store";
-import { Button, Dropdown, Icon, Menu } from "antd";
+import { Report } from "../../stores/report";
+import { Dropdown, Icon, Menu } from "antd";
 import styled from "../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReportStore } from "../../stores/report.store";
+import { startConvertion } from "../../services/cloud-converter.service";
+import { saveAs } from "file-saver";
+import DuplicateModal from "./editor-modals/DuplicateModal";
+import { UiStore } from "../../stores/ui.store";
+import { Button } from "antd/lib/radio";
+import { Flex } from "../../components/ui/Flex";
+import { deleteAllActiveReports } from "../../services/firebase.srevice";
+import { AuthStore } from "../../stores/auth.store";
 
 interface Props extends RouteComponentProps {
-  editorStore?: EditorStore;
+  Report?: Report;
   reportStore?: ReportStore;
+  uiStore?: UiStore;
+  authStore?: AuthStore;
 }
 
 const Container = styled.div`
   width: 100%;
   height: 40px;
   background-color: ${props => props.theme.secondary};
-  a {
-    color: ${props => props.theme.font_secondary};
-    line-height: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const MenuIcon = styled(FontAwesomeIcon)`
@@ -36,10 +44,43 @@ const MenuItem = styled(Menu.Item)`
   align-items: center;
 `;
 
+const ActionLink = styled.span`
+  color: ${props => props.theme.font_secondary};
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
+`;
+
+const ProDropdown: any = styled(Dropdown).attrs({
+  trigger: ["hover", "click"],
+})`
+  height: 100%;
+  line-height: 40px;
+`;
+
+const SyncButtton = styled(Button)`
+  border: none;
+  outline: none;
+  color: ${props => props.theme.secondary};
+  background-color: ${props => props.theme.font_secondary};
+  :hover {
+    color: ${props => props.theme.primary};
+  }
+`;
+
+const TemplateDropdown = ProDropdown.extend`
+  color: ${(props: any) => props.theme.secondary};
+  background-color: ${(props: any) => props.theme.disabled};
+  padding: 0px 10px;
+  margin: 0px;
+  font-weight: bolder;
+`;
+
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  editorStore: allStores.reportStore.activeReport,
+  Report: allStores.reportStore.activeReport,
   reportStore: allStores.reportStore,
+  authStore: allStores.authStore,
 }))
 @observer
 class EditorToolbar extends React.Component<Props> {
@@ -58,14 +99,38 @@ class EditorToolbar extends React.Component<Props> {
       this.props.reportStore!.hideInputs();
     } else {
       this.props.reportStore!.setFieldHighlighted(true);
-      this.props.reportStore!.showInputs();
+      this.props.reportStore!.renderContainers();
     }
   };
-  private reset = () => this.props.editorStore!.reset();
+
+  private reset = () => this.props.reportStore!.reset();
   private deleteReport = () =>
-    this.props.reportStore!.delete(this.props.editorStore!.id);
-  private duplicate = () =>
-    this.props.reportStore!.duplicate(this.props.editorStore!.id);
+    this.props.reportStore!.delete(this.props.Report!.id);
+
+  private duplicate = () => this.props.reportStore!.duplicate();
+
+  private exportReportSvg = async () => {
+    const svg = this.props.reportStore!.getSvg();
+    var blob = new Blob([svg], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, "test.svg");
+  };
+
+  private exportReportPdf = async () => {
+    const svg = this.props.reportStore!.getSvg();
+    const res = await startConvertion(svg);
+    // saveAs(blob, "test.svg");
+  };
+
+  private customDuplicateRequest = () =>
+    this.props.uiStore!.showModal("duplicate");
+
+  private synchronize = () => {
+    this.props.reportStore!.synchronize();
+  };
+
+  private deleteAll = () => {
+    deleteAllActiveReports(this.props.authStore!.userId);
+  };
 
   public render() {
     const isDirectMode = this.props.location.pathname === "/editor/direct";
@@ -84,7 +149,7 @@ class EditorToolbar extends React.Component<Props> {
           <div>Importer</div>
           <MenuIcon icon="file-export" />
         </MenuItem>
-        <MenuItem disabled={!isEditedReport}>
+        <MenuItem onClick={this.deleteAll}>
           <div>Vider</div>
           <MenuIcon icon="trash" />
         </MenuItem>
@@ -94,23 +159,36 @@ class EditorToolbar extends React.Component<Props> {
         </MenuItem>
       </Menu>
     );
+
     const reportMenu = (
       <Menu>
         <MenuItem onClick={this.duplicate} disabled={!isEditedReport}>
-          <div>Dupliquer</div>
+          <div>Dupliquer le rapport</div>
+          <MenuIcon icon="clone" />
+        </MenuItem>
+        <MenuItem
+          onClick={this.customDuplicateRequest}
+          disabled={!isEditedReport}
+        >
+          <div>Dupliquer custom</div>
           <MenuIcon icon="clone" />
         </MenuItem>
         <MenuItem disabled={!isEditedReport}>
-          <div>Exporter</div>
+          <div>Cloner les champs</div>
+        </MenuItem>
+        <MenuItem onClick={this.exportReportSvg} disabled={!isEditedReport}>
+          <div>Exporter svg</div>
+          <MenuIcon icon="file-export" />
+        </MenuItem>
+        <MenuItem onClick={this.exportReportPdf} disabled={!isEditedReport}>
+          <div>Exporter pdf</div>
           <MenuIcon icon="file-export" />
         </MenuItem>
         <MenuItem onClick={this.deleteReport} disabled={!isEditedReport}>
           <div>Supprimer</div>
           <MenuIcon icon="trash" />
         </MenuItem>
-        <MenuItem>
-          <div>Cloner les champs</div>
-        </MenuItem>
+
         <MenuItem onClick={this.reset}>
           <div>Vider les champs</div>
         </MenuItem>
@@ -124,6 +202,18 @@ class EditorToolbar extends React.Component<Props> {
         <MenuItem onClick={this.templateEditionMode} disabled={isDirectMode}>
           <div>Mode template</div>
         </MenuItem>
+        <MenuItem
+          onClick={this.hightlight}
+          disabled={!isDirectMode || !isEditedReport}
+        >
+          {this.props.reportStore!.fieldHighlighted ? "Masquer" : "Montrer"} les
+          champs
+          <MenuIcon
+            icon={
+              !this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
+            }
+          />
+        </MenuItem>
         <MenuItem onClick={this.zoomIn} disabled={!isDirectMode}>
           Zoom in
           <MenuIcon icon="plus" />
@@ -136,34 +226,27 @@ class EditorToolbar extends React.Component<Props> {
     );
     return (
       <Container>
-        <Dropdown overlay={fileMenu}>
-          <a className="ant-dropdown-link" href="#">
-            Fichiers <Icon type="down" />
-          </a>
-        </Dropdown>
-        <Dropdown overlay={reportMenu}>
-          <a className="ant-dropdown-link" href="#">
-            Rapport <Icon type="down" />
-          </a>
-        </Dropdown>
-        <Dropdown overlay={displayMenu}>
-          <a className="ant-dropdown-link" href="#">
-            Affichage <Icon type="down" />
-          </a>
-        </Dropdown>
-
-        {isDirectMode && (
-          <a className="ant-dropdown-link" href="#" onClick={this.hightlight}>
-            {this.props.reportStore!.fieldHighlighted ? "Masquer" : "Montrer"}{" "}
-            les champs
-            <FontAwesomeIcon
-              style={{ marginLeft: "5px" }}
-              icon={
-                !this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
-              }
-            />
-          </a>
-        )}
+        <Flex>
+          <ProDropdown overlay={fileMenu}>
+            <ActionLink>
+              Fichiers <Icon type="down" />
+            </ActionLink>
+          </ProDropdown>
+          <ProDropdown overlay={reportMenu}>
+            <ActionLink>
+              Rapport <Icon type="down" />
+            </ActionLink>
+          </ProDropdown>
+          <ProDropdown overlay={displayMenu}>
+            <ActionLink>
+              Affichage <Icon type="down" />
+            </ActionLink>
+          </ProDropdown>
+        </Flex>
+        <Flex alignH="flex-end" p="0px 5px 0px 0px">
+          <SyncButtton onClick={this.synchronize}>SYNCHRONISER </SyncButtton>
+        </Flex>
+        <DuplicateModal />
       </Container>
     );
   }

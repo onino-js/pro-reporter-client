@@ -16,16 +16,21 @@ export class SingleSignatureStore {
   @observable public isEditVisible: boolean = false;
   @observable public original: string = "";
   @observable public options: any = {};
+  @observable public mandatory: boolean = false;
 
   @computed
   get status() {
     return this.value === "" ? "untouched" : "valid";
   }
 
-  constructor(options: any) {
-    Object.assign(this, options);
+  constructor(input: any) {
+    Object.assign(this, input);
     this.canvasId = uuid();
-    this.canvasStore = new CanvasStore({ id: this.canvasId });
+    this.canvasStore = new CanvasStore({
+      id: this.canvasId,
+      width: input.options.width,
+      height: input.options.height,
+    });
   }
 
   @action.bound
@@ -36,6 +41,11 @@ export class SingleSignatureStore {
   @action.bound
   public setIsEditVisible(payload: boolean) {
     this.isEditVisible = payload;
+    if (payload) {
+      this.initialize();
+    } else {
+      this.canvasStore.unmountCanvas();
+    }
   }
 
   @action.bound

@@ -4,9 +4,18 @@ export class StringStore {
   @observable public value: string = "";
   @observable public tempValue: string = "";
   @observable public id: string = "";
+  @observable public mandatory: boolean = false;
   @computed
   get status() {
-    return this.value === "" ? "untouched" : "valid";
+    let status: string = "valid";
+    if (this.value === "") {
+      status = "untouched";
+    } else if (this.value.length < 2) {
+      status = "error";
+    } else {
+      status = "valid";
+    }
+    return status;
   }
 
   constructor(options: any) {
@@ -34,7 +43,7 @@ export class StringStore {
   }
 
   @action.bound
-  public clone(input : StringStore) {
+  public clone(input: StringStore) {
     this.value = input.value;
     this.tempValue = input.tempValue;
   }

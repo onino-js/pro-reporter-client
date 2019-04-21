@@ -1,17 +1,15 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
-import InputLayoutModal from "../layouts/InputLayoutModal";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import { EditorStore } from "../../../../stores/editor.store";
 
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import { OkButton, CancelButton } from "../layouts/EditorButtons";
 import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
+import { CancelButton, OkButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   uiStore?: UiStore;
@@ -67,6 +65,8 @@ class StringInputDirect extends React.Component<Props> {
       type: this.props.input.type,
       value: this.props.input.value,
     });
+    this.props.reportStore!.fieldHighlighted &&
+      this.props.reportStore!.renderContainers();
   };
   public onCancel = () => {
     this.props.input.retsoreValue();

@@ -39,9 +39,12 @@ const ValueBox = styled.div`
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
-  value: allStores.editorStore.inputs.filter(item => item.id === inputId)[0]
-    .value,
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
+  value: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0].value,
 }))
 @observer
 class SliderInput extends React.Component<ISliderInputProps> {

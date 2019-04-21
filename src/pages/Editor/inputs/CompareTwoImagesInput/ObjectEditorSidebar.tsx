@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
-import { ActionIconBox, ActionButton } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Divider, Input, Slider } from "antd";
+import {  Divider, Input, Slider } from "antd";
+import { ActionButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   input: any;
@@ -81,6 +81,8 @@ class ObjectEditorSidebar extends React.Component<Props> {
     this.forceUpdate();
   };
 
+  private remove = () => this.props.input.removeSelection();
+
   public render() {
     const activeObjects = this.props.activeObjects;
     return (
@@ -131,6 +133,11 @@ class ObjectEditorSidebar extends React.Component<Props> {
                 min={0}
                 max={10}
                 step={1}
+              />
+              <ActionButton
+                onClick={this.remove}
+                title={"Supprimmer la sélection"}
+                icon="trash"
               />
             </Body>
           ) : (

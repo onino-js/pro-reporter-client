@@ -6,21 +6,49 @@ import Routes from "./components/routes/Routes";
 import { startAuthListener, startAuth } from "./services/firebase.srevice";
 import { AllStores } from "./models/all-stores.model";
 import uiStore, { UiStore } from "./stores/ui.store";
-import { editorStore } from "./stores/editor.store";
+import { Report } from "./stores/report";
 import reportStore from "./stores/report.store";
+import authStore, { AuthStore } from "./stores/auth.store";
+import * as firebase from "firebase";
+import styled from "./styled-components";
 
 interface Props {
   uiStore?: UiStore;
+  authStore?: AuthStore;
   isLogged?: boolean;
 }
 
+const AuthContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const LoadingContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: "red";
+`;
+
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  isLogged: allStores.uiStore.isLogged,
+  authStore: allStores.authStore,
+  isLogged: allStores.authStore.isLogged,
 }))
 @observer
 class App extends Component<Props> {
   componentDidMount() {
+    // firebaseui.start('#firebaseui-auth-container', {
+    //   signInOptions: [
+    //     firebase.auth.EmailAuthProvider.PROVIDER_ID
+    //   ],
+    //   // Other config options...
+    // });
+    console.log(firebase.auth().currentUser);
     if (!this.props.isLogged) {
       startAuth();
       startAuthListener(this.signIn, this.signOut);
@@ -28,19 +56,23 @@ class App extends Component<Props> {
   }
 
   private signIn = (payload: any) => {
-    this.props.uiStore!.setIsLogged(true);
-    this.props.uiStore!.setDisplayName(payload.displayName);
+    this.props.authStore!.setIsLogged(true);
+    this.props.authStore!.setDisplayName(payload.displayName);
   };
   private signOut = () => {
-    this.props.uiStore!.setIsLogged(false);
-    this.props.uiStore!.setDisplayName("");
+    this.props.authStore!.setIsLogged(false);
+    this.props.authStore!.setDisplayName("");
   };
 
   render() {
+    console.log("logged", this.props.isLogged);
     return (
       <ThemeProvider theme={mainTheme}>
         {!this.props.isLogged ? (
-          <div id="firebaseui-auth-container" />
+          <React.Fragment>
+            <AuthContainer id="firebaseui-auth-container" />
+            {/* <LoadingContainer id="loading">Loading</LoadingContainer> */}
+          </React.Fragment>
         ) : (
           <Routes />
         )}
@@ -52,8 +84,9 @@ class App extends Component<Props> {
 export default () => (
   <Provider
     uiStore={uiStore}
-    editorStore={editorStore}
+    Report={Report}
     reportStore={reportStore}
+    authStore={authStore}
   >
     <App />
   </Provider>

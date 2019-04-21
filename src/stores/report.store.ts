@@ -1,47 +1,81 @@
-import { storeMapping } from "./../services/input-mapping.service";
+import { mapToArray } from "./../services/app.service";
+import { Itemplate, Ireport, IreportMap } from "./../models/template.model";
+import {
+  updateReport,
+  createReport,
+  getReports,
+} from "./../services/firebase.srevice";
+import { getStatusColor } from "./../services/template.service";
 import uuid from "uuid/v1";
-import { EditorStore } from "./editor.store";
-import { observable, action } from "mobx";
+import { Report } from "./report";
+import { observable, action, toJS, flow } from "mobx";
+import authStore from "./auth.store";
+import uiStore from "./ui.store";
 
-const ZOOM_STEP: number = 5;
+const ZOOM_STEP: number = 20;
 
 export class ReportStore {
-  @observable public template: string | null = null;
-  @observable public reports: EditorStore[] = [];
-  @observable public sections: any[] = [];
-  @observable public inputs: any[] = [];
-  @observable public activeReport: EditorStore | null = null;
+  @observable public template: Itemplate | null = null;
+  @observable public reports: Report[] = [];
+  @observable public reportList: Ireport[] = [];
+  @observable public activeReport: Report | null = null;
   @observable public activeReportId: string = "";
   @observable public fieldHighlighted: boolean = false;
   @observable public zoom: number = 100;
 
   @action.bound
-  public setTemplate(template: string) {
+  public setTemplate(template: Itemplate) {
     this.template = template;
+    this.activeReport = null;
   }
 
   @action.bound
-  public initialize() {
-    const svg = this.buildContainer();
-    this.buildInputAndSections(svg);
-  }
+  public setReportList = (reports: Ireport[]) => {
+    this.reportList = reports;
+  };
+
+  @action.bound
+  public getReportList = () => {
+    getReports(authStore.userId, (reports: IreportMap) => {
+      this.setReportList(mapToArray(reports));
+      uiStore!.setIsReportsLoaded(true);
+    });
+  };
 
   @action.bound
   public mountTemplate(id: string) {
-    document.getElementById(id)!.innerHTML = this.template as string;
+    this.template &&
+      (document.getElementById(id)!.innerHTML = this.template.svg as string);
+    const svg = document.getElementById(id)!.getElementsByTagName("svg")[0];
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "auto");
+  }
+
+  @action.bound
+  public getSvg() {
+    return document.getElementById("canvas-container")!.innerHTML;
   }
 
   @action.bound
   public create() {
     const id = uuid();
-    const newReport = new EditorStore({
+    const newReport = new Report({
       template: this.template,
       id,
-      inputs: this.inputs,
-      sections: this.sections,
+      inputs: this.template!.inputs,
+      sections: this.template!.sections,
     });
     this.reports.push(newReport);
     this.setActiveReport(id);
+    window.setTimeout(
+      () =>
+        createReport({
+          userId: authStore.userId,
+          reportId: id,
+          report: newReport.asJson(),
+        }),
+      100,
+    );
   }
 
   @action.bound
@@ -59,18 +93,67 @@ export class ReportStore {
   }
 
   @action.bound
-  public duplicate(id: string) {
-    const report = this.reports.find(report => report.id === id);
-    if (!report) return;
+  public reset() {
+    this.activeReport &&
+      this.activeReport.inputs.forEach(input => input.reset());
+    this.renderCanvas();
+  }
+
+  @action.bound
+  public duplicate() {
+    const newId = uuid();
+    if (!this.activeReport) return;
     else {
-      const newId = uuid();
-      const newReport = new EditorStore({ template: this.template, id: newId });
+      const newInputs = this.activeReport!.inputs.map((input: any) =>
+        toJS(input),
+      );
+      const newReport = new Report({
+        template: this.template,
+        inputs: newInputs,
+        sections: this.template!.sections,
+        id: newId,
+      });
       this.reports.push(newReport);
       this.setActiveReport(newReport.id);
-      // newReport.inputs.forEach(input => {
-      //   const inputToClone = report.inputs.find(item => item.id === input.id);
-      //   if (inputToClone) input.clone(inputToClone);
-      // });
+      window.setTimeout(
+        () =>
+          createReport({
+            userId: authStore.userId,
+            reportId: newReport.id,
+            report: newReport.asJson(),
+          }),
+        100,
+      );
+    }
+  }
+
+  @action.bound
+  public customDuplicate({ nb, sectionsIds }: any) {
+    if (!this.activeReport) return;
+    else {
+      let lastId = "";
+      for (let i = 0; i < nb; i++) {
+        const newId = uuid();
+        const newInputs = this.activeReport!.inputs.map((input: any) =>
+          toJS(input),
+        );
+        const newReport = new Report({
+          template: this.template,
+          inputs: newInputs,
+          sections: this.template!.sections,
+          id: newId,
+        });
+        this.reports.push(newReport);
+        lastId = newReport.id;
+
+        // firebase creation
+        createReport({
+          userId: authStore.userId,
+          reportId: newReport.id,
+          report: newReport.asJson(),
+        });
+      }
+      this.setActiveReport(lastId);
     }
   }
 
@@ -87,167 +170,8 @@ export class ReportStore {
   @action.bound
   public createSections(sections: any) {
     sections.forEach((section: any) => {
-      this.sections.push(section);
+      this.template!.sections.push(section);
     });
-  }
-
-  @action.bound
-  public buildContainer() {
-    const container = document.createElement("div");
-    container.style.display = "none";
-    document.body.appendChild(container);
-    container.innerHTML = this.template as string;
-    const svgEls = container.getElementsByTagName("svg");
-    return svgEls[0];
-  }
-
-  @action.bound
-  public buildInputAndSections(svg: any) {
-    const sections = [];
-    const sectionsElems = svg.getElementsByClassName("section");
-    for (let i = 0; i < sectionsElems.length; i++) {
-      const sectionElem = sectionsElems[i];
-      //@ts-ignore
-      const sectionId = sectionElem.id;
-      //@ts-ignore
-      const sectionLabel = sectionElem.dataset.label;
-
-      // Check if there is subsections
-      const subsections: any[] = [];
-      const subsectionsElems = sectionElem.getElementsByClassName("subsection");
-
-      if (subsectionsElems.length !== 0) {
-        for (let i = 0; i < subsectionsElems.length; i++) {
-          const subsectionElem = subsectionsElems[i];
-          //@ts-ignore
-          const subsectionId = subsectionElem.id;
-          //@ts-ignore
-          const subsectionLabel = subsectionElem.dataset.label;
-          subsections.push({
-            id: subsectionId,
-            label: subsectionLabel,
-          });
-          const elems = subsectionElem.getElementsByClassName("pro-input");
-          this.buildInputs({
-            elems: elems,
-            sectionId: sectionId,
-            subsectionId: subsectionId,
-          });
-        }
-      } else {
-        const elems = sectionElem.getElementsByClassName("pro-input");
-        this.buildInputs({
-          elems: elems,
-          sectionId: sectionId,
-          subsectionId: false,
-        });
-      }
-      sections.push({
-        id: sectionId,
-        label: sectionLabel,
-        subsections: subsections,
-      });
-    }
-    this.createSections(sections);
-  }
-
-  @action.bound
-  public buildInputs({ elems, sectionId, subsectionId }: any) {
-    // for each input
-    for (let i = 0; i < elems.length; i++) {
-      //  determine type, section and subsection
-      const el = elems[i];
-      //@ts-ignore
-      const id = el.id;
-      //@ts-ignore
-      const type = el.dataset.type;
-      //@ts-ignore
-      const label = el.dataset.label;
-
-      // Build input object
-      const input = {
-        id,
-        type,
-        label,
-        sectionId,
-        subsectionId,
-        value: "",
-      };
-      switch (type) {
-        case "string":
-          //@ts-ignore
-          input.value = "";
-          if (el.dataset.list) {
-            //@ts-ignore
-            input.options = {
-              list: el.dataset.list.split(","),
-            };
-          }
-          //input.value = el.textContent;
-          break;
-        case "number":
-          //@ts-ignore
-          input.value = 0;
-          // input.value = Number(el.textContent);
-          break;
-        case "single-image":
-          //@ts-ignore
-          input.value = "";
-          //@ts-ignore
-          // input.options = { height: el. };
-          // input.value = el.getAttribute("xlink:href");
-          break;
-        case "single-image-editable":
-          //@ts-ignore
-          input.value = "";
-          //@ts-ignore
-          input.options = {
-            height: el.height.baseVal.value,
-            width: el.width.baseVal.value,
-          };
-          // input.value = el.getAttribute("xlink:href");
-          break;
-        case "single-signature":
-          //@ts-ignore
-          input.value = "";
-          //@ts-ignore
-          input.options = {
-            height: el.height.baseVal.value,
-            width: el.width.baseVal.value,
-          };
-          // input.value = el.getAttribute("xlink:href");
-          break;
-        case "compare-two-images":
-          //@ts-ignore
-          input.value = { before: "", after: "" };
-          const imgEl = el.getElementsByTagName("image")[0];
-          //@ts-ignore
-          input.options = {
-            height: imgEl.height.baseVal.value,
-            width: imgEl.width.baseVal.value,
-          };
-          // input.options = {
-          //   height: imgEl.getBoundingClientRect().height,
-          //   width: imgEl.getBoundingClientRect().width,
-          // };
-          // input.value = el.getAttribute("xlink:href");
-          break;
-        case "single-select":
-          const values: string[] = [];
-          const textEls = el.getElementsByTagName("text");
-          for (let i = 0; i < textEls.length; i++) {
-            values.push(textEls[i].dataset.value);
-          }
-          //@ts-ignore
-          input.value = "";
-          //@ts-ignore
-          input.options = { values: values };
-          break;
-      }
-      // Create observable variable in store
-      this.inputs.push(input);
-      // this.addListener({ id: input.id, type: input.type, value: input.value });
-    }
   }
 
   @action.bound
@@ -333,17 +257,18 @@ export class ReportStore {
   }
 
   @action.bound
-  public showInputs() {
+  public renderContainers() {
     const elems = document.getElementsByClassName("pro-container");
     for (let i = 0; i < elems.length; i++) {
       const el = elems[i];
       //@ts-ignore
       const inputId = el.dataset.inputId;
-      const inputStatus = this.inputs.find((input: any) => input.id === inputId)
-        .status;
-      const color = inputStatus === "valid" ? "green" : "red";
+      const input = this.activeReport!.inputs.find(
+        (input: any) => input.id === inputId,
+      );
+      const color = getStatusColor(input.status, input.mandatory);
+      el.setAttribute("opacity", "0.6");
       el.setAttribute("fill", color);
-      el.setAttribute("opacity", "0.3");
     }
   }
 
@@ -354,6 +279,20 @@ export class ReportStore {
       const el = elems[i];
       el.setAttribute("fill", "transparent");
     }
+  }
+
+  @action.bound
+  public synchronize() {
+    // get all reports in json format
+    const reports = this.reports.map(report => report.asJson());
+    reports.forEach((report: any) =>
+      updateReport({
+        userId: authStore.userId,
+        reportId: report.id,
+        doc: report.inputs,
+      }),
+    );
+    // for each report, update it
   }
 }
 

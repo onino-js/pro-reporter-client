@@ -3,20 +3,13 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import { EditorStore } from "../../../../stores/editor.store";
 
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import {
-  OkButton,
-  CancelButton,
-  SelectButton,
-  ActionButton,
-  HiddenInputFile,
-} from "../layouts/EditorButtons";
 import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
+import { ActionButton, HiddenInputFile, CancelButton, OkButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   uiStore?: UiStore;

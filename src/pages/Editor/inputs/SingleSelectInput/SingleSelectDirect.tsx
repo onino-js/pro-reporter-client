@@ -1,16 +1,13 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
-import InputLayoutModal from "../layouts/InputLayoutModal";
-import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import { EditorStore } from "../../../../stores/editor.store";
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import { OkButton, CancelButton, SelectButton } from "../layouts/EditorButtons";
 import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
+import { CancelButton, OkButton, SelectButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   uiStore?: UiStore;
@@ -79,7 +76,7 @@ class SingleSelectDirect extends React.Component<Props> {
         <Row type="flex">
           <Col xl={16} md={16} xs={24}>
             <InputLayoutStandard input={this.props.input}>
-              {this.props.input!.options.values.map(
+              {this.props.input!.values.map(
                 (item: any, index: number) => (
                   <SelectButton
                     key={"single-select-input" + index}

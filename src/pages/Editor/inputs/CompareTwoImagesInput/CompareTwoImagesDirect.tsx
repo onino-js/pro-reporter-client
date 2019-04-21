@@ -6,18 +6,11 @@ import { UiStore } from "../../../../stores/ui.store";
 
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import {
-  OkButton,
-  CancelButton,
-  ActionButton,
-  HiddenInputFile,
-  ActionLink,
-} from "../layouts/EditorButtons";
 import { Col, Row } from "antd";
-import FreeModal from "../../../../components/modals/FreeModal";
 import ImageEditor from "./ImageEditor";
-import { mainTheme } from "../../../../assets/styles/_colors";
 import { ReportStore } from "../../../../stores/report.store";
+import { _measures } from "../../../../assets/styles/_measures";
+import { HiddenInputFile, ActionButton, ActionLink, CancelButton, OkButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   uiStore?: UiStore;
@@ -43,6 +36,9 @@ const InputContainer: any = styled.div`
       opacity: 1;
     }
   }
+  @media (max-width: ${_measures.tablet}px) {
+    padding: 20px;
+  }
 `;
 
 const Img = styled.img`
@@ -61,6 +57,7 @@ const MiddleRow = styled.div`
   width: 100%;
   display: flex;
   margin-top: 20px;
+  margin-bottom: 30px;
 `;
 
 const BottomRow = styled.div`
@@ -72,7 +69,9 @@ const BottomRow = styled.div`
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
   reportStore: allStores.reportStore,
 }))
 @observer
@@ -120,7 +119,7 @@ class CompareTwoImagesDirect extends React.Component<Props> {
           visible={this.props.uiStore!.isInputModalOpen}
         >
           <UpperRow>
-            <Col xl={16}>
+            <Col xl={24} xs={24}>
               <InputLayoutStandard input={this.props.input}>
                 <HiddenInputFile
                   id={"file-hidden-input-" + this.props.input!.id}
@@ -140,8 +139,8 @@ class CompareTwoImagesDirect extends React.Component<Props> {
             </Col>
           </UpperRow>
           <MiddleRow>
-            <Col xl={16}>
-              <Col xl={6}>
+            <Col xl={24} xs={24}>
+              <Col xl={8} xs={8}>
                 <Row>
                   <ActionLink
                     disabled={this.props.input.data.bg === false}
@@ -151,7 +150,7 @@ class CompareTwoImagesDirect extends React.Component<Props> {
                   />
                 </Row>
               </Col>
-              <Col xl={8}>
+              <Col xl={8} xs={8}>
                 {this.props.input.value.before === "" && (
                   <p>Aucun apperçu disponible</p>
                 )}
@@ -172,7 +171,7 @@ class CompareTwoImagesDirect extends React.Component<Props> {
                     />
                   )}
               </Col>
-              <Col xl={8}>
+              <Col xl={8} xs={8}>
                 {this.props.input.value.after === "" && (
                   <p>Aucun apperçu disponible</p>
                 )}
@@ -200,30 +199,20 @@ class CompareTwoImagesDirect extends React.Component<Props> {
             <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
           </BottomRow>
         </InputContainer>
-        <FreeModal
-          style={{
-            width: "80%",
-            height: "100%",
-            backgroundColor: mainTheme.bg_secondary,
-            borderRadius: "40px",
-            border: "none",
-          }}
+
+        <ImageEditor
           show={this.props.input.isEditVisible}
-          close={this.onEditorCancel}
-        >
-          <ImageEditor
-            addObjects={this.props.input.edited !== "bg"}
-            input={this.props.input}
-            onOk={this.onEditorOk}
-            onCancel={this.onEditorCancel}
-            isActiveSelection={this.props.input.isActiveSelection}
-            isSideMenuOpen={this.props.input.isSideMenuOpen}
-            isObjectEditOpen={this.props.input.isObjectEditOpen}
-            canvasMode={this.props.input.canvasStore.canvasMode}
-            activeObjects={this.props.input.activeObjects}
-            // addObjectsPanel={this.edited !== "bg"}
-          />
-        </FreeModal>
+          addObjects={this.props.input.edited !== "bg"}
+          input={this.props.input}
+          onOk={this.onEditorOk}
+          onCancel={this.onEditorCancel}
+          isActiveSelection={this.props.input.isActiveSelection}
+          isSideMenuOpen={this.props.input.isSideMenuOpen}
+          isObjectEditOpen={this.props.input.isObjectEditOpen}
+          canvasMode={this.props.input.canvasStore.canvasMode}
+          activeObjects={this.props.input.activeObjects}
+          // addObjectsPanel={this.edited !== "bg"}
+        />
       </React.Fragment>
     );
   }

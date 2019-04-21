@@ -1,15 +1,12 @@
 import * as React from "react";
-import { Row, Col, Dropdown, Button, Menu, Popover } from "antd";
-import { SmallBullet } from "../../../../components/ui/SmallBullet";
+import { Row, Col, Dropdown, Menu, Popover } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "../../../../styled-components";
 import {
-  SearchButton,
   RefreshButton,
   StatusButton,
   SearchIconBox,
-} from "./EditorButtons";
-import { InputLabel } from "./EditorTexts";
+} from "../../../../components/ui/Buttons";
 
 interface Props {
   input: any;
@@ -23,28 +20,20 @@ const MyRow = styled(Row)`
   padding: 0px;
 `;
 
+const InputLabel = styled.div`
+  letter-spacing: 3px;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.font_primary};
+`;
+
 // Change button to div to enable antd dropdown
 const SearchBox = SearchIconBox.withComponent("div");
 
-const flexCenter = {
-  style: {
-    display: "flex",
-    justifyContent: "center",
-  },
-};
-
-const col1 = {
-  xl: 1,
-  md: 1,
-  sm: 1,
-  xs: 1,
-  ...flexCenter,
-};
 const col2 = {
-  xl: 7,
-  md: 7,
-  sm: 7,
-  xs: 23,
+  xl: 8,
+  md: 8,
+  sm: 8,
+  xs: 24,
   style: {
     height: "30px",
     lineHeight: "30px",
@@ -87,9 +76,6 @@ class InputLayoutStandard extends React.Component<Props> {
     return (
       <React.Fragment>
         <MyRow type="flex" align="middle">
-          <Col {...col1}>
-            <SmallBullet mandatory={input.mandatory} />
-          </Col>
           <Col {...col2}>
             <InputLabel>{input.label}</InputLabel>
             {input.documentation && (
@@ -122,6 +108,7 @@ class InputLayoutStandard extends React.Component<Props> {
                     ))}
                   </Menu>
                 }
+                trigger={["click", "hover"]}
                 placement="bottomLeft"
               >
                 <SearchBox>
@@ -137,7 +124,10 @@ class InputLayoutStandard extends React.Component<Props> {
             />
           </Col>
           <Col {...col6}>
-            <StatusButton status={this.props.input.status} />
+            <StatusButton
+              status={this.props.input.status}
+              mandatory={this.props.input.mandatory}
+            />
           </Col>
         </MyRow>
         {this.props.additionalInfos && <Row>{this.props.additionalInfos}</Row>}

@@ -1,3 +1,4 @@
+import { mainTheme } from "./../assets/styles/_colors";
 interface IvalidationMsg {
   status: "clean" | "error";
   numberOfInputs: number;
@@ -50,7 +51,6 @@ export const checkTemplate = (template: string) => {
       }
       // Check if corresponding input exists
       else {
-        console.log(inputId);
         const inputEl = document.getElementById(inputId);
         if (!inputEl) {
           validationMsg.errors.push({
@@ -81,3 +81,31 @@ export const checkTemplate = (template: string) => {
 };
 
 export const buildSections = (template: string) => {};
+
+export const getStatusColor = (status: string, mandatory?: boolean) => {
+  if (status === "valid") {
+    return mainTheme.success;
+  } else if (status === "error") {
+    return mainTheme.danger;
+  } else if (status === "untouched" && mandatory) {
+    return mainTheme.warning;
+  } else if (status === "warning") {
+    return mainTheme.warning;
+  } else {
+    return mainTheme.disabled;
+  }
+};
+
+export const getStatusIcon = (status: string, mandatory?: boolean) => {
+  if (status === "valid") {
+    return "check";
+  } else if (status === "error") {
+    return "bug";
+  } else if (status === "untouched" && mandatory) {
+    return "exclamation-triangle";
+  } else if (status === "warning") {
+    return "exclamation-triangle";
+  } else {
+    return "exclamation-triangle";
+  }
+};

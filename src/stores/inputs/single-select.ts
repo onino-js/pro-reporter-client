@@ -2,8 +2,12 @@ import { observable, action } from "mobx";
 
 export class SingleSelectStore {
   @observable public value: string = "";
+  @observable public values: string[] = [];
   @observable public tempValue: string = "";
+  @observable public mandatory: boolean = false;
+
   public title: string = "";
+
   get status() {
     return this.value === "" ? "untouched" : "valid";
   }

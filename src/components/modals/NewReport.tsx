@@ -99,7 +99,6 @@ class NewReport extends React.Component<Props> {
             key="ok-button"
             type="primary"
             onClick={this.createReport}
-            // disabled={!isReferenceValid}
           >
             OK
           </OkButton>

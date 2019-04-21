@@ -2,7 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../models/all-stores.model";
 import { UiStore } from "../../../stores/ui.store";
-import { EditorStore } from "../../../stores/editor.store";
+import { Report } from "../../../stores/report";
 import { RouteChildrenProps } from "react-router";
 import styled from "styled-components";
 import { componentDirectMapping } from "../../../services/input-mapping.service";
@@ -12,8 +12,8 @@ import { ReportStore } from "../../../stores/report.store";
 
 interface Props extends RouteChildrenProps {
   uiStore?: UiStore;
-  editorStore?: EditorStore;
-  activeReport?: EditorStore;
+  Report?: Report;
+  activeReport?: Report;
   reportStore?: ReportStore;
 }
 
@@ -29,17 +29,15 @@ const CanvasContainer = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  /* flex-direction: column; */
   flex: 1;
   margin: 0;
-  min-height: 280px;
   overflow-y: auto;
   background-color: ${props => props.theme.bg_primary};
 `;
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  editorStore: allStores.reportStore.activeReport,
+  Report: allStores.reportStore.activeReport,
   reportStore: allStores.reportStore,
   activeReport: allStores.reportStore.activeReport,
 }))
@@ -54,7 +52,7 @@ class Preview extends React.Component<Props> {
   public editedInput: any = null;
 
   componentDidMount() {
-    this.props.activeReport && this.initialize(this.props.activeReport);
+    this.props.activeReport && this.initialize();
   }
 
   componentWillReceiveProps(newProps: any) {
@@ -62,7 +60,7 @@ class Preview extends React.Component<Props> {
     render && this.props.reportStore!.renderCanvas();
   }
 
-  private initialize = (report: EditorStore) => {
+  private initialize = () => {
     this.props.reportStore!.mountTemplate("canvas-container");
     // set container layer
     this.containerLayer = document.getElementById("container-layer");
@@ -72,7 +70,43 @@ class Preview extends React.Component<Props> {
     this.hideContainers();
     this.props.reportStore!.renderCanvas();
     this.addListeners();
+    // this.buildContainer();
   };
+
+  // private buildContainer = () => {
+  //   const svg = d3.select("#canvas-container").select("svg");
+  //   const group = svg.append("g").attr("class", "group-container");
+
+  //   svg.selectAll(".pro-input").each(function(input, index) {
+  //     let x;
+  //     let y;
+  //     if (
+  //       d3.select(this).attr("x") === null ||
+  //       d3.select(this).attr("y") === null
+  //     ) {
+  //       //@ts-ignore
+  //       const coord = this.getBoundingClientRect();
+  //       x = coord.x;
+  //       y = coord.y;
+  //     } else {
+  //       x = d3.select(this).attr("x");
+  //       y = d3.select(this).attr("y");
+  //     }
+  //     //@ts-ignore
+  //     group
+  //       .append("rect")
+  //       .attr("cx", x)
+  //       .attr("cy", y)
+  //       .attr("r", 10)
+  //       .attr("fill", "red");
+  //     group
+  //       .append("text")
+  //       //@ts-ignore
+  //       .text(this.dataset.label)
+  //       .attr("x", x)
+  //       .attr("y", y);
+  //   });
+  // };
 
   private addListeners = () => {
     const elems = document.getElementsByClassName("pro-container");
@@ -116,7 +150,7 @@ class Preview extends React.Component<Props> {
 
   public render() {
     return (
-      <Flex dir="c">
+      <Flex dir="c" flex={1}>
         <Wrapper>
           <CanvasContainer>
             <div id="canvas-container" />

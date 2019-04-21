@@ -5,6 +5,8 @@ export class SingleImageStore {
   @observable public value: string = "";
   @observable public tempValue: string = "";
   @observable public imageName: string = "";
+  @observable public mandatory: boolean = false;
+
   @computed
   get status() {
     return this.value === "" ? "untouched" : "valid";

@@ -9,10 +9,18 @@ interface Props {
 class MainLayout extends React.Component<Props> {
   public render() {
     return (
-      <Layout tagName="main" style={{ height: "100vh", overflow: "hidden" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+        }}
+      >
         <MainHeader />
         <div style={{ display: "flex", flex: 1 }}>{this.props.children}</div>
-      </Layout>
+      </div>
     );
   }
 }

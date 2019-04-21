@@ -2,18 +2,10 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import styled from "../../../../styled-components";
-import { Button } from "antd/lib/radio";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import ProModal from "../../../../components/modals/ProModal";
-import FreeModal from "../../../../components/modals/FreeModal";
-import { ActionIconBox } from "../layouts/InputButtons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import SingleSignatureEditor from "./SingleSignatureEditor";
-import { mainTheme } from "../../../../assets/styles/_colors";
-import InputLayoutModal from "../layouts/InputLayoutModal";
-import { ActionButton } from "../layouts/EditorButtons";
+import { ActionButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   inputId: string;
@@ -22,36 +14,22 @@ interface Props {
   layout?: string;
 }
 
-const HiddenInputFile = styled.input.attrs({
-  type: "file",
-})`
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-`;
-
 const Img = styled.img`
   border: 6px solid ${props => props.theme.disabled};
   width: "100%";
   height: auto;
   max-width: 100%;
+  background-color: white;
 `;
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
 }))
 @observer
 class SingleSignatureInput extends React.Component<Props> {
-  componentDidMount() {
-    this.props.input.initialize();
-  }
-  componentWillUnmount() {
-    this.props.input.setData();
-  }
   private openModal = () => {
     this.props.input.setIsEditVisible(true);
     window.setTimeout(() => this.props.input!.canvasStore.resizeCanvas(), 200);
@@ -98,23 +76,12 @@ class SingleSignatureInput extends React.Component<Props> {
           <Col xl={5} />
         </Row>
 
-        <FreeModal
-          style={{
-            width: "80%",
-            height: "80%",
-            backgroundColor: mainTheme.bg_secondary,
-            borderRadius: "40px",
-            border: "none",
-          }}
+        <SingleSignatureEditor
           show={this.props.input.isEditVisible}
-          close={this.onEditorCancel}
-        >
-          <SingleSignatureEditor
-            input={this.props.input}
-            onOk={this.onEditorOk}
-            onCancel={this.onEditorCancel}
-          />
-        </FreeModal>
+          input={this.props.input}
+          onOk={this.onEditorOk}
+          onCancel={this.onEditorCancel}
+        />
       </React.Fragment>
     );
   }

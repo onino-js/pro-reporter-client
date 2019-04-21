@@ -4,13 +4,12 @@ import { AllStores } from "../../../../models/all-stores.model";
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
 import FreeModal from "../../../../components/modals/FreeModal";
-import { ActionIconBox } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import ImageEditor from "./ImageEditor";
 import { mainTheme } from "../../../../assets/styles/_colors";
-import InputLayoutModal from "../layouts/InputLayoutModal";
+import { ActionIconBox } from "../../../../components/ui/Buttons";
 
 interface Props {
   inputId: string;
@@ -39,7 +38,9 @@ const Img = styled.img`
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
 }))
 @observer
 class SingleImageEditableInput extends React.Component<Props> {
@@ -72,11 +73,9 @@ class SingleImageEditableInput extends React.Component<Props> {
   };
 
   public render() {
-    const Layout: any =
-      this.props.layout === "modal" ? InputLayoutModal : InputLayoutStandard;
     return (
       <React.Fragment>
-        <Layout
+        <InputLayoutStandard
           input={this.props.input}
           actions={
             <div style={{ display: "flex" }}>
@@ -127,7 +126,7 @@ class SingleImageEditableInput extends React.Component<Props> {
             onChange={this.props.input.updateImage}
           />
           <InputPrimitive disabled={true} value={this.props.input.imageName} />
-        </Layout>
+        </InputLayoutStandard>
 
         <FreeModal
           style={{

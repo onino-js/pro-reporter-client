@@ -1,20 +1,21 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
-import { EditorStore } from "../../stores/editor.store";
+import { Report } from "../../stores/report";
 import styled from "../../styled-components";
 import { ReportStore } from "../../stores/report.store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
-  editorStore?: EditorStore;
+  Report?: Report;
   reportStore?: ReportStore;
-  activeReport?: EditorStore;
+  activeReport?: Report;
 }
 
 const Container = styled.div`
   width: 100%;
   height: auto;
+  min-height: 45px;
   padding-bottom : 10px;
   background-color: ${props => props.theme.disabled};
   border-top : 5px solid ${props => props.theme.secondary}
@@ -48,24 +49,40 @@ const PlusTab = Tab.extend`
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  editorStore: allStores.editorStore,
   reportStore: allStores.reportStore,
   activeReport: allStores.reportStore.activeReport,
 }))
 @observer
 class EditorTabs extends React.Component<Props> {
+  private create = () => {
+    this.props.reportStore!.create();
+    this.refresh();
+  };
+  private refresh = () => {
+    window.setTimeout(() => {
+      this.props.reportStore!.fieldHighlighted &&
+        this.props.reportStore!.renderContainers();
+    }, 100);
+  };
+  private change = (id: string) => {
+    this.props.reportStore!.setActiveReport(id);
+    this.refresh();
+  };
+
   public render() {
     return (
       <Container>
-        <PlusTab active={true} onClick={this.props.reportStore!.create}>
+        <PlusTab active={true} onClick={this.create}>
           <FontAwesomeIcon icon="plus" />
         </PlusTab>
         {this.props.reportStore!.reports.map(
-          (report: EditorStore, index: number) => (
+          (report: Report, index: number) => (
             <Tab
               key={"report-" + index}
               active={this.props.activeReport!.id === report.id}
-              onClick={() => this.props.reportStore!.setActiveReport(report.id)}
+              onClick={() => {
+                this.change(report.id);
+              }}
             >
               {index}
             </Tab>

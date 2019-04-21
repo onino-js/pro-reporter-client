@@ -1,16 +1,16 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../models/all-stores.model";
-import { EditorStore } from "../../../stores/editor.store";
-import { Button, Row, Col } from "antd";
+import { Report } from "../../../stores/report";
+import { Row, Col } from "antd";
 import styled from "../../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
-import { ActionButton } from "../inputs/layouts/EditorButtons";
+import { ActionButton } from "../../../components/ui/Buttons";
 
 const ZOOM_STEP: number = 5;
 
 interface Props extends RouteComponentProps {
-  editorStore?: EditorStore;
+  Report?: Report;
   showAnswer: () => void;
   hideAnswer: () => void;
 }
@@ -24,7 +24,6 @@ const Container = styled.div`
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  editorStore: allStores.editorStore,
 }))
 @observer
 class PreviewToolbar extends React.Component<Props> {

@@ -52,6 +52,7 @@ import {
   faObjectGroup,
   faHome,
   faUser,
+  faUserCircle,
   faArrowLeft,
   faArrowRight,
   faEdit,
@@ -64,6 +65,16 @@ import {
   faDoorOpen,
   faSave,
   faEyeSlash,
+  faArchive,
+  faPenFancy,
+  faFileSignature,
+  faEuroSign,
+  faCogs,
+  faDatabase,
+  faFileImage,
+  faHardHat,
+  faBoxOpen,
+  faBug,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faTachometerAlt);
@@ -117,8 +128,9 @@ library.add(faClipboardList);
 library.add(faListOl);
 library.add(faObjectGroup);
 library.add(faUsers);
-library.add(faHome);
 library.add(faUser);
+library.add(faUserCircle);
+library.add(faHome);
 library.add(faArrowLeft);
 library.add(faArrowRight);
 library.add(faEdit);
@@ -131,3 +143,13 @@ library.add(faFileExport);
 library.add(faDoorOpen);
 library.add(faSave);
 library.add(faEyeSlash);
+library.add(faArchive);
+library.add(faPenFancy);
+library.add(faFileSignature);
+library.add(faEuroSign);
+library.add(faCogs);
+library.add(faDatabase);
+library.add(faFileImage);
+library.add(faHardHat);
+library.add(faBoxOpen);
+library.add(faBug);

@@ -21,10 +21,22 @@ const menuItems = [
     page: "dashboard",
   },
   {
-    title: "Archives",
-    icon: "tachometer-alt",
+    title: "Templates",
+    icon: "file-image",
     color: "transparent",
-    page: "reports-list",
+    page: "templates",
+  },
+  {
+    title: "En cours",
+    icon: "hard-hat",
+    color: "transparent",
+    page: "on-going",
+  },
+  {
+    title: "Archives",
+    icon: "archive",
+    color: "transparent",
+    page: "archives",
   },
   {
     title: "Contacts",
@@ -33,8 +45,26 @@ const menuItems = [
     page: "contacts",
   },
   {
+    title: "Stockage cloud",
+    icon: "box-open",
+    color: "transparent",
+    page: "cloud-storage",
+  },
+  {
+    title: "Base de données",
+    icon: "database",
+    color: "transparent",
+    page: "database",
+  },
+  {
+    title: "Statistiques",
+    icon: "chart-pie",
+    color: "transparent",
+    page: "statistics",
+  },
+  {
     title: "Editeur",
-    icon: "users",
+    icon: "pen-fancy",
     color: "transparent",
     page: "editor/direct",
   },
@@ -61,33 +91,18 @@ const MenuItem = styled.div`
   }
 `;
 
-const MainMenuButton = styled.div`
-  width: 100%;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  color: #fff;
-  /* flex-direction: column; */
-  justify-content: center;
-  cursor: pointer;
-  /* border-bottom: 1px solid #fff; */
-  :hover {
-    color: ${props => props.theme.primary};
-  }
-`;
-
 const Menu = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
 const MenuItemTitle = styled.span`
-  padding-left: 20px;
+  padding-left: 10px;
   display: flex;
   flex: 1;
-  @media (max-width: ${_measures.tablet}px) {
+  /* @media (max-width: ${_measures.tablet}px) {
     display: none;
-  }
+  } */
 `;
 
 const IconBox = styled.div`
@@ -101,7 +116,7 @@ const IconBox = styled.div`
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  isLogged: allStores.uiStore.isLogged,
+  isLogged: allStores.authStore.isLogged,
 }))
 @observer
 class SideNavigation extends React.Component<Props> {
@@ -111,12 +126,6 @@ class SideNavigation extends React.Component<Props> {
   public render() {
     return (
       <React.Fragment>
-        {/* <MainMenuButton
-          onClick={() => this.props.uiStore!.setState("showNewReport", true)}
-        >
-          <FontAwesomeIcon icon="plus" style={{ fontSize: "1.6em" }} />
-          <div style={{ paddingLeft: "20px" }}>NOUVEAU RAPPORT</div>
-        </MainMenuButton> */}
         <NewReport />
         <Menu>
           {menuItems.map((item: any, index) => (

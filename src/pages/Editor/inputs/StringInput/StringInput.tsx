@@ -1,9 +1,7 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
-import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import InputLayoutModal from "../layouts/InputLayoutModal";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
 

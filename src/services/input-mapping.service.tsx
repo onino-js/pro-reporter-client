@@ -14,8 +14,6 @@ import { SliderStore } from "../stores/inputs/slider";
 import SliderInput from "../pages/Editor/inputs/SliderInput/SliderInput";
 import { CompareTwoImagesStore } from "../stores/inputs/compare-two-images";
 import CompareTwoImagesInput from "../pages/Editor/inputs/CompareTwoImagesInput/CompareTwoImages";
-import StringInputModal from "../pages/Editor/inputs/StringInput/StringInputModal";
-import SingleSelectModal from "../pages/Editor/inputs/SingleSelectInput/SingleSelectModal";
 import StringInputDirect from "../pages/Editor/inputs/StringInput/StringInputDirect";
 import SingleSelectDirect from "../pages/Editor/inputs/SingleSelectInput/SingleSelectDirect";
 import SingleImageDirect from "../pages/Editor/inputs/SingleImageInput/SingleImageDirect";
@@ -44,16 +42,16 @@ export const componentMapping: any = {
   "compare-two-images": CompareTwoImagesInput,
 };
 
-export const componentModalMapping: any = {
-  string: StringInputModal,
-  "single-select": SingleSelectModal,
-  "single-image": SingleImageInput,
-  "single-image-editable": SingleImageEditableInput,
-  "single-signature": SingleSignatureInput,
-  number: NumberInput,
-  slider: SliderInput,
-  "compare-two-images": CompareTwoImagesInput,
-};
+// export const componentModalMapping: any = {
+//   string: StringInputModal,
+//   "single-select": SingleSelectModal,
+//   "single-image": SingleImageInput,
+//   "single-image-editable": SingleImageEditableInput,
+//   "single-signature": SingleSignatureInput,
+//   number: NumberInput,
+//   slider: SliderInput,
+//   "compare-two-images": CompareTwoImagesInput,
+// };
 
 export const componentDirectMapping: any = {
   string: StringInputDirect,

@@ -2,17 +2,12 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import styled from "../../../../styled-components";
-import { Button } from "antd/lib/radio";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import ProModal from "../../../../components/modals/ProModal";
-import FreeModal from "../../../../components/modals/FreeModal";
-import { ActionIconBox } from "../layouts/InputButtons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import ImageEditor from "./ImageEditor";
-import { mainTheme } from "../../../../assets/styles/_colors";
-import { ActionButton, ActionLink } from "../layouts/EditorButtons";
+import { ActionButton, ActionLink } from "../../../../components/ui/Buttons";
+
 
 interface Props {
   inputId: string;
@@ -160,18 +155,8 @@ class CompareTwoImagesInput extends React.Component<Props> {
           </Col>
         </MiddleRow>
 
-        <FreeModal
-          style={{
-            width: "80%",
-            height: "100%",
-            backgroundColor: mainTheme.bg_secondary,
-            borderRadius: "40px",
-            border: "none",
-          }}
-          show={this.props.input.isEditVisible}
-          close={this.onEditorCancel}
-        >
           <ImageEditor
+            show={this.props.input.isEditVisible}
             addObjects={this.props.input.edited !== "bg"}
             input={this.props.input}
             onOk={this.onEditorOk}
@@ -181,9 +166,7 @@ class CompareTwoImagesInput extends React.Component<Props> {
             isObjectEditOpen={this.props.input.isObjectEditOpen}
             canvasMode={this.props.input.canvasStore.canvasMode}
             activeObjects={this.props.input.activeObjects}
-            // addObjectsPanel={this.edited !== "bg"}
           />
-        </FreeModal>
       </React.Fragment>
     );
   }

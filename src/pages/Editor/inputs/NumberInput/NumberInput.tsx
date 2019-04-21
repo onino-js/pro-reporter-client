@@ -35,7 +35,9 @@ const MyInput = styled.input`
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.editorStore.inputs.filter(item => item.id === inputId)[0],
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
 }))
 @observer
 class NumberInput extends React.Component<Props> {

@@ -12,6 +12,8 @@ export class CanvasStore {
   @observable public resizeLoop: any = false;
   @observable public canvasHeight: any = false;
   @observable public canvasWidth: any = false;
+  @observable public width: any = false;
+  @observable public height: any = false;
   @observable public rotation: number = 90;
 
   constructor(options: any) {
@@ -77,11 +79,18 @@ export class CanvasStore {
 
   @action.bound
   public resizeCanvas() {
-    this.canvasWidth = this.canvasBox.offsetWidth;
-    this.canvasHeight = this.canvasBox.offsetHeight;
+    const canvasBox = document.getElementById(this.id)!.parentElement!
+      .parentElement;
+    const maxWidth = canvasBox!.offsetWidth;
+    const maxHeight = canvasBox!.offsetHeight;
+
+    const ratio1 = maxWidth / maxHeight;
+    const ratio2 = this.width / this.height;
+    const width = ratio1 <= ratio2 ? maxWidth : maxHeight * ratio2;
+    const height = width / ratio2;
     this.canvas.setDimensions({
-      width: this.canvasWidth,
-      height: this.canvasHeight,
+      width: width,
+      height: height,
     });
   }
 

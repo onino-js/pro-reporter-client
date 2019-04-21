@@ -1,8 +1,7 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
-import { Button } from "antd";
-import { ActionIconBox } from "../layouts/InputButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ActionIconBox } from "../../../../components/ui/Buttons";
 
 interface Props {
   input: any;

@@ -1,3 +1,4 @@
+import { Itemplate } from "./../models/template.model";
 import * as firebase from "firebase";
 import firebaseui from "firebaseui";
 import "firebase/database";
@@ -15,7 +16,7 @@ let database: any;
 let ui: any;
 
 export const initializeDataBase = () => {
-  firebase.initializeApp(config);
+  // firebase.initializeApp(config);
   database = firebase.database();
 };
 
@@ -27,8 +28,8 @@ export const saveReport = (doc: any, callback?: any) => {
   });
 };
 
-export const updateReport = (id: string, doc: any, callback?: any) => {
-  database.ref(`reports/${id}`).update(doc, (e: any) => {
+export const updateReport = ({ userId, reportId, doc, callback }: any) => {
+  database.ref(`users/${userId}/${reportId}/inputs`).update(doc, (e: any) => {
     if (callback) {
       callback(e);
     }
@@ -42,28 +43,63 @@ export const deleteReport = (id: string, callback: any) => {
 };
 
 export const getReportsList = (callback: any) => {
-  var reports = database.ref("projects/");
+  const reports = database.ref("projects/");
   reports.on("value", function(res: any) {
     callback(res.val());
   });
+};
+
+export const getTemplates = (callback: any) => {
+  const reports = database.ref("templates/");
+  reports.on("value", function(res: any) {
+    res && res.val && callback(res.val());
+  });
+};
+
+export const createTemplate = (template: Itemplate, callback?: any) => {
+  const ref = database.ref(`templates/${template.id}`);
+  ref.set(template, function(res: any, err: any) {
+    console.log(res);
+    console.log(err);
+  });
+};
+
+export const checkTemplateId = async (id: string) => {
+  const snapshot = await database.ref(`templates/${id}`).once("value");
+  if (snapshot.exists()) {
+    return true;
+  } else return false;
 };
 
 export const getReportList = (callback: any) => {
-  var reports = database.ref(`reports/`);
+  const reports = database.ref(`reports/`);
   reports.on("value", function(res: any) {
     callback(res.val());
   });
 };
 
-export const createReport = (report: any, callback: any) => {
-  const ref1 = database.ref(`reports/`).push();
-  ref1.set(report, (e: any) => {
-    callback(e);
+export const getReports = (userId: string, callback: any) => {
+  const reports = database.ref(`users/${userId}/reports/`);
+  reports.on("value", function(res: any) {
+    callback(res.val());
+  });
+};
+
+export const deleteAllActiveReports = (userId: string, callback?: any) => {
+  database.ref(`users/${userId}/reports/`).remove((e: any) => {
+    callback && callback(e);
+  });
+};
+
+export const createReport = ({ userId, report, reportId, callback }: any) => {
+  const ref = database.ref(`users/${userId}/reports/${reportId}/`);
+  ref.set(report, (e: any) => {
+    callback && callback(e);
   });
 };
 
 // FirebaseUI config.
-var uiConfig = {
+const uiConfig = {
   callbacks: {
     signInSuccessWithAuthResult: function(authResult: any, redirectUrl: any) {
       // User successfully signed in.
@@ -74,19 +110,25 @@ var uiConfig = {
     uiShown: function() {
       // The widget is rendered.
       // Hide the loader.
+      // document.getElementById("loader")!.style.display = "none";
       console.log("shown");
     },
   },
   // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
   signInFlow: "popup",
+  credentialHelper: firebaseui.auth.CredentialHelper.NONE,
   signInSuccessUrl: "/",
   signInOptions: [
+    {
+      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+    },
     // Leave the lines as is for the providers you want to offer your users.
     // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
     // firebase.auth.GithubAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    // firebase.auth.EmailAuthProvider.PROVIDER_ID,
     // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
     // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
   ],
@@ -105,6 +147,10 @@ export const initializeAuth = () => {
 };
 
 export const startAuth = () => {
+  // if (ui.isPendingRedirect()) {
+  //   console.log("user", firebase.auth().currentUser);
+  //   ui.start("#firebaseui-auth-container", uiConfig);
+  // }
   ui.start("#firebaseui-auth-container", uiConfig);
 };
 
@@ -114,8 +160,6 @@ export const startAuthListener = function(
 ) {
   firebase.auth().onAuthStateChanged(
     function(user) {
-      console.log("onAuthStateChanged");
-      console.log(user);
       if (user) {
         // User is signed in.
         const displayName = user.displayName;
@@ -138,6 +182,7 @@ export const startAuthListener = function(
           });
         });
       } else {
+        console.log("signout");
         signOut();
       }
     },
@@ -148,15 +193,14 @@ export const startAuthListener = function(
 };
 
 export const signOut = () => {
-  firebase
-    .auth()
-    .signOut()
-    .then(
-      function() {
-        ui.start("#firebaseui-auth-container", uiConfig);
-      },
-      function(error) {
-        console.error("Sign Out Error", error);
-      },
-    );
+  firebase.auth().signOut();
+  // .then(
+  //   function() {
+  //     console.log("starting ui");
+  //    // ui.start("#firebaseui-auth-container", uiConfig);
+  //   },
+  //   function(error) {
+  //     console.error("Sign Out Error", error);
+  //   },
+  // );
 };

@@ -1,29 +1,25 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
-import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import { EditorStore } from "../../../../stores/editor.store";
 
 import styled from "../../../../styled-components";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import {
-  OkButton,
-  CancelButton,
-  SelectButton,
-  ActionButton,
-  HiddenInputFile,
-} from "../layouts/EditorButtons";
-import { Col, Row } from "antd";
-import FreeModal from "../../../../components/modals/FreeModal";
+import { Col } from "antd";
 import SingleSignatureEditor from "./SingleSignatureEditor";
-import { mainTheme } from "../../../../assets/styles/_colors";
+import { _measures } from "../../../../assets/styles/_measures";
+import { ReportStore } from "../../../../stores/report.store";
+import {
+  ActionButton,
+  CancelButton,
+  OkButton,
+} from "../../../../components/ui/Buttons";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
   input?: any;
-  editorStore?: EditorStore;
+  reportStore?: ReportStore;
 }
 
 const InputContainer: any = styled.div`
@@ -43,21 +39,53 @@ const InputContainer: any = styled.div`
       opacity: 1;
     }
   }
+  @media (max-width: ${_measures.tablet}px) {
+    padding: 20px;
+  }
+`;
+
+const Img = styled.img`
+  border: 6px solid ${props => props.theme.disabled};
+  max-width: 90%;
+  height: auto;
+  cursor: pointer;
+  background-color: white;
+`;
+
+const UpperRow = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const MiddleRow = styled.div`
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 30px;
+`;
+
+const BottomRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
-  input: allStores.reportStore.activeReport!.inputs.filter(item => item.id === inputId)[0],
-  editorStore: allStores.editorStore,
+  input: allStores.reportStore.activeReport!.inputs.filter(
+    item => item.id === inputId,
+  )[0],
+  reportStore: allStores.reportStore,
 }))
 @observer
 class SingleSignatureDirect extends React.Component<Props> {
-  componentDidMount() {
-    this.props.input.initialize();
-  }
-  componentWillUnmount() {
-    this.props.input.setData();
-  }
+  // componentDidMount() {
+  //   this.props.input.initialize();
+  // }
+  // componentWillUnmount() {
+  //   this.props.input.setData();
+  // }
   private openModal = () => {
     this.props.input.setIsEditVisible(true);
     window.setTimeout(() => this.props.input!.canvasStore.resizeCanvas(), 200);
@@ -74,7 +102,7 @@ class SingleSignatureDirect extends React.Component<Props> {
   public onOk = () => {
     this.props.input.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
-    this.props.editorStore!.renderInput({
+    this.props.reportStore!.renderInput({
       id: this.props.input.id,
       type: this.props.input.type,
       value: this.props.input.value,
@@ -91,8 +119,8 @@ class SingleSignatureDirect extends React.Component<Props> {
           close={this.onCancel}
           visible={this.props.uiStore!.isInputModalOpen}
         >
-          <Row type="flex">
-            <Col xl={16}>
+          <UpperRow>
+            <Col xl={24} xs={24}>
               <InputLayoutStandard input={this.props.input}>
                 <ActionButton
                   icon="edit"
@@ -101,51 +129,30 @@ class SingleSignatureDirect extends React.Component<Props> {
                 />
               </InputLayoutStandard>
             </Col>
-            <Col
-              xl={8}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
-              <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
+          </UpperRow>
+          <MiddleRow>
+            <Col xl={24} xs={24}>
+              <Col xl={8} xs={8}>
+                {this.props.input.value !== "" ? (
+                  <Img src={this.props.input.value} />
+                ) : (
+                  <p>Pas d'aperçu disponible</p>
+                )}
+              </Col>
             </Col>
-          </Row>
-          <Row style={{ paddingTop: "20px", paddingBottom: "50px" }}>
-            <Col xl={24} style={{ display: "flex", justifyContent: "center" }}>
-              {this.props.input.value !== "" ? (
-                <img
-                  src={this.props.input.value}
-                  className="image-preview"
-                  width="auto"
-                  height="150px"
-                  style={{ maxWidth: "600px", backgroundColor: "#FFF" }}
-                />
-              ) : (
-                <p>Pas d'aperçu disponible</p>
-              )}
-            </Col>
-          </Row>
+          </MiddleRow>
+          <BottomRow>
+            <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
+            <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
+          </BottomRow>
         </InputContainer>
-        <FreeModal
-          style={{
-            width: "80%",
-            height: "80%",
-            backgroundColor: mainTheme.bg_secondary,
-            borderRadius: "40px",
-            border: "none",
-          }}
+
+        <SingleSignatureEditor
           show={this.props.input.isEditVisible}
-          close={this.onEditorCancel}
-        >
-          <SingleSignatureEditor
-            input={this.props.input}
-            onOk={this.onEditorOk}
-            onCancel={this.onEditorCancel}
-          />
-        </FreeModal>
+          input={this.props.input}
+          onOk={this.onEditorOk}
+          onCancel={this.onEditorCancel}
+        />
       </React.Fragment>
     );
   }

@@ -10,6 +10,8 @@ export class CompareTwoImagesStore {
   @observable public id: string = "";
   @observable public value: any = { before: "", after: "" };
   @observable public tempValue: any = { before: "", after: "" };
+  @observable public mandatory: boolean = false;
+
   @observable public data: any = {
     before: false,
     after: false,
@@ -23,6 +25,8 @@ export class CompareTwoImagesStore {
   @observable public canvasId: string = "";
   @observable public canvasStore: CompareStore = new CompareStore({
     id: this.canvasId,
+    width: false,
+    height: false,
   });
   @observable public imageName: string = "";
   @observable public isEditVisible: boolean = false;
@@ -41,10 +45,14 @@ export class CompareTwoImagesStore {
       : "valid";
   }
 
-  constructor(options: any) {
-    Object.assign(this, options);
+  constructor(input: any) {
+    Object.assign(this, input);
     this.canvasId = uuid();
-    this.canvasStore = new CompareStore({ id: this.canvasId });
+    this.canvasStore = new CompareStore({
+      id: this.canvasId,
+      width: input.options.width,
+      height: input.options.height,
+    });
   }
 
   @action.bound
@@ -83,6 +91,7 @@ export class CompareTwoImagesStore {
       this.isActiveSelection = false;
       this.activeObjects = [];
     });
+    canvas.on("mouse:dblclick", () => this.setIsObjectEditOpen(true));
   }
 
   @action.bound
@@ -150,7 +159,7 @@ export class CompareTwoImagesStore {
 
   @action.bound
   public clone(input: CompareTwoImagesStore) {
-    this.value = {...input.value};
+    this.value = { ...input.value };
     this.data = { ...input.data };
     this.tempData = { ...input.tempData };
     this.imageName = input.imageName;
@@ -160,12 +169,12 @@ export class CompareTwoImagesStore {
   @action.bound
   public toJS() {
     return {
-      value : this.value,
-      data : { ...this.data },
-      tempData : { ...this.tempData },
-      imageName : this.imageName,
-      original : this.original,
-    }
+      value: this.value,
+      data: { ...this.data },
+      tempData: { ...this.tempData },
+      imageName: this.imageName,
+      original: this.original,
+    };
   }
 
   @action.bound
