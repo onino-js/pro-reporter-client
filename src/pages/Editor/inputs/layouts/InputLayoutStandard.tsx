@@ -27,7 +27,13 @@ const InputLabel = styled.div`
 `;
 
 // Change button to div to enable antd dropdown
-const SearchBox = SearchIconBox.withComponent("div");
+const SearchBox = styled.div`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const col2 = {
   xl: 8,

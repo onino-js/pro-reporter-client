@@ -2,16 +2,12 @@ import "antd/dist/antd.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App2";
+import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./assets/icons/fa-icons";
-import {
-  initializeDataBase,
-  initializeAuth,
-} from "./services/firebase.srevice";
+import { initializeDataBase } from "./services/firebase.srevice";
 
 initializeDataBase();
-// initializeAuth();
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

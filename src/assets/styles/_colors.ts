@@ -1,9 +1,9 @@
 export const palette = {
   blue: "#5bb4dc",
+  purple: "#806bff",
   green: "#80b683",
   orange: "#ffb261",
   red: "#db574d",
-  purple: "purple",
   brown: "brown",
   grey: "#CCC",
 };
@@ -19,7 +19,7 @@ export const mainTheme = {
   bg_tertiary: "#f76343",
   font_primary: "#444",
   font_secondary: "#FFF",
-  disabled : "#DDD",
+  disabled: "#DDD",
   ...palette,
 };
 

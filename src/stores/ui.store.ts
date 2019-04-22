@@ -7,6 +7,7 @@ export class UiStore {
   @observable public showLoadingModal: boolean = false;
   @observable public showDuplicateModal: boolean = false;
   @observable public showNewTemplate: boolean = false;
+  @observable public showTemplateInfoModal: boolean = false;
 
   @observable public isInputModalOpen: boolean = false;
   @observable public isTemplatesLoaded: boolean = false;
@@ -27,6 +28,9 @@ export class UiStore {
       case "new-template":
         this.showNewTemplate = true;
         break;
+      case "template-info":
+        this.showTemplateInfoModal = true;
+        break;
     }
   }
 
@@ -44,6 +48,9 @@ export class UiStore {
         break;
       case "new-template":
         this.showNewTemplate = false;
+        break;
+      case "template-info":
+        this.showTemplateInfoModal = false;
         break;
     }
   }

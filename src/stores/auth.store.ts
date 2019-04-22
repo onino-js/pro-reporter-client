@@ -1,4 +1,6 @@
 import { observable, action } from "mobx";
+import firebaseui from "firebase/auth";
+import * as firebase from "firebase/app";
 
 export class AuthStore {
   @observable public token: string = "";
@@ -8,6 +10,11 @@ export class AuthStore {
   @observable public password: string = "";
   @observable public userId: string = "";
 
+  @action
+  public signout = (): void => {
+    firebase.auth().signOut();
+    this.isLogged = false;
+  };
   @action
   public setIsLogged = (payload: boolean): void => {
     this.isLogged = payload;

@@ -21,16 +21,16 @@ const menuItems = [
     page: "dashboard",
   },
   {
-    title: "Templates",
-    icon: "file-image",
-    color: "transparent",
-    page: "templates",
-  },
-  {
     title: "En cours",
     icon: "hard-hat",
     color: "transparent",
     page: "on-going",
+  },
+  {
+    title: "Templates",
+    icon: "file-image",
+    color: "transparent",
+    page: "templates",
   },
   {
     title: "Archives",

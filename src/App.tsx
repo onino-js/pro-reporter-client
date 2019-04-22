@@ -1,78 +1,93 @@
 import React, { Component } from "react";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { ThemeProvider } from "styled-components";
 import { inject, observer, Provider } from "mobx-react";
 import { mainTheme } from "./assets/styles/_colors";
 import Routes from "./components/routes/Routes";
-import { startAuthListener, startAuth } from "./services/firebase.srevice";
+import logo from "./assets/images/proreporter-logo.png";
 import { AllStores } from "./models/all-stores.model";
 import uiStore, { UiStore } from "./stores/ui.store";
-import { Report } from "./stores/report";
 import reportStore from "./stores/report.store";
 import authStore, { AuthStore } from "./stores/auth.store";
 import * as firebase from "firebase";
 import styled from "./styled-components";
+import templateStore, { TemplateStore } from "./stores/templateStore";
+import Signin from "./pages/Signin/Signin";
+
+const config = {
+  apiKey: "AIzaSyBDHfw2EEgmWWIE7V7lPgpPLScx8C3lnVo",
+  authDomain: "gham-f07f7.firebaseapp.com",
+  databaseURL: "https://gham-f07f7.firebaseio.com",
+  projectId: "gham-f07f7",
+  storageBucket: "gham-f07f7.appspot.com",
+  messagingSenderId: "1065942140105",
+};
+firebase.initializeApp(config);
 
 interface Props {
   uiStore?: UiStore;
   authStore?: AuthStore;
   isLogged?: boolean;
+  templateStore?: TemplateStore;
 }
-
-const AuthContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const LoadingContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: "red";
-`;
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
   authStore: allStores.authStore,
   isLogged: allStores.authStore.isLogged,
+  templateStore: allStores.templateStore,
 }))
 @observer
 class App extends Component<Props> {
+  state = {
+    isSignedIn: false, // Local signed-in state.
+  };
+  private unregisterAuthObserver: any = null;
+
+  // Configure FirebaseUI.
+  uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: "popup",
+    signInSuccessUrl: "/",
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      {
+        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+      },
+    ],
+    callbacks: {
+      // Avoid redirects after sign-in.
+      signInSuccessWithAuthResult: () => false,
+    },
+  };
+
+  // Listen to the Firebase Auth state and set the local state.
   componentDidMount() {
-    // firebaseui.start('#firebaseui-auth-container', {
-    //   signInOptions: [
-    //     firebase.auth.EmailAuthProvider.PROVIDER_ID
-    //   ],
-    //   // Other config options...
-    // });
-    console.log(firebase.auth().currentUser);
-    if (!this.props.isLogged) {
-      startAuth();
-      startAuthListener(this.signIn, this.signOut);
-    }
+    !this.props.uiStore!.isTemplatesLoaded &&
+      this.props.templateStore!.getTemplates(() =>
+        this.props.uiStore!.setIsTemplatesLoaded(true),
+      );
+
+    firebase.auth().languageCode = "fr";
+    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+      user && this.props.authStore!.setUserId(user!.uid);
+      this.setState({ isSignedIn: !!user });
+    });
   }
 
-  private signIn = (payload: any) => {
-    this.props.authStore!.setIsLogged(true);
-    this.props.authStore!.setDisplayName(payload.displayName);
-  };
-  private signOut = () => {
-    this.props.authStore!.setIsLogged(false);
-    this.props.authStore!.setDisplayName("");
-  };
+  // Make sure we un-register Firebase observers when the component unmounts.
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
+  }
 
   render() {
-    console.log("logged", this.props.isLogged);
     return (
       <ThemeProvider theme={mainTheme}>
-        {!this.props.isLogged ? (
-          <React.Fragment>
-            <AuthContainer id="firebaseui-auth-container" />
-            {/* <LoadingContainer id="loading">Loading</LoadingContainer> */}
-          </React.Fragment>
+        {!this.state.isSignedIn ? (
+          <Signin uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
         ) : (
           <Routes />
         )}
@@ -84,9 +99,9 @@ class App extends Component<Props> {
 export default () => (
   <Provider
     uiStore={uiStore}
-    Report={Report}
     reportStore={reportStore}
     authStore={authStore}
+    templateStore={templateStore}
   >
     <App />
   </Provider>

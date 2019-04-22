@@ -5,15 +5,14 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { ReportStore } from "../../stores/report.store";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
-import { Report } from "../../stores/report";
-import { Row, Col } from "antd";
-import { formatDate } from "../../services/app.service";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Col, Row } from "antd";
 import { Ireport } from "../../models/template.model";
-import LoadingZone from "../../components/ui/LoadingZone";
+import OnGoingItem from "./OnGoingItem";
+import { _measures } from "../../assets/styles/_measures";
+import { UiStore } from "../../stores/ui.store";
 
 interface Props extends RouteComponentProps {
-  uiStore?: any;
+  uiStore?: UiStore;
   reportStore?: ReportStore;
 }
 
@@ -29,7 +28,10 @@ const Wrapper = styled(Col).attrs({
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  width: 100%;
+  max-width: 500px;
+  @media (max-width: ${_measures.tablet}px) {
+    width: 100%;
+  }
 `;
 
 @inject((allStores: AllStores) => ({
@@ -37,42 +39,40 @@ const Wrapper = styled(Col).attrs({
   reportStore: allStores.reportStore,
 }))
 @observer
-class OnGingList extends React.Component<Props> {
+class OnGoingList extends React.Component<Props> {
   componentDidMount() {
     this.props.reportStore!.getReportList();
   }
   public render() {
     const reports = this.props.reportStore!.reportList;
-    const isReportsLoaded = this.props.uiStore!.isReportsLoaded;
-    const length = reports.length;
-    return isReportsLoaded ? (
-      <Flex dir="c">
-        <Text>Vous avez {length} Rapports en cours</Text>
+    // const length = reports.length;
+    return (
+      <Flex dir="c" scrollY="auto">
         <Wrapper>
-          {reports.map((report: Ireport, index: number) => {
-            return (
-              <Row key={"row" + index}>
-                <Col xl={2} xs={2}>
-                  {index + 1}
-                </Col>
-                <Col xl={3} xs={3}>
-                  {formatDate(report.creationDate)}
-                </Col>
-                <Col xl={3} xs={3}>
-                  {formatDate(report.lastModifiedDate)}
-                </Col>
-                <Col xl={3} xs={3}>
-                  <FontAwesomeIcon icon="edit" />
-                </Col>
-              </Row>
-            );
-          })}
+          {/* <Row type="flex" align="middle">
+            <Col xl={3} xs={3}>
+              Date création
+            </Col>
+            <Col xl={3} xs={3}>
+              Dernière modif
+            </Col>
+            <Col xl={13} xs={13}>
+              Nom template
+            </Col>
+            <Col xl={4} xs={4}>
+              status
+            </Col>
+          </Row> */}
+          {reports.map((report: Ireport, index: number) => (
+            <OnGoingItem
+              key={"report-list-item" + index}
+              reportId={report.id}
+            />
+          ))}
         </Wrapper>
       </Flex>
-    ) : (
-      <LoadingZone message="Chargement des documents en cours" />
     );
   }
 }
 
-export default withRouter(OnGingList);
+export default withRouter(OnGoingList);

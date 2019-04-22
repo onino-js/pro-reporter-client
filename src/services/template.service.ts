@@ -91,21 +91,25 @@ export const getStatusColor = (status: string, mandatory?: boolean) => {
     return mainTheme.warning;
   } else if (status === "warning") {
     return mainTheme.warning;
+  } else if (status === "new") {
+    return mainTheme.purple;
   } else {
     return mainTheme.disabled;
   }
 };
 
 export const getStatusIcon = (status: string, mandatory?: boolean) => {
-  if (status === "valid") {
-    return "check";
-  } else if (status === "error") {
-    return "bug";
-  } else if (status === "untouched" && mandatory) {
-    return "exclamation-triangle";
-  } else if (status === "warning") {
-    return "exclamation-triangle";
-  } else {
-    return "exclamation-triangle";
+  switch (status) {
+    case "valid":
+      return "check";
+    case "error":
+      return "bug";
+    case "exclamation-triangle":
+      return "exclamation-triangle";
+    case "warning":
+      return "exclamation-triangle";
+    case "new":
+      return "kiwi-bird";
   }
+  return "exclamation-triangle";
 };

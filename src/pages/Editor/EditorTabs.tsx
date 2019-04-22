@@ -5,11 +5,13 @@ import { Report } from "../../stores/report";
 import styled from "../../styled-components";
 import { ReportStore } from "../../stores/report.store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Itemplate } from "../../models/template.model";
 
 interface Props {
   Report?: Report;
   reportStore?: ReportStore;
   activeReport?: Report;
+  template: Itemplate;
 }
 
 const Container = styled.div`
@@ -43,7 +45,7 @@ const Tab: any = styled.div.attrs({
   }
 `;
 
-const PlusTab = Tab.extend`
+const PlusTab = styled(Tab)`
   width: 70px;
 `;
 
@@ -55,7 +57,7 @@ const PlusTab = Tab.extend`
 @observer
 class EditorTabs extends React.Component<Props> {
   private create = () => {
-    this.props.reportStore!.create();
+    this.props.reportStore!.create(this.props.template);
     this.refresh();
   };
   private refresh = () => {
@@ -70,24 +72,29 @@ class EditorTabs extends React.Component<Props> {
   };
 
   public render() {
+    const activeId = this.props.activeReport
+      ? this.props.activeReport.id
+      : null;
     return (
       <Container>
         <PlusTab active={true} onClick={this.create}>
           <FontAwesomeIcon icon="plus" />
         </PlusTab>
-        {this.props.reportStore!.reports.map(
-          (report: Report, index: number) => (
+        {this.props
+          .reportStore!.reports.filter(
+            report => report.templateId === this.props.template.id,
+          )
+          .map((report: Report, index: number) => (
             <Tab
               key={"report-" + index}
-              active={this.props.activeReport!.id === report.id}
+              active={activeId === report.id}
               onClick={() => {
                 this.change(report.id);
               }}
             >
               {index}
             </Tab>
-          ),
-        )}
+          ))}
       </Container>
     );
   }

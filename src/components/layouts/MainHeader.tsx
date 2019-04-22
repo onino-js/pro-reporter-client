@@ -2,7 +2,6 @@ import * as React from "react";
 import { Menu, Dropdown } from "antd";
 import styled from "../../styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { signOut } from "../../services/firebase.srevice";
 import { inject, observer, Provider } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
@@ -110,7 +109,7 @@ const MenuItem = styled(Menu.Item)`
 @observer
 class MainHeader extends React.Component<Props> {
   private signOut = () => {
-    signOut();
+    this.props.authStore!.signout();
     // this.props.authStore!.setIsLogged(false);
   };
   private goHome = () => {

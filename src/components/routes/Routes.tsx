@@ -22,11 +22,11 @@ class Routes extends React.Component<Props> {
     return (
       <Router>
         <React.Fragment>
-          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/" component={OnGoingMenu} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/archives" component={Acrhives} />
           <Route path="/contacts" component={Contacts} />
-          <Route path="/editor" component={Editor} />
+          <Route path="/editor/:reportId?" component={Editor} />
           <Route path="/preview" component={Preview} />
           <Route path="/templates" component={TemplateMenu} />
           <Route path="/on-going" component={OnGoingMenu} />
@@ -37,7 +37,7 @@ class Routes extends React.Component<Props> {
           <Route path="/user-plan" component={UserPlan} />
           <Route path="/user-billing" component={UserBilling} />
           <Route path="/user-settings" component={UserSettings} />
-          <Redirect from="/*" to="/" />
+          <Redirect to="/" />
         </React.Fragment>
       </Router>
     );

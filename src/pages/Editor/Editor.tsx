@@ -1,8 +1,7 @@
 import * as React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import { UiStore } from "../../stores/ui.store";
-import { Report } from "../../stores/report";
-import { Route, withRouter, RouteComponentProps } from "react-router";
+import { withRouter, RouteComponentProps } from "react-router";
 import FormEdition from "./FormEdition/FormEdition";
 import EditorToolbar from "./EditorToolbar";
 import Preview from "./Preview/Preview";
@@ -29,7 +28,14 @@ interface Props extends RouteComponentProps {
 @observer
 class Editor extends React.Component<Props> {
   componentWillMount() {
-    // get back template
+    if (!this.props.uiStore!.isReportsLoaded) {
+      this.props.history.push("/on-going");
+    }
+    const params: any = this.props.match.params;
+    if (params.reportId) {
+      this.props.reportStore!.loadReportInEditor(params.reportId);
+      this.props.reportStore!.setActiveReport(params.reportId);
+    }
   }
 
   public render() {
@@ -38,16 +44,10 @@ class Editor extends React.Component<Props> {
     const activeReport = this.props.reportStore!.activeReport;
     const template = this.props.reportStore!.template;
     const reportsLoaded = reports.length !== 0;
+    const editionMode = this.props.reportStore!.editionMode;
     return (
       <MainLayout>
-        <SubLayout
-          p="0px"
-          sideContent={
-            <EditorSidebar
-              clickBehaviour={isDirectMode ? "highlight" : "scroll"}
-            />
-          }
-        >
+        <SubLayout p="0px" sideContent={<EditorSidebar />}>
           <Flex dir="c" flex={1}>
             {template && <EditorToolbar />}
             {!template ? (
@@ -56,12 +56,11 @@ class Editor extends React.Component<Props> {
               <NoReport />
             ) : (
               <React.Fragment>
-                <Route exact path="/editor" component={Preview} />
-                <Route path="/editor/form" component={FormEdition} />
-                <Route path="/editor/direct" component={Preview} />
+                {editionMode === "direct" && <Preview />}
+                {editionMode === "form" && <FormEdition />}
               </React.Fragment>
             )}
-            {template && <EditorTabs />}
+            {template && <EditorTabs template={template} />}
           </Flex>
           <LoadingModal
             show={this.props.uiStore!.showLoadingModal}

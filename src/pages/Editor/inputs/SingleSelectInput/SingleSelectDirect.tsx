@@ -3,11 +3,12 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import { UiStore } from "../../../../stores/ui.store";
 import styled from "../../../../styled-components";
-import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
-import { CancelButton, OkButton, SelectButton } from "../../../../components/ui/Buttons";
+import {
+  SelectButton,
+} from "../../../../components/ui/Buttons";
+import InputLayoutDirect from "../layouts/InputLayoutDirect";
 
 interface Props {
   uiStore?: UiStore;
@@ -67,42 +68,32 @@ class SingleSelectDirect extends React.Component<Props> {
     this.props.input.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
   };
+  public onRefresh = () => {
+    this.props.input.reset();
+  };
   public render() {
     return (
       <InputContainer
         close={this.onCancel}
         visible={this.props.uiStore!.isInputModalOpen}
       >
-        <Row type="flex">
-          <Col xl={16} md={16} xs={24}>
-            <InputLayoutStandard input={this.props.input}>
-              {this.props.input!.values.map(
-                (item: any, index: number) => (
-                  <SelectButton
-                    key={"single-select-input" + index}
-                    onClick={() => this.setValue(item)}
-                    className={this.props.input.value === item ? "active" : ""}
-                  >
-                    {item}
-                  </SelectButton>
-                ),
-              )}
-            </InputLayoutStandard>
-          </Col>
-          <Col
-            xl={8}
-            md={8}
-            xs={24}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
-            <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
-          </Col>
-        </Row>
+        <InputLayoutDirect
+          label={this.props.input!.label}
+          onOk={this.onOk}
+          onCancel={this.onCancel}
+          onRefresh={this.onRefresh}
+          status={this.props.input!.status}
+        >
+          {this.props.input!.values.map((item: any, index: number) => (
+            <SelectButton
+              key={"single-select-input" + index}
+              onClick={() => this.setValue(item)}
+              className={this.props.input.value === item ? "active" : ""}
+            >
+              {item}
+            </SelectButton>
+          ))}
+        </InputLayoutDirect>
       </InputContainer>
     );
   }

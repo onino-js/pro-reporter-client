@@ -1,5 +1,4 @@
 import styled from "../../../../styled-components";
-import { _measures } from "../../../../assets/styles/_measures";
 
 export const InputPrimitive = styled.input`
   width: 100%;
@@ -8,6 +7,7 @@ export const InputPrimitive = styled.input`
   height: 30px;
   font-size: 16px;
   font-size: 16px;
+  max-width : 300px
   /* font-weight : 900; */
   letter-spacing: 3px;
   /* border-width: 1px;

@@ -68,7 +68,7 @@ const SyncButtton = styled(Button)`
   }
 `;
 
-const TemplateDropdown = ProDropdown.extend`
+const TemplateDropdown = styled(ProDropdown)`
   color: ${(props: any) => props.theme.secondary};
   background-color: ${(props: any) => props.theme.disabled};
   padding: 0px 10px;
@@ -85,10 +85,10 @@ const TemplateDropdown = ProDropdown.extend`
 @observer
 class EditorToolbar extends React.Component<Props> {
   private formEditionMode = () => {
-    this.props.history.push("/editor/form");
+    this.props.reportStore!.setEditionMode("form");
   };
   private templateEditionMode = () => {
-    this.props.history.push("/editor/direct");
+    this.props.reportStore!.setEditionMode("direct");
   };
   private zoomIn = () => this.props.reportStore!.zoomIn();
   private zoomOut = () => this.props.reportStore!.zoomOut();
@@ -133,7 +133,7 @@ class EditorToolbar extends React.Component<Props> {
   };
 
   public render() {
-    const isDirectMode = this.props.location.pathname === "/editor/direct";
+    const editionMode = this.props.reportStore!.editionMode;
     const isEditedReport = this.props.reportStore!.activeReport !== null;
     const fileMenu = (
       <Menu>
@@ -196,15 +196,21 @@ class EditorToolbar extends React.Component<Props> {
     );
     const displayMenu = (
       <Menu>
-        <MenuItem onClick={this.formEditionMode} disabled={!isDirectMode}>
+        <MenuItem
+          onClick={this.formEditionMode}
+          disabled={editionMode === "form"}
+        >
           <div>Mode formulaire</div>
         </MenuItem>
-        <MenuItem onClick={this.templateEditionMode} disabled={isDirectMode}>
+        <MenuItem
+          onClick={this.templateEditionMode}
+          disabled={editionMode === "direct"}
+        >
           <div>Mode template</div>
         </MenuItem>
         <MenuItem
           onClick={this.hightlight}
-          disabled={!isDirectMode || !isEditedReport}
+          disabled={editionMode === "form" || !isEditedReport}
         >
           {this.props.reportStore!.fieldHighlighted ? "Masquer" : "Montrer"} les
           champs
@@ -214,11 +220,11 @@ class EditorToolbar extends React.Component<Props> {
             }
           />
         </MenuItem>
-        <MenuItem onClick={this.zoomIn} disabled={!isDirectMode}>
+        <MenuItem onClick={this.zoomIn} disabled={editionMode === "form"}>
           Zoom in
           <MenuIcon icon="plus" />
         </MenuItem>
-        <MenuItem onClick={this.zoomOut} disabled={!isDirectMode}>
+        <MenuItem onClick={this.zoomOut} disabled={editionMode === "form"}>
           Zoom out
           <MenuIcon icon="minus" />
         </MenuItem>

@@ -16,6 +16,7 @@ import { SpiralSpinner } from "react-spinners-kit";
 import { mainTheme } from "../../assets/styles/_colors";
 import NewTemplate from "../../components/modals/NewTemplate";
 import { ActionButton } from "../../components/ui/Buttons";
+import TemplateInfoModal from "../../components/modals/TemplateInfoModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -43,6 +44,7 @@ class TemplateMenu extends React.Component<Props> {
   private closeNewTemplate = () => {
     this.props.uiStore!.hideModal("new-template");
   };
+
   private newTemplateRequest = () => {
     this.props.uiStore!.showModal("new-template");
   };
@@ -80,6 +82,7 @@ class TemplateMenu extends React.Component<Props> {
               close={this.closeNewTemplate}
               onOk={this.closeNewTemplate}
             />
+
           </ProContainer>
         </SubLayout>
       </MainLayout>

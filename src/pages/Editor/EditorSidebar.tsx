@@ -15,7 +15,6 @@ import { StatusButton } from "../../components/ui/Buttons";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
-  clickBehaviour: "scroll" | "highlight";
   activeReport?: Report;
   reportStore?: ReportStore;
   templateStore?: TemplateStore;
@@ -117,19 +116,13 @@ const MainButtonWrapper = styled.div`
 }))
 @observer
 class EditorSidebar extends React.Component<Props> {
-  public componentDidMount() {
-    !this.props.uiStore!.isTemplatesLoaded &&
-      this.props.templateStore!.getTemplates(() =>
-        this.props.uiStore!.setIsTemplatesLoaded(true),
-      );
-  }
-
   private sectionClick = (sectionLabel: string) => {
-    switch (this.props.clickBehaviour) {
-      case "scroll":
+    const editionMode = this.props.reportStore!.editionMode;
+    switch (editionMode) {
+      case "form":
         this.scroll(sectionLabel);
         break;
-      case "highlight":
+      case "direct":
         this.highlight(sectionLabel);
         break;
     }

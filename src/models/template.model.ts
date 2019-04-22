@@ -22,7 +22,7 @@ interface IsignatureInput extends IinputeBase {
   values: string[];
 }
 
-type Iinput = IstringInput | IsingleSelectInput | IsignatureInput;
+export type Iinput = IstringInput | IsingleSelectInput | IsignatureInput;
 
 export interface Isection {
   id: string;
@@ -40,17 +40,33 @@ export interface Itemplate {
   inputs: Iinput[];
 }
 
-export interface ItemplateMap {
-  [key: string]: Itemplate;
-}
+export type IreportStatus = "valid" | "new" | "warning" | "error";
 
-export interface Ireport {
-  inputs: Iinput[];
+export interface IreportBase {
   id: string;
+  userId: string;
   sections: any[];
-  template: Itemplate | null;
+  templateId: string;
+  templateName: string;
   creationDate: Date | string;
   lastModifiedDate: Date | string;
+  status: IreportStatus;
+}
+
+export interface Ireport extends IreportBase {
+  inputs: Iinput[];
+}
+
+export interface IreportObj extends IreportBase {
+  inputs: IinputMap;
+}
+
+export interface IinputMap {
+  [key: string]: Iinput;
+}
+
+export interface ItemplateMap {
+  [key: string]: Itemplate;
 }
 
 export interface IreportMap {

@@ -1,7 +1,6 @@
-import { Itemplate } from "./../models/template.model";
-import * as firebase from "firebase";
+import { Itemplate, IreportObj } from "./../models/template.model";
+import * as firebase from "firebase/app";
 import firebaseui from "firebaseui";
-import "firebase/database";
 
 const config = {
   apiKey: "AIzaSyBDHfw2EEgmWWIE7V7lPgpPLScx8C3lnVo",
@@ -36,16 +35,20 @@ export const updateReport = ({ userId, reportId, doc, callback }: any) => {
   });
 };
 
-export const deleteReport = (id: string, callback: any) => {
-  database.ref(`reports/${id}`).remove((e: any) => {
-    callback(e);
+export const deleteReport = (
+  userId: string,
+  reportId: string,
+  callback?: (e: any) => void,
+) => {
+  database.ref(`users/${userId}/reports/${reportId}`).remove((e: any) => {
+    callback && callback(e);
   });
 };
 
-export const getReportsList = (callback: any) => {
+export const getReportsList = (callback?: (e: any) => void) => {
   const reports = database.ref("projects/");
   reports.on("value", function(res: any) {
-    callback(res.val());
+    callback && callback(res.val());
   });
 };
 
@@ -91,116 +94,126 @@ export const deleteAllActiveReports = (userId: string, callback?: any) => {
   });
 };
 
-export const createReport = ({ userId, report, reportId, callback }: any) => {
-  const ref = database.ref(`users/${userId}/reports/${reportId}/`);
+interface IcreateReportParams {
+  userId: string;
+  report: IreportObj;
+  callback?: (e: any) => void;
+}
+
+export const createReport = ({
+  userId,
+  report,
+  callback,
+}: IcreateReportParams) => {
+  const ref = database.ref(`users/${userId}/reports/${report.id}/`);
   ref.set(report, (e: any) => {
     callback && callback(e);
   });
 };
 
-// FirebaseUI config.
-const uiConfig = {
-  callbacks: {
-    signInSuccessWithAuthResult: function(authResult: any, redirectUrl: any) {
-      // User successfully signed in.
-      // Return type determines whether we continue the redirect automatically
-      // or whether we leave that to developer to handle.
-      return false;
-    },
-    uiShown: function() {
-      // The widget is rendered.
-      // Hide the loader.
-      // document.getElementById("loader")!.style.display = "none";
-      console.log("shown");
-    },
-  },
-  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-  signInFlow: "popup",
-  credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-  signInSuccessUrl: "/",
-  signInOptions: [
-    {
-      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
-    },
-    // Leave the lines as is for the providers you want to offer your users.
-    // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-    // firebase.auth.GithubAuthProvider.PROVIDER_ID,
-    // firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-    // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
-  ],
-  // tosUrl and privacyPolicyUrl accept either url string or a callback
-  // function.
-  // Terms of service url/callback.
-  tosUrl: "<your-tos-url>",
-  // Privacy policy url/callback.
-  privacyPolicyUrl: function() {
-    window.location.assign("<your-privacy-policy-url>");
-  },
-};
+// // FirebaseUI config.
+// const uiConfig = {
+//   callbacks: {
+//     signInSuccessWithAuthResult: function(authResult: any, redirectUrl: any) {
+//       // User successfully signed in.
+//       // Return type determines whether we continue the redirect automatically
+//       // or whether we leave that to developer to handle.
+//       return false;
+//     },
+//     uiShown: function() {
+//       // The widget is rendered.
+//       // Hide the loader.
+//       // document.getElementById("loader")!.style.display = "none";
+//       console.log("shown");
+//     },
+//   },
+//   // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+//   signInFlow: "popup",
+//   credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+//   signInSuccessUrl: "/",
+//   signInOptions: [
+//     {
+//       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+//       signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+//     },
+//     // Leave the lines as is for the providers you want to offer your users.
+//     // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+//     // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+//     // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+//     // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+//     // firebase.auth.EmailAuthProvider.PROVIDER_ID,
+//     // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+//     // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+//   ],
+//   // tosUrl and privacyPolicyUrl accept either url string or a callback
+//   // function.
+//   // Terms of service url/callback.
+//   tosUrl: "<your-tos-url>",
+//   // Privacy policy url/callback.
+//   privacyPolicyUrl: function() {
+//     window.location.assign("<your-privacy-policy-url>");
+//   },
+// };
 
-export const initializeAuth = () => {
-  ui = new firebaseui.auth.AuthUI(firebase.auth());
-};
+// export const initializeAuth = () => {
+//   ui = new firebaseui.auth.AuthUI(firebase.auth());
+// };
 
-export const startAuth = () => {
-  // if (ui.isPendingRedirect()) {
-  //   console.log("user", firebase.auth().currentUser);
-  //   ui.start("#firebaseui-auth-container", uiConfig);
-  // }
-  ui.start("#firebaseui-auth-container", uiConfig);
-};
+// export const startAuth = () => {
+//   // if (ui.isPendingRedirect()) {
+//   //   console.log("user", firebase.auth().currentUser);
+//   //   ui.start("#firebaseui-auth-container", uiConfig);
+//   // }
+//   ui.start("#firebaseui-auth-container", uiConfig);
+// };
 
-export const startAuthListener = function(
-  signIn: (a: any) => void,
-  signOut: () => void,
-) {
-  firebase.auth().onAuthStateChanged(
-    function(user) {
-      if (user) {
-        // User is signed in.
-        const displayName = user.displayName;
-        const email = user.email;
-        const emailVerified = user.emailVerified;
-        const photoURL = user.photoURL;
-        const uid = user.uid;
-        const phoneNumber = user.phoneNumber;
-        const providerData = user.providerData;
-        user.getIdToken().then(function(accessToken) {
-          signIn({
-            displayName: displayName,
-            email: email,
-            emailVerified: emailVerified,
-            phoneNumber: phoneNumber,
-            photoURL: photoURL,
-            uid: uid,
-            accessToken: accessToken,
-            providerData: providerData,
-          });
-        });
-      } else {
-        console.log("signout");
-        signOut();
-      }
-    },
-    function(error) {
-      console.log(error);
-    },
-  );
-};
+// export const startAuthListener = function(
+//   signIn: (a: any) => void,
+//   signOut: () => void,
+// ) {
+//   firebase.auth().onAuthStateChanged(
+//     function(user) {
+//       if (user) {
+//         // User is signed in.
+//         const displayName = user.displayName;
+//         const email = user.email;
+//         const emailVerified = user.emailVerified;
+//         const photoURL = user.photoURL;
+//         const uid = user.uid;
+//         const phoneNumber = user.phoneNumber;
+//         const providerData = user.providerData;
+//         user.getIdToken().then(function(accessToken) {
+//           signIn({
+//             displayName: displayName,
+//             email: email,
+//             emailVerified: emailVerified,
+//             phoneNumber: phoneNumber,
+//             photoURL: photoURL,
+//             uid: uid,
+//             accessToken: accessToken,
+//             providerData: providerData,
+//           });
+//         });
+//       } else {
+//         console.log("signout");
+//         signOut();
+//       }
+//     },
+//     function(error) {
+//       console.log(error);
+//     },
+//   );
+// };
 
-export const signOut = () => {
-  firebase.auth().signOut();
-  // .then(
-  //   function() {
-  //     console.log("starting ui");
-  //    // ui.start("#firebaseui-auth-container", uiConfig);
-  //   },
-  //   function(error) {
-  //     console.error("Sign Out Error", error);
-  //   },
-  // );
-};
+// export const signOut = () => {
+//   firebase.auth().signOut();
+//   // .then(
+//   //   function() {
+//   //     console.log("starting ui");
+//   //    // ui.start("#firebaseui-auth-container", uiConfig);
+//   //   },
+//   //   function(error) {
+//   //     console.error("Sign Out Error", error);
+//   //   },
+//   // );
+// };

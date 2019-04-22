@@ -8,9 +8,10 @@ import { _measures } from "../../../assets/styles/_measures";
 import { ProContainer } from "../../../components/layouts/ProContainer";
 import { AllStores } from "../../../models/all-stores.model";
 import { StatusButton } from "../../../components/ui/Buttons";
+import { Iinput } from "../../../models/template.model";
 
 interface Props {
-  inputs: any;
+  inputs?: Iinput[];
   sections?: any[];
 }
 
@@ -53,13 +54,13 @@ class FormEdition extends React.Component<Props> {
             this.props.sections.map((section, index) => {
               let status = "valid";
               let mandatory = false;
-              this.props.inputs
+              this.props.inputs!
                 .filter((input: any) => input.sectionId === section.id)
                 .forEach((input: any) => {
                   input.mandatory && (mandatory = true);
                   input.status === "untouched" && (status = "untouched");
                 });
-              this.props.inputs
+              this.props.inputs!
                 .filter((input: any) => input.sectionId === section.id)
                 .forEach((input: any) => {
                   input.mandatory && (mandatory = true);
@@ -75,7 +76,7 @@ class FormEdition extends React.Component<Props> {
                   </Flex>
 
                   <div>
-                    {this.props.inputs
+                    {this.props.inputs!
                       .filter((input: any) => input.sectionId === section.id)
                       .map((input: any, index2: number) => {
                         const Input = componentMapping[input.type];

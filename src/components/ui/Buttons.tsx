@@ -22,17 +22,17 @@ interface IIconBoxProps {
   size?: "big" | "small";
 }
 
-export const SearchIconBox = IconBox.extend`
+export const SearchIconBox = styled(IconBox)`
   border-bottom: 1px solid ${props => props.theme.font_primary};
   color: ${props => props.theme.font_primary};
 `;
 
-export const RefreshIconBox: any = IconBox.extend`
+export const RefreshIconBox: any = styled(IconBox)`
   background-color: ${(props: any) =>
-    props.active ? props.theme.font_primary : props.theme.disabled};
+    !props.active ? props.theme.font_primary : props.theme.disabled};
 `;
 
-export const ActionIconBox: any = IconBox.extend`
+export const ActionIconBox: any = styled(IconBox)`
   margin-left: 10px;
   background-color: ${(props: any) =>
     !props.disabled
@@ -41,7 +41,6 @@ export const ActionIconBox: any = IconBox.extend`
   color: ${props => props.theme.font_secondary};
   cursor: ${(props: any) => (!props.disabled ? "pointer" : "not-allowed")};
 `;
-
 
 interface IActionButtonBoxProps {
   onClick: () => void;

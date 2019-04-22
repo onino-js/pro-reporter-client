@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "../../styled-components";
 import { Itemplate } from "../../models/template.model";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   template: Itemplate;
@@ -10,6 +11,12 @@ interface Props {
   editTemplate: (template: Itemplate) => void;
   viewTemplate: (template: Itemplate) => void;
 }
+
+const Container = styled.div`
+  width: 160px;
+  height: auto;
+  text-align: center;
+`;
 
 const TemplateItemBox: any = styled.div.attrs({
   className: (props: any) => (props.active ? "active" : ""),
@@ -22,7 +29,7 @@ const TemplateItemBox: any = styled.div.attrs({
   height: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-end;
   align-items: center;
 `;
 
@@ -45,11 +52,17 @@ const Item: any = styled.div.attrs({
   }
 `;
 
-const EditButton: any = styled.button.attrs({
+const TemplateButton: any = styled.button.attrs({
   className: (props: any) => (props.active ? "active" : ""),
 })`
   display: none;
-  color: ${props => props.theme.primary};
+  width: 130px;
+  color: ${props => props.theme.font_secondary};
+  background-color: ${props => props.theme.primary};
+  cursor: pointer;
+  outline: none;
+  border: none;
+  margin-bottom: 10px;
   z-index: 1;
   &.active {
     display: inline;
@@ -60,42 +73,34 @@ const Label = styled.div`
   width: 100%;
   text-align: center;
   z-index: 1;
-`;
-
-const ViewButton: any = styled.button.attrs({
-  className: (props: any) => (props.active ? "active" : ""),
-})`
-  display: none;
-  color: ${props => props.theme.primary};
-  z-index: 1;
-  &.active {
-    display: inline;
-  }
+  margin: auto;
 `;
 
 const TemplateItem: React.SFC<Props> = (props: Props) => (
-  <React.Fragment>
+  <Container>
     <TemplateItemBox>
-      <EditButton
+      <TemplateButton
         onClick={() => props.editTemplate(props.template)}
         active={props.selectedTemplateId === props.template.id ? 1 : 0}
       >
         EDITER
-      </EditButton>
-      <ViewButton
+        <FontAwesomeIcon icon="edit" style={{ marginLeft: "10px" }} />
+      </TemplateButton>
+      <TemplateButton
         onClick={() => props.viewTemplate(props.template)}
         active={props.selectedTemplateId === props.template.id ? 1 : 0}
       >
         INFOS
-      </ViewButton>
-      <Label>{props.template.label}</Label>
+        <FontAwesomeIcon icon="eye" style={{ marginLeft: "10px" }} />
+      </TemplateButton>
       <Item
         id={"template-container" + props.template.id}
         onClick={() => props.selectTemplate(props.template.id)}
         active={props.selectedTemplateId === props.template.id ? 1 : 0}
       />
     </TemplateItemBox>
-  </React.Fragment>
+    <Label>{props.template.label}</Label>
+  </Container>
 );
 
 export default TemplateItem;

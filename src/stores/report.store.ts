@@ -4,6 +4,7 @@ import {
   updateReport,
   createReport,
   getReports,
+  deleteReport,
 } from "./../services/firebase.srevice";
 import { getStatusColor } from "./../services/template.service";
 import uuid from "uuid/v1";
@@ -11,6 +12,7 @@ import { Report } from "./report";
 import { observable, action, toJS, flow } from "mobx";
 import authStore from "./auth.store";
 import uiStore from "./ui.store";
+import templateStore from "./templateStore";
 
 const ZOOM_STEP: number = 20;
 
@@ -22,11 +24,33 @@ export class ReportStore {
   @observable public activeReportId: string = "";
   @observable public fieldHighlighted: boolean = false;
   @observable public zoom: number = 100;
+  @observable public editionMode: "direct" | "form" = "direct";
 
   @action.bound
   public setTemplate(template: Itemplate) {
-    this.template = template;
-    this.activeReport = null;
+    if (!(this.template && template.id === this.template.id)) {
+      this.template = template;
+      this.activeReport = null;
+    }
+  }
+
+  @action.bound
+  public setActiveReport(id: string) {
+    // Check if report already loaded in editor
+    const report = this.reports.find(report => report.id === id)!;
+    if (report) {
+      console.log(report);
+      console.log(this.template);
+      if (!this.template || this.template.id !== report.templateId) {
+        this.template = templateStore.templates.find(
+          t => t.id === report.templateId,
+        )!;
+      }
+      this.activeReport = report;
+    } else {
+      // todo : manage error
+      console.log("no corresponding editor in loaded reports");
+    }
   }
 
   @action.bound
@@ -35,9 +59,22 @@ export class ReportStore {
   };
 
   @action.bound
+  public setEditionMode = (payload: "direct" | "form") => {
+    this.editionMode = payload;
+  };
+
+  @action.bound
   public getReportList = () => {
     getReports(authStore.userId, (reports: IreportMap) => {
-      this.setReportList(mapToArray(reports));
+      // Transform object to array
+      this.setReportList(
+        mapToArray(reports).map((report: Ireport) => {
+          return {
+            ...report,
+            inputs: mapToArray(report.inputs),
+          };
+        }),
+      );
       uiStore!.setIsReportsLoaded(true);
     });
   };
@@ -57,13 +94,18 @@ export class ReportStore {
   }
 
   @action.bound
-  public create() {
+  public create(template: Itemplate) {
     const id = uuid();
     const newReport = new Report({
-      template: this.template,
+      userId: authStore.userId,
+      templateId: template.id,
+      templateName: template.label,
       id,
+      creationDate: new Date(),
+      lastModifiedDate: new Date(),
       inputs: this.template!.inputs,
       sections: this.template!.sections,
+      status: "new",
     });
     this.reports.push(newReport);
     this.setActiveReport(id);
@@ -71,12 +113,31 @@ export class ReportStore {
       () =>
         createReport({
           userId: authStore.userId,
-          reportId: id,
-          report: newReport.asJson(),
+          report: newReport.asJsonObj(),
         }),
       100,
     );
   }
+
+  @action.bound
+  loadReportInEditor(reportId: string) {
+    const allreadyLoaded = this.reports.find(r => r.id === reportId);
+    if (!allreadyLoaded) {
+      const report = this.reportList.find(report => report.id === reportId)!;
+      if (report) {
+        const newReport = new Report(report);
+        this.reports.push(newReport);
+      } else {
+        // todo : manage error
+        console.log("no corresponding report");
+      }
+    }
+  }
+
+  @action.bound
+  public deleteReport = (reportId: string) => {
+    deleteReport(authStore.userId, reportId);
+  };
 
   @action.bound
   public delete(id: string) {
@@ -107,20 +168,20 @@ export class ReportStore {
       const newInputs = this.activeReport!.inputs.map((input: any) =>
         toJS(input),
       );
-      const newReport = new Report({
-        template: this.template,
+      const newReportJson: Ireport = {
+        ...this.activeReport.asJson(),
+        creationDate: new Date(),
+        lastModifiedDate: new Date(),
         inputs: newInputs,
-        sections: this.template!.sections,
-        id: newId,
-      });
+      };
+      const newReport = new Report(newReportJson);
       this.reports.push(newReport);
       this.setActiveReport(newReport.id);
       window.setTimeout(
         () =>
           createReport({
             userId: authStore.userId,
-            reportId: newReport.id,
-            report: newReport.asJson(),
+            report: newReport.asJsonObj(),
           }),
         100,
       );
@@ -137,29 +198,24 @@ export class ReportStore {
         const newInputs = this.activeReport!.inputs.map((input: any) =>
           toJS(input),
         );
-        const newReport = new Report({
-          template: this.template,
+        const newReportJson: Ireport = {
+          ...this.activeReport.asJson(),
+          creationDate: new Date(),
+          lastModifiedDate: new Date(),
           inputs: newInputs,
-          sections: this.template!.sections,
-          id: newId,
-        });
+        };
+        const newReport = new Report(newReportJson);
         this.reports.push(newReport);
         lastId = newReport.id;
 
         // firebase creation
         createReport({
           userId: authStore.userId,
-          reportId: newReport.id,
-          report: newReport.asJson(),
+          report: newReport.asJsonObj(),
         });
       }
       this.setActiveReport(lastId);
     }
-  }
-
-  @action.bound
-  public setActiveReport(id: string) {
-    this.activeReport = this.reports.find(report => report.id === id)!;
   }
 
   @action.bound

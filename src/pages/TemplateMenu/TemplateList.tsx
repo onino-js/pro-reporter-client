@@ -7,6 +7,7 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { Itemplate } from "../../models/template.model";
 import TemplateItem from "./TemplateItem";
+import TemplateInfoModal from "../../components/modals/TemplateInfoModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: any;
@@ -19,7 +20,6 @@ const Text = styled.div`
   margin-bottom: 30px;
 `;
 
-
 const Wrapper = styled.div`
   display: flex;
   overflow-x: scroll;
@@ -27,7 +27,6 @@ const Wrapper = styled.div`
     display: none;
   }
 `;
-
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
@@ -59,11 +58,16 @@ class TemplateList extends React.Component<Props> {
   };
   private editTemplate = (template: Itemplate) => {
     this.props.reportStore!.setTemplate(template!);
-    this.props.history.push("/editor/direct");
+    this.props.history.push("/editor");
+  };
+  private closeTemplateInfo = () => {
+    this.props.uiStore!.hideModal("template-info");
   };
   private viewTemplate = (template: Itemplate) => {
-    this.props.reportStore!.setTemplate(template!);
-    this.props.history.push("/editor/direct");
+    this.props.uiStore!.showModal("template-info");
+    this.setState({
+      selectedTemplateId: template.id,
+    });
   };
 
   public render() {
@@ -72,16 +76,22 @@ class TemplateList extends React.Component<Props> {
         <Text>Choisissez un template à éditer : </Text>
         <Wrapper>
           {this.props.templates!.map((template: Itemplate, index: number) => (
-            <TemplateItem 
+            <TemplateItem
+              key={"template-list-item" + index}
               template={template}
               selectedTemplateId={this.state.selectedTemplateId}
-              index={index} 
+              index={index}
               selectTemplate={this.selectTemplate}
               editTemplate={this.editTemplate}
-              viewTemplate = {this.viewTemplate}
-        />
-      ))}
+              viewTemplate={this.viewTemplate}
+            />
+          ))}
         </Wrapper>
+        <TemplateInfoModal
+          templateId={this.state.selectedTemplateId}
+          show={this.props.uiStore!.showTemplateInfoModal}
+          close={this.closeTemplateInfo}
+        />
       </Flex>
     ) : (
       <div> </div>

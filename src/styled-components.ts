@@ -14,6 +14,7 @@ export interface ThemeInterface {
   warning: string;
   danger: string;
   disabled: string;
+  purple: string;
 }
 
 const {
