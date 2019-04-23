@@ -124,10 +124,10 @@ class InputLayoutStandard extends React.Component<Props> {
             )}
           </Col>
           <Col {...col5}>
-            <RefreshButton
+            {this.props.input.status !== "untouched" && <RefreshButton
               active={this.props.input.status !== "untouched"}
               onClick={this.props.input.reset}
-            />
+            />}
           </Col>
           <Col {...col6}>
             <StatusButton

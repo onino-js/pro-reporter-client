@@ -5,6 +5,7 @@ import {
   createReport,
   getReports,
   deleteReport,
+  updateReportList,
 } from "./../services/firebase.srevice";
 import { getStatusColor } from "./../services/template.service";
 import uuid from "uuid/v1";
@@ -39,8 +40,6 @@ export class ReportStore {
     // Check if report already loaded in editor
     const report = this.reports.find(report => report.id === id)!;
     if (report) {
-      console.log(report);
-      console.log(this.template);
       if (!this.template || this.template.id !== report.templateId) {
         this.template = templateStore.templates.find(
           t => t.id === report.templateId,
@@ -67,14 +66,15 @@ export class ReportStore {
   public getReportList = () => {
     getReports(authStore.userId, (reports: IreportMap) => {
       // Transform object to array
-      this.setReportList(
-        mapToArray(reports).map((report: Ireport) => {
-          return {
-            ...report,
-            inputs: mapToArray(report.inputs),
-          };
-        }),
-      );
+      reports &&
+        this.setReportList(
+          mapToArray(reports).map((report: Ireport) => {
+            return {
+              ...report,
+              inputs: mapToArray(report.inputs),
+            };
+          }),
+        );
       uiStore!.setIsReportsLoaded(true);
     });
   };
@@ -84,8 +84,8 @@ export class ReportStore {
     this.template &&
       (document.getElementById(id)!.innerHTML = this.template.svg as string);
     const svg = document.getElementById(id)!.getElementsByTagName("svg")[0];
-    svg.setAttribute("width", "100%");
-    svg.setAttribute("height", "auto");
+    // svg.setAttribute("width", "210mm");
+    // svg.setAttribute("height", "297mm");
   }
 
   @action.bound
@@ -120,7 +120,25 @@ export class ReportStore {
   }
 
   @action.bound
-  loadReportInEditor(reportId: string) {
+  loadReportListInEditor(ids?: string) {
+    if (ids) {
+      this.reportList
+        .filter(r => r.templateId === this.template!.id)
+        .filter(r => ids.includes(r.id))
+        .forEach(r => this.loadReportInEditor(r));
+    } else {
+      this.reportList.forEach(report => this.loadReportInEditor(report));
+    }
+  }
+
+  @action.bound
+  loadReportInEditor(report: Ireport) {
+    const newReport = new Report(report);
+    !this.isReportLoadedInEditor(report.id) && this.reports.push(newReport);
+  }
+
+  @action.bound
+  loadReportInEditorFromId(reportId: string) {
     const allreadyLoaded = this.reports.find(r => r.id === reportId);
     if (!allreadyLoaded) {
       const report = this.reportList.find(report => report.id === reportId)!;
@@ -132,6 +150,12 @@ export class ReportStore {
         console.log("no corresponding report");
       }
     }
+  }
+
+  @action.bound
+  public isReportLoadedInEditor(reportId: string) {
+    const exist = this.reports.find(r => r.id === reportId);
+    return exist ? true : false;
   }
 
   @action.bound
@@ -340,14 +364,21 @@ export class ReportStore {
   @action.bound
   public synchronize() {
     // get all reports in json format
-    const reports = this.reports.map(report => report.asJson());
-    reports.forEach((report: any) =>
-      updateReport({
-        userId: authStore.userId,
-        reportId: report.id,
-        doc: report.inputs,
-      }),
-    );
+    const reports = this.reports.map(report => report.asJsonObj());
+    updateReportList({
+      userId: authStore.userId,
+      reports: reports,
+      onUpdateOne: console.log,
+      onUpdateAll: () => console.log("done"),
+      onError: () => {},
+    });
+    // reports.forEach((report: any) =>
+    //   updateReport({
+    //     userId: authStore.userId,
+    //     reportId: report.id,
+    //     doc: report.inputs,
+    //   }),
+    // );
     // for each report, update it
   }
 }

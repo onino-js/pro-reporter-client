@@ -5,6 +5,7 @@ export const InputPrimitive = styled.input`
   flex : 1;
   border-radius: 0px;
   height: 30px;
+  padding-left: 10px;
   font-size: 16px;
   font-size: 16px;
   max-width : 300px

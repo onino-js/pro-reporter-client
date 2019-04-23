@@ -15,6 +15,7 @@ import LoadingModal from "../../components/modals/LoadingModal";
 import SubLayout from "../../components/layouts/SubLayout";
 import EditorSidebar from "./EditorSidebar";
 import { NoTemplate } from "./NoTemplate";
+import LoadReportModal from "../../components/modals/LoadReportModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -33,13 +34,12 @@ class Editor extends React.Component<Props> {
     }
     const params: any = this.props.match.params;
     if (params.reportId) {
-      this.props.reportStore!.loadReportInEditor(params.reportId);
+      this.props.reportStore!.loadReportInEditorFromId(params.reportId);
       this.props.reportStore!.setActiveReport(params.reportId);
     }
   }
 
   public render() {
-    const isDirectMode = this.props.location.pathname === "/editor/direct";
     const reports = this.props.reportStore!.reports;
     const activeReport = this.props.reportStore!.activeReport;
     const template = this.props.reportStore!.template;
@@ -62,10 +62,15 @@ class Editor extends React.Component<Props> {
             )}
             {template && <EditorTabs template={template} />}
           </Flex>
+          <LoadReportModal />
           <LoadingModal
             show={this.props.uiStore!.showLoadingModal}
             message="Création des nouveax rapports en cours, veuillez patienter"
           />
+          {/* <LoadingModal
+            show={true}
+            message="Création des nouveax rapports en cours, veuillez patienter"
+          /> */}
         </SubLayout>
       </MainLayout>
     );

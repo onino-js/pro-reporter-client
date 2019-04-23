@@ -17,12 +17,17 @@ export const startConvertion = (file: any) => {
     body: JSON.stringify({
       input: "raw",
       file: file,
+
+      // input: "base64",
+      files: [
+        { filename: "1.svg", file: file },
+        { filename: "2.svg", file: file },
+      ],
       mode: "combine",
-      // files: [file, file],
-      filename: "test.svg",
+      // filename: "test.svg",
       inputformat: "svg",
       // wait: "true",
-      // download: "true",
+      download: "inline",
       outputformat: "pdf",
       converteroptions: {
         audio_bitrate: 128,
@@ -43,7 +48,7 @@ export const startConvertion = (file: any) => {
     });
 };
 
-export const createProcess = () => {
+export const createProcess = async () => {
   return fetch(URL, {
     method: "post",
     headers: {

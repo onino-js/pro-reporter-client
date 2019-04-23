@@ -35,12 +35,35 @@ export const updateReport = ({ userId, reportId, doc, callback }: any) => {
   });
 };
 
+interface IupdateReportListParams {
+  userId: string;
+  reports: IreportObj[];
+  onUpdateOne: (id: string) => void;
+  onUpdateAll: () => void;
+  onError: () => void;
+}
+
+export const updateReportList = async ({
+  userId,
+  reports,
+  onUpdateOne,
+  onUpdateAll,
+  onError,
+}: IupdateReportListParams) => {
+  for (const report of reports) {
+    const ref = database.ref(`users/${userId}/ongoing/${report.id}`);
+    await ref.update(report);
+    onUpdateOne && onUpdateOne(report.id);
+  }
+  onUpdateAll && onUpdateAll();
+};
+
 export const deleteReport = (
   userId: string,
   reportId: string,
   callback?: (e: any) => void,
 ) => {
-  database.ref(`users/${userId}/reports/${reportId}`).remove((e: any) => {
+  database.ref(`users/${userId}/ongoing/${reportId}`).remove((e: any) => {
     callback && callback(e);
   });
 };
@@ -82,14 +105,14 @@ export const getReportList = (callback: any) => {
 };
 
 export const getReports = (userId: string, callback: any) => {
-  const reports = database.ref(`users/${userId}/reports/`);
+  const reports = database.ref(`users/${userId}/ongoing/`);
   reports.on("value", function(res: any) {
     callback(res.val());
   });
 };
 
 export const deleteAllActiveReports = (userId: string, callback?: any) => {
-  database.ref(`users/${userId}/reports/`).remove((e: any) => {
+  database.ref(`users/${userId}/ongoing/`).remove((e: any) => {
     callback && callback(e);
   });
 };
@@ -105,7 +128,7 @@ export const createReport = ({
   report,
   callback,
 }: IcreateReportParams) => {
-  const ref = database.ref(`users/${userId}/reports/${report.id}/`);
+  const ref = database.ref(`users/${userId}/ongoing/${report.id}/`);
   ref.set(report, (e: any) => {
     callback && callback(e);
   });

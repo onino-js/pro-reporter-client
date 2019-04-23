@@ -7,7 +7,10 @@ import styled from "../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReportStore } from "../../stores/report.store";
-import { startConvertion } from "../../services/cloud-converter.service";
+import {
+  startConvertion,
+  createProcess,
+} from "../../services/cloud-converter.service";
 import { saveAs } from "file-saver";
 import DuplicateModal from "./editor-modals/DuplicateModal";
 import { UiStore } from "../../stores/ui.store";
@@ -117,8 +120,9 @@ class EditorToolbar extends React.Component<Props> {
 
   private exportReportPdf = async () => {
     const svg = this.props.reportStore!.getSvg();
-    const res = await startConvertion(svg);
-    // saveAs(blob, "test.svg");
+    // const res = await startConvertion(svg);
+    const res = await createProcess();
+    res && console.log(res);
   };
 
   private customDuplicateRequest = () =>
@@ -132,14 +136,18 @@ class EditorToolbar extends React.Component<Props> {
     deleteAllActiveReports(this.props.authStore!.userId);
   };
 
+  private showLoadReportModal = () => {
+    this.props.uiStore!.showModal("load-report");
+  };
+
   public render() {
     const editionMode = this.props.reportStore!.editionMode;
     const isEditedReport = this.props.reportStore!.activeReport !== null;
     const fileMenu = (
       <Menu>
-        <MenuItem disabled={true}>
-          <div>Enregistrer</div>
-          <MenuIcon icon="save" />
+        <MenuItem onClick={this.showLoadReportModal}>
+          <div>Charger</div>
+          <MenuIcon icon="download" />
         </MenuItem>
         <MenuItem disabled={!isEditedReport}>
           <div>Exporter</div>
