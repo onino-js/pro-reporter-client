@@ -12,6 +12,7 @@ import { Itemplate } from "../../models/template.model";
 import { SpiralSpinner } from "react-spinners-kit";
 import { mainTheme } from "../../assets/styles/_colors";
 import { StatusButton } from "../../components/ui/Buttons";
+import { _measures } from "../../assets/styles/_measures";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -40,6 +41,9 @@ const SideMenuItem = styled.div`
     background-color: #000;
     color: #fff;
   }
+   @media (max-width: ${_measures.mobile}px) {
+    justify-content : center;
+  }
 `;
 
 const Container = styled.div`
@@ -48,6 +52,9 @@ const Container = styled.div`
   width: 200px;
   font-size: 0.8em;
   background-color: ${props => props.theme.disabled};
+  @media (max-width: ${_measures.mobile}px) {
+    width: 50px;
+  }
 `;
 
 const SideMenuItemTitle = styled.span`
@@ -58,6 +65,9 @@ const SideMenuItemTitle = styled.span`
   font-size: 0.8em;
   letter-spacing: 3px;
   font-weight: bolder;
+  @media (max-width: ${_measures.mobile}px) {
+    display: none;
+  }
 `;
 
 const MainMenuButton = styled.div`
@@ -66,10 +76,8 @@ const MainMenuButton = styled.div`
   display: flex;
   align-items: center;
   color: #fff;
-  /* flex-direction: column; */
   justify-content: center;
   cursor: pointer;
-  /* border-bottom: 1px solid #fff; */
   :hover {
     color: ${props => props.theme.primary};
   }
@@ -105,6 +113,12 @@ const MainButtonWrapper = styled.div`
   flex-direction: center;
   align-items: center;
   background-color: ${props => props.theme.bg_tertiary};
+`;
+
+const TemplateChoiceButton = styled.div`
+  @media (max-width: ${_measures.mobile}px) {
+    display: none;
+  }
 `;
 
 @inject((allStores: AllStores) => ({
@@ -168,7 +182,10 @@ class EditorSidebar extends React.Component<Props> {
           {templatesLoaded ? (
             <ProDropdown overlay={menu}>
               <ActionLink>
-                {template ? template.label : "Choix template"}
+                <TemplateChoiceButton>
+                  {" "}
+                  {template ? template.label : "Choix template"}
+                </TemplateChoiceButton>
                 <Icon type="down" style={{ marginLeft: "10px" }} />
               </ActionLink>
             </ProDropdown>

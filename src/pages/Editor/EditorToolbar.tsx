@@ -7,10 +7,7 @@ import styled from "../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReportStore } from "../../stores/report.store";
-import {
-  startConvertion,
-  createProcess,
-} from "../../services/cloud-converter.service";
+import { createProcess, startProcess } from "../../services/cloud-converter.service";
 import { saveAs } from "file-saver";
 import DuplicateModal from "./editor-modals/DuplicateModal";
 import { UiStore } from "../../stores/ui.store";
@@ -18,6 +15,7 @@ import { Button } from "antd/lib/radio";
 import { Flex } from "../../components/ui/Flex";
 import { deleteAllActiveReports } from "../../services/firebase.srevice";
 import { AuthStore } from "../../stores/auth.store";
+import { _measures } from "../../assets/styles/_measures";
 
 interface Props extends RouteComponentProps {
   Report?: Report;
@@ -79,6 +77,20 @@ const TemplateDropdown = styled(ProDropdown)`
   font-weight: bolder;
 `;
 
+const LeftWrapperPc = styled(Flex)`
+  @media (max-width: ${_measures.mobile}px) {
+    display: none;
+  }
+`;
+
+const LeftWrapperMobile = styled(Flex)`
+  padding-left: 10px;
+  color: ${props => props.theme.bg_primary};
+  @media (min-width: ${_measures.mobile}px) {
+    display: none;
+  }
+`;
+
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
   Report: allStores.reportStore.activeReport,
@@ -123,6 +135,8 @@ class EditorToolbar extends React.Component<Props> {
     // const res = await startConvertion(svg);
     const res = await createProcess();
     res && console.log(res);
+    // const res2 = await startProcess(res.url, svg)
+    // console.log(res2)
   };
 
   private customDuplicateRequest = () =>
@@ -240,7 +254,7 @@ class EditorToolbar extends React.Component<Props> {
     );
     return (
       <Container>
-        <Flex>
+        <LeftWrapperPc>
           <ProDropdown overlay={fileMenu}>
             <ActionLink>
               Fichiers <Icon type="down" />
@@ -256,7 +270,10 @@ class EditorToolbar extends React.Component<Props> {
               Affichage <Icon type="down" />
             </ActionLink>
           </ProDropdown>
-        </Flex>
+        </LeftWrapperPc>
+        <LeftWrapperMobile>
+          <FontAwesomeIcon icon="ellipsis-h" />
+        </LeftWrapperMobile>
         <Flex alignH="flex-end" p="0px 5px 0px 0px">
           <SyncButtton onClick={this.synchronize}>SYNCHRONISER </SyncButtton>
         </Flex>

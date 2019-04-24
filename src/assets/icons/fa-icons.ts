@@ -78,6 +78,7 @@ import {
   faEllipsisV,
   faKiwiBird,
   faDownload,
+  faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faTachometerAlt);
@@ -159,3 +160,4 @@ library.add(faBug);
 library.add(faEllipsisV);
 library.add(faKiwiBird);
 library.add(faDownload);
+library.add(faEllipsisH);

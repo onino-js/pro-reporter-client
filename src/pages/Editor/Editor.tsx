@@ -22,6 +22,7 @@ interface Props extends RouteComponentProps {
   reportStore?: ReportStore;
 }
 
+
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
   reportStore: allStores.reportStore,
