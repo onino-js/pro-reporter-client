@@ -3,7 +3,6 @@ import styled from "../../styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { _measures } from "../../assets/styles/_measures";
 import { withRouter, RouteComponentProps } from "react-router";
-import NewReport from "../modals/NewReport";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
@@ -117,7 +116,6 @@ class UserAccountNavigation extends React.Component<Props> {
           <FontAwesomeIcon icon="plus" style={{ fontSize: "1.6em" }} />
           <div style={{ paddingLeft: "20px" }}>NOUVEAU RAPPORT</div>
         </MainMenuButton> */}
-        <NewReport />
         <Menu>
           {menuItems.map((item: any, index) => (
             <MenuItem

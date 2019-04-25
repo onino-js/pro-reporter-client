@@ -16,12 +16,12 @@ import SubLayout from "../../components/layouts/SubLayout";
 import EditorSidebar from "./EditorSidebar";
 import { NoTemplate } from "./NoTemplate";
 import LoadReportModal from "../../components/modals/LoadReportModal";
+import SyncModal from "../../components/modals/SyncModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   reportStore?: ReportStore;
 }
-
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
@@ -64,6 +64,7 @@ class Editor extends React.Component<Props> {
             {template && <EditorTabs template={template} />}
           </Flex>
           <LoadReportModal />
+          <SyncModal />
           <LoadingModal
             show={this.props.uiStore!.showLoadingModal}
             message="Création des nouveax rapports en cours, veuillez patienter"

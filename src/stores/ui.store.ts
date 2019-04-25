@@ -9,8 +9,10 @@ export class UiStore {
   @observable public showNewTemplate: boolean = false;
   @observable public showTemplateInfoModal: boolean = false;
   @observable public showLoadReportModal: boolean = false;
-
+  @observable public showSyncModal: boolean = false;
   @observable public isInputModalOpen: boolean = false;
+
+  // STATE OF SYNC
   @observable public isTemplatesLoaded: boolean = false;
   @observable public isReportsLoaded: boolean = false;
 
@@ -35,6 +37,9 @@ export class UiStore {
       case "load-report":
         this.showLoadReportModal = true;
         break;
+      case "sync":
+        this.showSyncModal = true;
+        break;
     }
   }
 
@@ -58,6 +63,9 @@ export class UiStore {
         break;
       case "load-report":
         this.showLoadReportModal = false;
+        break;
+      case "sync":
+        this.showSyncModal = false;
         break;
     }
   }

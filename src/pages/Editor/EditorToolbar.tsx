@@ -7,7 +7,10 @@ import styled from "../../styled-components";
 import { withRouter, RouteComponentProps } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReportStore } from "../../stores/report.store";
-import { createProcess, startProcess } from "../../services/cloud-converter.service";
+import {
+  createProcess,
+  startProcess,
+} from "../../services/cloud-converter.service";
 import { saveAs } from "file-saver";
 import DuplicateModal from "./editor-modals/DuplicateModal";
 import { UiStore } from "../../stores/ui.store";
@@ -16,12 +19,14 @@ import { Flex } from "../../components/ui/Flex";
 import { deleteAllActiveReports } from "../../services/firebase.srevice";
 import { AuthStore } from "../../stores/auth.store";
 import { _measures } from "../../assets/styles/_measures";
+import { FirebaseStore } from "../../stores/firebaseStore";
 
 interface Props extends RouteComponentProps {
   Report?: Report;
   reportStore?: ReportStore;
   uiStore?: UiStore;
   authStore?: AuthStore;
+  firebaseStore?: FirebaseStore;
 }
 
 const Container = styled.div`
@@ -96,6 +101,7 @@ const LeftWrapperMobile = styled(Flex)`
   Report: allStores.reportStore.activeReport,
   reportStore: allStores.reportStore,
   authStore: allStores.authStore,
+  firebaseStore: allStores.firebaseStore,
 }))
 @observer
 class EditorToolbar extends React.Component<Props> {
@@ -143,15 +149,23 @@ class EditorToolbar extends React.Component<Props> {
     this.props.uiStore!.showModal("duplicate");
 
   private synchronize = () => {
-    this.props.reportStore!.synchronize();
+    this.props.firebaseStore!.synchronize();
   };
 
   private deleteAll = () => {
     deleteAllActiveReports(this.props.authStore!.userId);
   };
 
+  private empty = () => {
+    deleteAllActiveReports(this.props.authStore!.userId);
+  };
+
   private showLoadReportModal = () => {
     this.props.uiStore!.showModal("load-report");
+  };
+
+  private exit = () => {
+    this.props.history.push("/");
   };
 
   public render() {
@@ -171,11 +185,15 @@ class EditorToolbar extends React.Component<Props> {
           <div>Importer</div>
           <MenuIcon icon="file-export" />
         </MenuItem>
-        <MenuItem onClick={this.deleteAll}>
-          <div>Vider</div>
+        <MenuItem onClick={this.empty}>
+          <div>Vider l'éditeur</div>
           <MenuIcon icon="trash" />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={this.deleteAll}>
+          <div>Supprimer les rapports</div>
+          <MenuIcon icon="trash" />
+        </MenuItem>
+        <MenuItem onClick={this.exit}>
           <div>Quitter mode édition</div>
           <MenuIcon icon="door-open" />
         </MenuItem>

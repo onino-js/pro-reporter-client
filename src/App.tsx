@@ -1,18 +1,16 @@
 import React, { Component } from "react";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { ThemeProvider } from "styled-components";
 import { inject, observer, Provider } from "mobx-react";
 import { mainTheme } from "./assets/styles/_colors";
 import Routes from "./components/routes/Routes";
-import logo from "./assets/images/proreporter-logo.png";
 import { AllStores } from "./models/all-stores.model";
 import uiStore, { UiStore } from "./stores/ui.store";
 import reportStore from "./stores/report.store";
 import authStore, { AuthStore } from "./stores/auth.store";
 import * as firebase from "firebase";
-import styled from "./styled-components";
 import templateStore, { TemplateStore } from "./stores/templateStore";
 import Signin from "./pages/Signin/Signin";
+import firebaseStore from "./stores/firebaseStore";
 
 const config = {
   apiKey: "AIzaSyBDHfw2EEgmWWIE7V7lPgpPLScx8C3lnVo",
@@ -102,6 +100,7 @@ export default () => (
     reportStore={reportStore}
     authStore={authStore}
     templateStore={templateStore}
+    firebaseStore={firebaseStore}
   >
     <App />
   </Provider>

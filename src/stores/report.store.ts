@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { mapToArray } from "./../services/app.service";
 import { Itemplate, Ireport, IreportMap } from "./../models/template.model";
 import {
@@ -84,8 +85,8 @@ export class ReportStore {
     this.template &&
       (document.getElementById(id)!.innerHTML = this.template.svg as string);
     const svg = document.getElementById(id)!.getElementsByTagName("svg")[0];
-    // svg.setAttribute("width", "210mm");
-    // svg.setAttribute("height", "297mm");
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "auto");
   }
 
   @action.bound
@@ -120,10 +121,9 @@ export class ReportStore {
   }
 
   @action.bound
-  loadReportListInEditor(ids?: string) {
+  loadReportListInEditor(ids?: string[]) {
     if (ids) {
       this.reportList
-        .filter(r => r.templateId === this.template!.id)
         .filter(r => ids.includes(r.id))
         .forEach(r => this.loadReportInEditor(r));
     } else {
@@ -161,6 +161,7 @@ export class ReportStore {
   @action.bound
   public deleteReport = (reportId: string) => {
     deleteReport(authStore.userId, reportId);
+    message.success("Le rapport a été supprimé");
   };
 
   @action.bound
@@ -194,6 +195,7 @@ export class ReportStore {
       );
       const newReportJson: Ireport = {
         ...this.activeReport.asJson(),
+        id: newId,
         creationDate: new Date(),
         lastModifiedDate: new Date(),
         inputs: newInputs,
@@ -224,6 +226,7 @@ export class ReportStore {
         );
         const newReportJson: Ireport = {
           ...this.activeReport.asJson(),
+          id: newId,
           creationDate: new Date(),
           lastModifiedDate: new Date(),
           inputs: newInputs,
@@ -359,27 +362,6 @@ export class ReportStore {
       const el = elems[i];
       el.setAttribute("fill", "transparent");
     }
-  }
-
-  @action.bound
-  public synchronize() {
-    // get all reports in json format
-    const reports = this.reports.map(report => report.asJsonObj());
-    updateReportList({
-      userId: authStore.userId,
-      reports: reports,
-      onUpdateOne: console.log,
-      onUpdateAll: () => console.log("done"),
-      onError: () => {},
-    });
-    // reports.forEach((report: any) =>
-    //   updateReport({
-    //     userId: authStore.userId,
-    //     reportId: report.id,
-    //     doc: report.inputs,
-    //   }),
-    // );
-    // for each report, update it
   }
 }
 

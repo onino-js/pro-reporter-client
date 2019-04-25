@@ -115,7 +115,7 @@ const MainButtonWrapper = styled.div`
   background-color: ${props => props.theme.bg_tertiary};
 `;
 
-const TemplateChoiceButton = styled.div`
+const TemplateChoiceButton = styled.span`
   @media (max-width: ${_measures.mobile}px) {
     display: none;
   }
@@ -183,7 +183,6 @@ class EditorSidebar extends React.Component<Props> {
             <ProDropdown overlay={menu}>
               <ActionLink>
                 <TemplateChoiceButton>
-                  {" "}
                   {template ? template.label : "Choix template"}
                 </TemplateChoiceButton>
                 <Icon type="down" style={{ marginLeft: "10px" }} />
