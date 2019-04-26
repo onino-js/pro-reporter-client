@@ -23,7 +23,6 @@ export class ReportStore {
   @observable public reports: Report[] = [];
   @observable public reportList: Ireport[] = [];
   @observable public activeReport: Report | null = null;
-  @observable public activeReportId: string = "";
   @observable public fieldHighlighted: boolean = false;
   @observable public zoom: number = 100;
   @observable public editionMode: "direct" | "form" = "direct";
@@ -65,9 +64,11 @@ export class ReportStore {
 
   @action.bound
   public getReportList = () => {
-    getReports(authStore.userId, (reports: IreportMap) => {
+    getReports(authStore.userId, (reports: IreportMap | null) => {
       // Transform object to array
-      reports &&
+      if (reports === null) {
+        this.setReportList([]);
+      } else if (reports) {
         this.setReportList(
           mapToArray(reports).map((report: Ireport) => {
             return {
@@ -76,6 +77,7 @@ export class ReportStore {
             };
           }),
         );
+      }
       uiStore!.setIsReportsLoaded(true);
     });
   };
@@ -126,6 +128,8 @@ export class ReportStore {
       this.reportList
         .filter(r => ids.includes(r.id))
         .forEach(r => this.loadReportInEditor(r));
+      this.reports.length > 0 &&
+        this.setActiveReport(this.reports[this.reports.length - 1].id);
     } else {
       this.reportList.forEach(report => this.loadReportInEditor(report));
     }
@@ -133,12 +137,32 @@ export class ReportStore {
 
   @action.bound
   loadReportInEditor(report: Ireport) {
-    const newReport = new Report(report);
-    !this.isReportLoadedInEditor(report.id) && this.reports.push(newReport);
+    if (!this.isReportLoadedInEditor(report.id)) {
+      const newReport = new Report(report);
+      this.reports.push(newReport);
+    }
   }
 
   @action.bound
-  loadReportInEditorFromId(reportId: string) {
+  public unloadAllActiveReports() {
+    this.reports = [];
+    this.activeReport = null;
+    this.template = null;
+  }
+
+  @action.bound
+  public unloadReportFromEditor(reportId: string) {
+    const index = this.reports.findIndex(r => r.id === reportId);
+    if (index !== -1) {
+      this.reports.splice(index, 1);
+    } else {
+      // todo : manage error
+      console.log("no corresponding report");
+    }
+  }
+
+  @action.bound
+  public loadReportInEditorFromId(reportId: string) {
     const allreadyLoaded = this.reports.find(r => r.id === reportId);
     if (!allreadyLoaded) {
       const report = this.reportList.find(report => report.id === reportId)!;

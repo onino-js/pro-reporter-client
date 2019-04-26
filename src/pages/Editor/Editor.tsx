@@ -3,7 +3,7 @@ import MainLayout from "../../components/layouts/MainLayout";
 import { UiStore } from "../../stores/ui.store";
 import { withRouter, RouteComponentProps } from "react-router";
 import FormEdition from "./FormEdition/FormEdition";
-import EditorToolbar from "./EditorToolbar";
+import EditorToolbar from "./EditorToolbar/EditorToolbar";
 import Preview from "./Preview/Preview";
 import { Flex } from "../../components/ui/Flex";
 import { inject, observer } from "mobx-react";

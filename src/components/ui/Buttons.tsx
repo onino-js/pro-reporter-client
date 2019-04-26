@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { _measures } from "../../assets/styles/_measures";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { getStatusColor, getStatusIcon } from "../../services/template.service";
+import { Menu } from "antd";
 
 export const IconBox = styled.button<IIconBoxProps>`
   display: flex;
@@ -281,4 +282,15 @@ export const NormalButton: any = styled.button.attrs({
     font-size: 1em;
     height: 30px;
   }
+`;
+
+export const ProMenuItem = styled(Menu.Item)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const ProMenuIcon = styled(FontAwesomeIcon)`
+  margin-left: 10px;
+  font-size: 1em;
 `;
