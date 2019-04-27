@@ -10,11 +10,14 @@ export class UiStore {
   @observable public showTemplateInfoModal: boolean = false;
   @observable public showLoadReportModal: boolean = false;
   @observable public showSyncModal: boolean = false;
+  @observable public showInProgressModal: boolean = false;
   @observable public isInputModalOpen: boolean = false;
 
   // STATE OF SYNC
   @observable public isTemplatesLoaded: boolean = false;
   @observable public isReportsLoaded: boolean = false;
+
+  @observable public inProgressMessage: string = "";
 
   @action.bound
   public showModal(modal: string) {
@@ -39,6 +42,9 @@ export class UiStore {
         break;
       case "sync":
         this.showSyncModal = true;
+        break;
+      case "in-progress":
+        this.showInProgressModal = true;
         break;
     }
   }
@@ -67,6 +73,9 @@ export class UiStore {
       case "sync":
         this.showSyncModal = false;
         break;
+      case "in-progress":
+        this.showInProgressModal = false;
+        break;
     }
   }
 
@@ -88,6 +97,11 @@ export class UiStore {
   @action.bound
   public setIsReportsLoaded = (payload: boolean): void => {
     this.isReportsLoaded = payload;
+  };
+
+  @action.bound
+  public setInProgressMessage = (payload: string): void => {
+    this.inProgressMessage = payload;
   };
 }
 

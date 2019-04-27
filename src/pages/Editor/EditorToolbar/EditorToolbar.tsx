@@ -14,6 +14,7 @@ import { FirebaseStore } from "../../../stores/firebaseStore";
 import MainMenu from "./MainMenu";
 import ReportMenu from "./ReportMenu";
 import DisplayMenu from "./DisplayMenu";
+import { ProDropdown } from "../../../components/ui/Buttons";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -38,12 +39,6 @@ const ActionLink = styled.span`
   font-size: 14px;
 `;
 
-const ProDropdown: any = styled(Dropdown).attrs({
-  trigger: ["hover", "click"],
-})`
-  height: 100%;
-  line-height: 40px;
-`;
 
 const SyncButtton = styled(Button)`
   border: none;

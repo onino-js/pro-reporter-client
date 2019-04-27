@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { _measures } from "../../assets/styles/_measures";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { getStatusColor, getStatusIcon } from "../../services/template.service";
-import { Menu } from "antd";
+import { Menu, Dropdown } from "antd";
 
 export const IconBox = styled.button<IIconBoxProps>`
   display: flex;
@@ -63,6 +63,7 @@ const ActionButtonBox = styled.button.attrs<IActionButtonBoxProps>({
   min-width: 30px;
   line-height: 30px;
   display: flex;
+  flex-shrink : 0;
   padding: 0;
   align-items: center;
   justify-content: center;
@@ -293,4 +294,16 @@ export const ProMenuItem = styled(Menu.Item)`
 export const ProMenuIcon = styled(FontAwesomeIcon)`
   margin-left: 10px;
   font-size: 1em;
+`;
+
+interface IProDropdownProps {
+  m?: string;
+}
+
+export const ProDropdown = styled(Dropdown).attrs<IProDropdownProps>({
+  trigger: ["click"],
+})`
+  height: 100%;
+  line-height: 40px;
+  margin: ${props => props.m || "0px"};
 `;

@@ -14,6 +14,7 @@ import OnGoingMenu from "../../pages/OnGoingMenu/OnGoingMenu";
 import Database from "../../pages/Database/Database";
 import CloudStorage from "../../pages/CloudStorage/CloudStorage";
 import Statistics from "../../pages/Statistics/Statistics";
+import InProgressModal from "../modals/InProgressModal";
 
 interface Props {}
 
@@ -39,6 +40,7 @@ class Routes extends React.Component<Props> {
           <Route path="/user-settings" component={UserSettings} />
           <Redirect to="/" />
         </React.Fragment>
+        <InProgressModal />
       </Router>
     );
   }

@@ -14,6 +14,8 @@ import { UiStore } from "../../stores/ui.store";
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   reportStore?: ReportStore;
+  templateFilter: string;
+  statusFilter: string;
 }
 
 const Text = styled.div`
@@ -45,9 +47,8 @@ class OnGoingList extends React.Component<Props> {
   }
   public render() {
     const reports = this.props.reportStore!.reportList;
-    // const length = reports.length;
     return (
-      <Flex dir="c" scrollY="auto">
+      <Flex dir="c" scrollY="auto" flex={1}>
         <Wrapper>
           {/* <Row type="flex" align="middle">
             <Col xl={3} xs={3}>
@@ -63,12 +64,27 @@ class OnGoingList extends React.Component<Props> {
               status
             </Col>
           </Row> */}
-          {reports.map((report: Ireport, index: number) => (
-            <OnGoingItem
-              key={"report-list-item" + index}
-              reportId={report.id}
-            />
-          ))}
+          {reports
+            .filter(r => {
+              if (this.props.templateFilter === "") {
+                return true;
+              } else {
+                return r.templateId === this.props.templateFilter;
+              }
+            })
+            .filter(r => {
+              if (this.props.statusFilter === "Tous les status") {
+                return true;
+              } else {
+                return r.status === this.props.statusFilter;
+              }
+            })
+            .map((report: Ireport, index: number) => (
+              <OnGoingItem
+                key={"report-list-item" + index}
+                reportId={report.id}
+              />
+            ))}
         </Wrapper>
       </Flex>
     );

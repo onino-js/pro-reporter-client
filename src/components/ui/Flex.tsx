@@ -30,5 +30,6 @@ export const Flex = styled.div<Iprops>`
   align-items: ${(props: Iprops) =>
     props.dir === "c" ? props.alignH : props.alignV};
   flex: ${props => (props.flex ? props.flex : "0 1 auto")};
+  flex-shrink: 0;
   overflow-y: ${props => props.scrollY || "hidden"};
 `;
