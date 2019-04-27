@@ -17,16 +17,6 @@ interface Props extends RouteComponentProps {
   isLogged?: boolean;
 }
 
-const Logo = styled.div`
-  width: auto;
-  padding-left: 20px;
-  padding-right: 50px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 60px;
@@ -35,14 +25,32 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0;
+  @media (max-width: ${_measures.mobile}px) {
+    height: 40px;
+  }
+`;
+
+const LogoBox = styled.div`
+  width: auto;
+  padding-left: 5px;
+  padding-right: 50px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const Logo = styled.img`
+  width: auto;
+  height: 50px;
+  @media (max-width: ${_measures.mobile}px) {
+    height: 35px;
+  }
 `;
 
 const Band1: any = styled.div`
-  position: absolute;
-  top: ${(props: any) => props.n * 10}px;
-  left: 0;
   width: 100%;
-  height: 10px;
+  height: 10%;
   background: linear-gradient(
     90deg,
     rgba(0, 0, 0, 1) 0%,
@@ -52,11 +60,8 @@ const Band1: any = styled.div`
   padding: 0;
 `;
 const Band2: any = styled.div`
-  position: absolute;
-  top: ${(props: any) => props.n * 10}px;
-  left: 0;
   width: 100%;
-  height: 10px;
+  height: 10%;
   background: rgba(0, 0, 0, 1);
   padding: 0;
 `;
@@ -74,6 +79,11 @@ const HeaderButton = styled.button`
   .gi-icon {
     margin-left: 10px;
   }
+  @media (max-width: ${_measures.mobile}px) {
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 40px;
+  }
 `;
 
 const RightBox = styled.div`
@@ -86,11 +96,14 @@ const LeftBox = styled.div`
 `;
 const MiddleBox = styled.div`
   height: 100%;
+  display: flex;
+  flex-direction: column;
   flex: 1;
   position: relative;
 `;
 
 const Text = styled.span`
+  margin-right: 10px;
   @media (max-width: ${_measures.mobile}px) {
     display: none;
   }
@@ -127,14 +140,14 @@ class MainHeader extends React.Component<Props> {
         <MenuItem onClick={this.goToUserPage}>
           <FontAwesomeIcon
             icon="user-circle"
-            style={{ margin: "auto 10px auto 0px" }}
+            // style={{ margin: "auto 10px auto 0px" }}
           />
           Mon compte
         </MenuItem>
         <MenuItem onClick={this.signOut}>
           <FontAwesomeIcon
             icon="sign-out-alt"
-            style={{ margin: "auto 10px auto 0px" }}
+            // style={{ margin: "auto 10px auto 0px" }}
           />
           Se déconnecter
         </MenuItem>
@@ -143,9 +156,9 @@ class MainHeader extends React.Component<Props> {
     return (
       <Container>
         <RightBox>
-          <Logo onClick={this.goHome}>
-            <img src={logo} width="150px" />
-          </Logo>
+          <LogoBox onClick={this.goHome}>
+            <Logo src={logo} />
+          </LogoBox>
           {/* <HeaderButton>
             LEXIQUE <FontAwesomeIcon icon="book-open" className="gi-icon" />
           </HeaderButton>
@@ -160,11 +173,16 @@ class MainHeader extends React.Component<Props> {
           <Band2 n={3} />
           <Band1 n={4} />
           <Band2 n={5} />
+          <Band1 n={6} />
+          <Band2 n={7} />
+          <Band1 n={8} />
+          <Band2 n={9} />
+          <Band1 n={10} />
         </MiddleBox>
         <LeftBox>
           <HeaderButton onClick={this.showInfoModal}>
             <Text>A propos</Text>
-            <FontAwesomeIcon icon="question-circle" className="gi-icon" />
+            <FontAwesomeIcon icon="question-circle" />
           </HeaderButton>
           <Dropdown overlay={<UserMenu />} placement="bottomRight">
             <HeaderButton>
