@@ -11,7 +11,7 @@ import { TemplateStore } from "../../stores/templateStore";
 import { Itemplate } from "../../models/template.model";
 import { SpiralSpinner } from "react-spinners-kit";
 import { mainTheme } from "../../assets/styles/_colors";
-import { StatusButton } from "../../components/ui/Buttons";
+import { StatusButton, ProDropdown } from "../../components/ui/Buttons";
 import { _measures } from "../../assets/styles/_measures";
 
 interface Props extends RouteComponentProps {
@@ -70,34 +70,11 @@ const SideMenuItemTitle = styled.span`
   }
 `;
 
-const MainMenuButton = styled.div`
-  width: 100%;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  color: #fff;
-  justify-content: center;
-  cursor: pointer;
-  :hover {
-    color: ${props => props.theme.primary};
-  }
-`;
-
 const ActionLink = styled.span`
   color: ${props => props.theme.font_secondary};
   cursor: pointer;
   margin-left: 10px;
   font-size: 14px;
-`;
-
-const ProDropdown: any = styled(Dropdown).attrs({
-  trigger: ["hover", "click"],
-})`
-  height: 100%;
-  width: 100%;
-  margin: auto;
-  line-height: 40px;
-  text-align: center;
 `;
 
 const MenuItem = styled(Menu.Item)`

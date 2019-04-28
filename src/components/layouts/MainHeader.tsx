@@ -71,6 +71,7 @@ const HeaderButton = styled.button`
   background-color: transparent;
   border: none;
   height: 100%;
+  min-width: 60px;
   padding-right: 20px;
   padding-left: 20px;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
@@ -83,6 +84,7 @@ const HeaderButton = styled.button`
     padding-right: 10px;
     padding-left: 10px;
     width: 40px;
+    min-width: 40px;
   }
 `;
 

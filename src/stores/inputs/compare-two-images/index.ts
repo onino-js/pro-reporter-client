@@ -1,14 +1,53 @@
+import { Report } from "./../../report";
 import { observable, action, toJS, computed } from "mobx";
 import { message, Button } from "antd";
 import uuid from "uuid/v1";
 import { CompareStore } from "./compare-store";
 import { fabric } from "fabric";
+import {
+  IinputBase,
+  IinputJsonBase,
+  IinputType,
+  IinputStatus,
+} from "../../../models/template.model";
 
 export type Iedited = "before" | "after" | "bg";
 
+export interface ICompareTwoImagesStoreParams {
+  reportRef: Report;
+  inputRef: IcompareTwoImagesInput;
+  value: IcompareTwoImagesValue;
+  data: any;
+}
+
+export interface IcompareTwoImagesValue {
+  after: string | false;
+  before: string | false;
+}
+export interface IcompareTwoImagesInput extends IinputBase {
+  value: IcompareTwoImagesValue;
+  options: {
+    width: number;
+    height: number;
+  };
+}
+export interface IcompareTwoImagesJson extends IinputJsonBase {
+  value: IcompareTwoImagesValue;
+  imageName: string;
+  original: string;
+  data: any;
+}
+export interface IcompareTwoImagesJsonMap {
+  [key: string]: IcompareTwoImagesJson;
+}
+export interface IcompareTwoImagesStoreConstructor {
+  new (params: ICompareTwoImagesStoreParams): CompareTwoImagesStore;
+}
+
 export class CompareTwoImagesStore {
   @observable public id: string = "";
-  @observable public value: any = { before: "", after: "" };
+  @observable public type: IinputType = "compare-two-images";
+  @observable public value: IcompareTwoImagesValue = { before: "", after: "" };
   @observable public tempValue: any = { before: "", after: "" };
   @observable public mandatory: boolean = false;
 
@@ -38,20 +77,27 @@ export class CompareTwoImagesStore {
   @observable public isObjectEditOpen: boolean = false;
   @observable public activeObjects: any[] = [];
 
+  public reportRef: Report;
+  public inputRef: IcompareTwoImagesInput;
+
   @computed
-  get status() {
+  get status(): IinputStatus {
     return this.value.before === "" || this.value.after === ""
       ? "untouched"
       : "valid";
   }
 
-  constructor(input: any) {
-    Object.assign(this, input);
+  constructor(params: ICompareTwoImagesStoreParams) {
+    this.value = params.value;
+    this.id = params.inputRef.id;
+    this.data = params.data;
+    this.reportRef = params.reportRef;
+    this.inputRef = params.inputRef;
     this.canvasId = uuid();
     this.canvasStore = new CompareStore({
       id: this.canvasId,
-      width: input.options.width,
-      height: input.options.height,
+      width: params.inputRef.options.width,
+      height: params.inputRef.options.height,
     });
   }
 
@@ -144,6 +190,8 @@ export class CompareTwoImagesStore {
 
   @action.bound
   public setValue(payload: string) {
+    // TODO : arrange types
+    //@ts-ignore
     this.value[this.edited] = payload;
   }
 
@@ -268,9 +316,29 @@ export class CompareTwoImagesStore {
     }
   }
 
-  // @action.bound
-  // public savePhoto(photoType: keyof this) {
-  //   const dataURL = this.canvasStore.toDataURL("image/png");
-  //   this[photoType] = dataURL;
-  // }
+  @action.bound
+  public asJson(): IcompareTwoImagesJson {
+    return {
+      id: this.id,
+      value: this.value,
+      status: this.status,
+      data: { ...this.data },
+      imageName: this.imageName,
+      original: this.original,
+    };
+  }
+
+  @action.bound
+  public asJsonMap(): IcompareTwoImagesJsonMap {
+    return {
+      [this.id]: {
+        id: this.id,
+        value: this.value,
+        status: this.status,
+        data: { ...this.data },
+        imageName: this.imageName,
+        original: this.original,
+      },
+    };
+  }
 }

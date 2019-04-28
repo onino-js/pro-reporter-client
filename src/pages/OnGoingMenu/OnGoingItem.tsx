@@ -6,17 +6,17 @@ import { AllStores } from "../../models/all-stores.model";
 import { Dropdown, Menu } from "antd";
 import { formatDate } from "../../services/app.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Ireport } from "../../models/template.model";
 import { UiStore } from "../../stores/ui.store";
 import { StatusButton } from "../../components/ui/Buttons";
 import { _measures } from "../../assets/styles/_measures";
 import { RouteComponentProps, withRouter } from "react-router";
+import { IreportJson } from "../../stores/report";
 
 interface Props extends RouteComponentProps {
   reportId: string;
   uiStore?: UiStore;
   reportStore?: ReportStore;
-  report?: Ireport;
+  report?: IreportJson;
   deleteReport?: (id: string) => void;
 }
 

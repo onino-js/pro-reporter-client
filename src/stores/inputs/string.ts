@@ -1,13 +1,42 @@
+import { Report } from "./../report";
 import { observable, action, computed } from "mobx";
+import {
+  IinputBase,
+  IinputJsonBase,
+  IinputStatus,
+} from "../../models/template.model";
+
+interface IStringStoreParams {
+  reportRef: Report;
+  inputRef: IstringInput;
+  value: IstringValue;
+}
+
+export type IstringValue = string;
+export interface IstringInput extends IinputBase {
+  value: IstringValue;
+  list?: string[];
+}
+export interface IstringInputJson extends IinputJsonBase {
+  value: IstringValue;
+}
+export interface IstringInputJsonMap {
+  [key: string]: IstringInputJson;
+}
+export interface IstringStoreConstructor {
+  new (params: IStringStoreParams): StringStore;
+}
 
 export class StringStore {
   @observable public value: string = "";
   @observable public tempValue: string = "";
   @observable public id: string = "";
-  @observable public mandatory: boolean = false;
+  public reportRef: Report;
+  public inputRef: IstringInput;
+
   @computed
-  get status() {
-    let status: string = "valid";
+  get status(): IinputStatus {
+    let status: IinputStatus = "valid";
     if (this.value === "") {
       status = "untouched";
     } else if (this.value.length < 2) {
@@ -18,13 +47,17 @@ export class StringStore {
     return status;
   }
 
-  constructor(options: any) {
-    Object.assign(this, options);
+  constructor(params: IStringStoreParams) {
+    this.value = params.value;
+    this.id = params.inputRef.id;
+    this.reportRef = params.reportRef;
+    this.inputRef = params.inputRef;
   }
 
   @action
   public setValue = (value: string): void => {
     this.value = value;
+    this.reportRef!.setStatus();
   };
 
   @action
@@ -46,6 +79,24 @@ export class StringStore {
   public clone(input: StringStore) {
     this.value = input.value;
     this.tempValue = input.tempValue;
+  }
+
+  public asJson(): IstringInputJson {
+    return {
+      id: this.id,
+      value: this.value,
+      status: this.status,
+    };
+  }
+
+  public asJsonMap(): IstringInputJsonMap {
+    return {
+      [this.id]: {
+        id: this.id,
+        value: this.value,
+        status: this.status,
+      },
+    };
   }
 }
 

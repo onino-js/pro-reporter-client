@@ -7,6 +7,9 @@ import styled from "../../styled-components";
 import { ReportStore } from "../../stores/report.store";
 import ProModal from "./ProModal";
 import { ProContainer } from "../layouts/ProContainer";
+import { TextDanger } from "../ui/Texts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ProIcon } from "../ui/Icons";
 
 interface Props {
   uiStore?: UiStore;
@@ -75,37 +78,28 @@ const ReportId = styled.div`
   reportStore: allStores.reportStore,
 }))
 @observer
-class LoadReportModal extends React.Component<Props, State> {
+class DeleteReportModal extends React.Component<Props, State> {
   componentDidMount() {
-    let ids: string[] = [];
     const templateId = this.props.reportStore!.template
       ? this.props.reportStore!.template!.id
       : null;
-    this.props
-      .reportStore!.reportList.filter(
-        report => report.templateId === templateId,
-      )
-      .filter(
-        report =>
-          this.props.reportStore!.reports.find(r => r.id === report.id) ===
-          undefined,
-      )
-      .forEach(r => ids.push(r.id));
+    // Get Ids of loaded reports
+    let ids: string[] = this.props
+      .reportStore!.reports.filter(report => report.templateId === templateId)
+      .map(r => r.id);
     this.setState({ selectedIds: ids });
   }
 
   public state = {
     selectedIds: [],
   };
-  // private setNewReference = (e: any) => {
-  //   this.props.domainStore!.setNewReference(e.currentTarget.value);
-  // };
+
   private handleOk = () => {
-    this.props.reportStore!.loadReportListInEditor(this.state.selectedIds);
-    this.props.uiStore!.hideModal("load-report");
+    this.props.uiStore!.hideModal("delete-report");
+    this.props.reportStore!.deleteReports(this.state.selectedIds);
   };
   private handleCancel = () => {
-    this.props.uiStore!.hideModal("load-report");
+    this.props.uiStore!.hideModal("delete-report");
   };
 
   private toggleItem = (id: string) => {
@@ -139,30 +133,25 @@ class LoadReportModal extends React.Component<Props, State> {
       ? this.props.reportStore!.template!.id
       : null;
 
-    // Get unload reports
-    const reports = this.props
-      .reportStore!.reportList.filter(
-        report => report.templateId === templateId,
-      )
-      .filter(
-        report =>
-          this.props.reportStore!.reports.find(r => r.id === report.id) ===
-          undefined,
-      );
-
+    // Get unloaded reports
+    const reports = this.props.reportStore!.reports.filter(
+      report => report.templateId === templateId,
+    );
     const isAll = this.state.selectedIds.length === reports.length;
-    // const isReferenceValid = this.props.domainStore!.isReferenceValid;
-    // const showMesage =
-    //   !isReferenceValid && this.props.domainStore!.newReference !== "";
+
     return (
       <ProModal
-        show={this.props.uiStore!.showLoadReportModal}
+        show={this.props.uiStore!.showDeleteReportModal}
         close={this.handleCancel}
         onOk={this.handleOk}
-        headerTitle="Charger les rapports"
+        // headerTitle="Charger les rapports"
       >
         <ProContainer>
-          <Title>Choisissez les rapports à charger</Title>
+          <Title>Choisissez les rapports à supprimer</Title>
+          <TextDanger align="center" w="100%" p="10px">
+            <ProIcon icon="exclamation-triangle" scale={"big"} m="0px 10px" />
+            Attention ! cette action supprimer définitivement les données
+          </TextDanger>
           <Body>
             {reports.length !== 0 && (
               <AllChoice onClick={() => this.toggleAll(reports)}>
@@ -185,7 +174,7 @@ class LoadReportModal extends React.Component<Props, State> {
                   </ReportItem>
                 ))
               ) : (
-                <p>Pas de rapport à charger</p>
+                <p>Pas de rapport chargé</p>
               )}
             </ReportList>
           </Body>
@@ -195,4 +184,4 @@ class LoadReportModal extends React.Component<Props, State> {
   }
 }
 
-export default LoadReportModal;
+export default DeleteReportModal;

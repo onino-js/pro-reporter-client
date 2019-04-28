@@ -1,28 +1,96 @@
-type IinputType = "string" | "single-select";
+import {
+  IcompareTwoImagesJson,
+  IcompareTwoImagesJsonMap,
+  IcompareTwoImagesStoreConstructor,
+} from "./../stores/inputs/compare-two-images/index";
+import {
+  IsingleSignatureInput,
+  IsingleSignatureJson,
+  IsingleSignatureJsonMap,
+  IsingleSignatureStoreConstructor,
+} from "./../stores/inputs/single-signature/index";
+import {
+  IsingleSelectInput,
+  IsingleSelectJson,
+  IsingleSelectJsonMap,
+  IsingleSelectStoreConstructor,
+} from "./../stores/inputs/single-select";
+import {
+  IstringInput,
+  IstringInputJson,
+  IstringInputJsonMap,
+  IstringStoreConstructor,
+} from "./../stores/inputs/string";
+import { StringStore } from "../stores/inputs/string";
+import { SingleSelectStore } from "../stores/inputs/single-select";
+import { SingleSignatureStore } from "../stores/inputs/single-signature";
+import {
+  SingleImageStore,
+  IsingleImageInput,
+  IsingleImageStoreConstructor,
+} from "../stores/inputs/single-image";
+import {
+  CompareTwoImagesStore,
+  IcompareTwoImagesInput,
+} from "../stores/inputs/compare-two-images";
 
-interface IinputeBase {
+export type IinputType =
+  | "string"
+  | "single-select"
+  | "single-signature"
+  | "single-image"
+  | "compare-two-images";
+
+export type IinputStatus = "valid" | "untouched" | "warning" | "error";
+
+export interface IinputBase {
   id: string;
   label: string;
   sectionId: string;
-  value: string;
   type: IinputType;
   mandatory?: boolean;
   description?: string;
 }
 
-interface IstringInput extends IinputeBase {
-  list?: string[];
+export interface IinputJsonBase {
+  id: string;
+  status: IinputStatus;
 }
 
-interface IsingleSelectInput extends IinputeBase {
-  values: string[];
-}
+// COMPARE TWO IMAGES
 
-interface IsignatureInput extends IinputeBase {
-  values: string[];
-}
+// INPUT
+export type Iinput =
+  | IstringInput
+  | IsingleSelectInput
+  | IsingleSignatureInput
+  | IsingleImageInput
+  | IcompareTwoImagesInput;
+export type IinputJson =
+  | IstringInputJson
+  | IsingleSelectJson
+  | IsingleSignatureJson
+  | IcompareTwoImagesJson;
 
-export type Iinput = IstringInput | IsingleSelectInput | IsignatureInput;
+export type IinputJsonMap =
+  | IstringInputJsonMap
+  | IsingleSelectJsonMap
+  | IsingleSignatureJsonMap
+  | IcompareTwoImagesJsonMap;
+
+export type IinputStore =
+  | StringStore
+  | SingleSelectStore
+  | SingleSignatureStore
+  | SingleImageStore
+  | CompareTwoImagesStore;
+
+export type IinputStoreConstructor =
+  | IstringStoreConstructor
+  | IsingleSelectStoreConstructor
+  | IsingleSignatureStoreConstructor
+  | IsingleImageStoreConstructor
+  | IcompareTwoImagesStoreConstructor;
 
 export interface Isection {
   id: string;
@@ -40,35 +108,10 @@ export interface Itemplate {
   inputs: Iinput[];
 }
 
-export type IreportStatus = "valid" | "new" | "warning" | "error";
-
-export interface IreportBase {
-  id: string;
-  userId: string;
-  sections: any[];
-  templateId: string;
-  templateName: string;
-  creationDate: Date | string;
-  lastModifiedDate: Date | string;
-  status: IreportStatus;
-}
-
-export interface Ireport extends IreportBase {
-  inputs: Iinput[];
-}
-
-export interface IreportObj extends IreportBase {
-  inputs: IinputMap;
-}
-
 export interface IinputMap {
   [key: string]: Iinput;
 }
 
 export interface ItemplateMap {
   [key: string]: Itemplate;
-}
-
-export interface IreportMap {
-  [key: string]: Ireport;
 }

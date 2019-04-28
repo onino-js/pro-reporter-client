@@ -1,16 +1,7 @@
-import {
-  Itemplate,
-  ItemplateMap,
-  Isection,
-} from "./../models/template.model";
+import { Itemplate, ItemplateMap, Isection, Iinput } from "./../models/template.model";
 import { observable, action } from "mobx";
-import {
-  getTemplates,
-  checkTemplateId,
-  createTemplate,
-} from "../services/firebase.srevice";
-import uiStore from "./ui.store";
 import { mapToArray } from "../services/app.service";
+import firebaseStore from "./firebaseStore";
 
 interface ItemplateError {
   msg: string;
@@ -59,7 +50,7 @@ export class TemplateStore {
 
   @action.bound
   public getTemplates = (callback?: () => void) => {
-    getTemplates((payload: ItemplateMap) => {
+    firebaseStore.getTemplates((payload: ItemplateMap) => {
       if (!payload) {
         this.setTemplates([]);
       } else {
@@ -76,7 +67,7 @@ export class TemplateStore {
 
   @action.bound
   public createTemplate() {
-    createTemplate(this.newTemplate);
+    firebaseStore.createTemplate(this.newTemplate);
   }
 
   @action.bound
@@ -210,7 +201,7 @@ export class TemplateStore {
       });
     } else {
       this.newTemplate.id = svg.id;
-      const idExists = await checkTemplateId(svg.id);
+      const idExists = await firebaseStore.checkTemplateId(svg.id);
       if (idExists) {
         this.addTemplateErrors("L'identifiant exist déja");
         this.setNewTemplateStatus({
@@ -351,7 +342,7 @@ export class TemplateStore {
       const label = el.dataset.label || "Label non défini";
 
       // Build input object
-      const input = {
+      const input : Iinput = {
         id,
         type,
         label,

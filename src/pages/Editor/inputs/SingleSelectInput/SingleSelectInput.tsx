@@ -23,7 +23,7 @@ class SingleSelectInput extends React.Component<Props> {
   public render() {
     return (
       <InputLayoutStandard input={this.props.input}>
-        {this.props.input!.values.map((item: any, index: number) => (
+        {this.props.input!.inputRef.values.map((item: any, index: number) => (
           <SelectButton
             key={"single-select-input" + index}
             onClick={() => this.setValue(item)}

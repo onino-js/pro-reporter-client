@@ -1,6 +1,36 @@
+import { IinputStatus } from "./../../../models/template.model";
 import { observable, action, toJS, computed } from "mobx";
 import uuid from "uuid/v1";
 import { CanvasStore } from "./canvas-store";
+import { Report } from "../../report";
+import { IinputBase, IinputJsonBase } from "../../../models/template.model";
+
+interface ISingleSignatureStoreParams {
+  reportRef: Report;
+  inputRef: IsingleSignatureInput;
+  value: IsingleSignatureValue;
+  data: any;
+}
+
+export type IsingleSignatureValue = string;
+export interface IsingleSignatureInput extends IinputBase {
+  value: IsingleSignatureValue;
+  values: string[];
+  options: {
+    width: number;
+    height: number;
+  };
+}
+export interface IsingleSignatureJson extends IinputJsonBase {
+  value: IsingleSignatureValue;
+}
+export interface IsingleSignatureJsonMap {
+  [key: string]: IsingleSignatureJson;
+}
+
+export interface IsingleSignatureStoreConstructor {
+  new (params: ISingleSignatureStoreParams): SingleSignatureStore;
+}
 
 export class SingleSignatureStore {
   @observable public id: string = "";
@@ -15,21 +45,25 @@ export class SingleSignatureStore {
   @observable public imageName: string = "";
   @observable public isEditVisible: boolean = false;
   @observable public original: string = "";
-  @observable public options: any = {};
-  @observable public mandatory: boolean = false;
+  public reportRef: Report;
+  public inputRef: IsingleSignatureInput;
 
   @computed
-  get status() {
+  get status(): IinputStatus {
     return this.value === "" ? "untouched" : "valid";
   }
 
-  constructor(input: any) {
-    Object.assign(this, input);
+  constructor(params: ISingleSignatureStoreParams) {
+    this.value = params.value;
+    this.id = params.inputRef.id;
+    this.reportRef = params.reportRef;
+    this.inputRef = params.inputRef;
+    this.data = params.data;
     this.canvasId = uuid();
     this.canvasStore = new CanvasStore({
       id: this.canvasId,
-      width: input.options.width,
-      height: input.options.height,
+      width: params.inputRef.options.width,
+      height: params.inputRef.options.height,
     });
   }
 
@@ -103,5 +137,23 @@ export class SingleSignatureStore {
     this.tempData = { ...input.tempData };
     this.imageName = input.imageName;
     this.original = input.original;
+  }
+
+  public asJson() {
+    return {
+      id: this.id,
+      value: this.value,
+      status: this.status,
+    };
+  }
+
+  public asJsonMap() {
+    return {
+      [this.id]: {
+        id: this.id,
+        value: this.value,
+        status: this.status,
+      },
+    };
   }
 }

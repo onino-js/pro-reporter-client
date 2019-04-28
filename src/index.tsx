@@ -5,9 +5,9 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./assets/icons/fa-icons";
-import { initializeDataBase } from "./services/firebase.srevice";
+import firebaseStore from "./stores/firebaseStore";
 
-initializeDataBase();
+firebaseStore.initializeDataBase();
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

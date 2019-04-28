@@ -6,10 +6,10 @@ import { ReportStore } from "../../stores/report.store";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { Col, Row } from "antd";
-import { Ireport } from "../../models/template.model";
 import OnGoingItem from "./OnGoingItem";
 import { _measures } from "../../assets/styles/_measures";
 import { UiStore } from "../../stores/ui.store";
+import { IreportJson } from "../../stores/report";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -17,11 +17,6 @@ interface Props extends RouteComponentProps {
   templateFilter: string;
   statusFilter: string;
 }
-
-const Text = styled.div`
-  font-size: 16px;
-  margin-bottom: 30px;
-`;
 
 const Wrapper = styled(Col).attrs({
   xl: 18,
@@ -79,7 +74,7 @@ class OnGoingList extends React.Component<Props> {
                 return r.status === this.props.statusFilter;
               }
             })
-            .map((report: Ireport, index: number) => (
+            .map((report: IreportJson, index: number) => (
               <OnGoingItem
                 key={"report-list-item" + index}
                 reportId={report.id}

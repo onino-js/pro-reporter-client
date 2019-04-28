@@ -5,9 +5,7 @@ import { UiStore } from "../../../../stores/ui.store";
 import styled from "../../../../styled-components";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
-import {
-  SelectButton,
-} from "../../../../components/ui/Buttons";
+import { SelectButton } from "../../../../components/ui/Buttons";
 import InputLayoutDirect from "../layouts/InputLayoutDirect";
 
 interface Props {
@@ -78,13 +76,13 @@ class SingleSelectDirect extends React.Component<Props> {
         visible={this.props.uiStore!.isInputModalOpen}
       >
         <InputLayoutDirect
-          label={this.props.input!.label}
+          label={this.props.input!.inputRef.label}
           onOk={this.onOk}
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
           status={this.props.input!.status}
         >
-          {this.props.input!.values.map((item: any, index: number) => (
+          {this.props.input!.inputRef.values.map((item: any, index: number) => (
             <SelectButton
               key={"single-select-input" + index}
               onClick={() => this.setValue(item)}

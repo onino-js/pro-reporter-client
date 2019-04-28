@@ -7,9 +7,11 @@ import {
   StatusButton,
   SearchIconBox,
 } from "../../../../components/ui/Buttons";
+import { StringStore } from "../../../../stores/inputs/string";
+import { IinputStore } from "../../../../models/template.model";
 
 interface Props {
-  input: any;
+  input: IinputStore;
   actions?: React.ReactChild[] | React.ReactChild;
   additionalInfos?: React.ReactChild;
 }
@@ -79,15 +81,17 @@ const col6 = {
 class InputLayoutStandard extends React.Component<Props> {
   public render() {
     const { input } = this.props;
+    //@ts-ignore
+    const list = this.props.input.inputRef.list
     return (
       <React.Fragment>
         <MyRow type="flex" align="middle">
           <Col {...col2}>
-            <InputLabel>{input.label}</InputLabel>
-            {input.documentation && (
+            <InputLabel>{input.inputRef.label}</InputLabel>
+            {input.inputRef.description && (
               <Popover
-                content={input.documentation}
-                title={input.label}
+                content={input.inputRef.description}
+                title={input.inputRef.label}
                 trigger="hover"
               >
                 <FontAwesomeIcon
@@ -100,18 +104,21 @@ class InputLayoutStandard extends React.Component<Props> {
           {/* <Col {...col3}>{this.props.actions}</Col> */}
           <Col {...col4}>
             {this.props.children}
-            {input.options && input.options.list && (
+
+            {
+            list && (
               <Dropdown
                 overlay={
                   <Menu>
-                    {input.options.list.map((item: any, index: number) => (
-                      <Menu.Item
-                        onClick={() => input.setValue(item)}
-                        key={"menu-item" + index}
-                      >
-                        {item}
-                      </Menu.Item>
-                    ))}
+                    {list
+                      .map((item: any, index: number) => (
+                        <Menu.Item
+                          onClick={() => input.setValue(item)}
+                          key={"menu-item" + index}
+                        >
+                          {item}
+                        </Menu.Item>
+                      ))}
                   </Menu>
                 }
                 trigger={["click", "hover"]}
@@ -124,15 +131,14 @@ class InputLayoutStandard extends React.Component<Props> {
             )}
           </Col>
           <Col {...col5}>
-            {this.props.input.status !== "untouched" && <RefreshButton
-              active={this.props.input.status !== "untouched"}
-              onClick={this.props.input.reset}
-            />}
+            {this.props.input.status !== "untouched" && (
+              <RefreshButton active={true} onClick={this.props.input.reset} />
+            )}
           </Col>
           <Col {...col6}>
             <StatusButton
               status={this.props.input.status}
-              mandatory={this.props.input.mandatory}
+              mandatory={this.props.input.inputRef.mandatory}
             />
           </Col>
         </MyRow>

@@ -6,7 +6,6 @@ import { Menu } from "antd";
 import { withRouter, RouteComponentProps } from "react-router";
 import { ReportStore } from "../../../stores/report.store";
 import { UiStore } from "../../../stores/ui.store";
-import { deleteAllActiveReports } from "../../../services/firebase.srevice";
 import { AuthStore } from "../../../stores/auth.store";
 import { FirebaseStore } from "../../../stores/firebaseStore";
 import { ProMenuItem, ProMenuIcon } from "../../../components/ui/Buttons";
@@ -31,11 +30,10 @@ class MainMenu extends React.Component<Iprops> {
     this.props.uiStore!.showModal("load-report");
   };
   private empty = () => {
-    console.log("hey");
     this.props.reportStore!.unloadAllActiveReports();
   };
   private deleteAll = () => {
-    deleteAllActiveReports(this.props.authStore!.userId, console.log);
+    this.props.uiStore!.showModal("delete-report");
   };
   private exit = () => {
     this.props.history.push("/");

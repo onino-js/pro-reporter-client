@@ -5,9 +5,7 @@ import { Report } from "../../../stores/report";
 import { Menu } from "antd";
 import { withRouter, RouteComponentProps } from "react-router";
 import { ReportStore } from "../../../stores/report.store";
-import {
-  createProcess,
-} from "../../../services/cloud-converter.service";
+import { createProcess } from "../../../services/cloud-converter.service";
 import { saveAs } from "file-saver";
 import { UiStore } from "../../../stores/ui.store";
 import { AuthStore } from "../../../stores/auth.store";
@@ -31,10 +29,11 @@ interface Props extends RouteComponentProps {
 }))
 @observer
 class ReportMenu extends React.Component<Props> {
-  
   private reset = () => this.props.reportStore!.reset();
-  private deleteReport = () =>
-    this.props.reportStore!.delete(this.props.Report!.id);
+  private deleteReport = () => {
+    this.props.reportStore!.unloadReport(this.props.Report!.id);
+    this.props.reportStore!.deleteReport(this.props.Report!.id);
+  };
 
   private duplicate = () => this.props.reportStore!.duplicate();
 
@@ -55,7 +54,6 @@ class ReportMenu extends React.Component<Props> {
 
   private customDuplicateRequest = () =>
     this.props.uiStore!.showModal("duplicate");
-
 
   public render() {
     const isEditedReport = this.props.reportStore!.activeReport !== null;

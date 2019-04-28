@@ -17,6 +17,7 @@ import EditorSidebar from "./EditorSidebar";
 import { NoTemplate } from "./NoTemplate";
 import LoadReportModal from "../../components/modals/LoadReportModal";
 import SyncModal from "../../components/modals/SyncModal";
+import DeleteReportModal from "../../components/modals/DeleteReportModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -64,6 +65,7 @@ class Editor extends React.Component<Props> {
             {template && <EditorTabs template={template} />}
           </Flex>
           <LoadReportModal />
+          <DeleteReportModal />
           <SyncModal />
           <LoadingModal
             show={this.props.uiStore!.showLoadingModal}

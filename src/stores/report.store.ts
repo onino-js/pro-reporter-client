@@ -1,27 +1,21 @@
 import { message } from "antd";
 import { mapToArray } from "./../services/app.service";
-import { Itemplate, Ireport, IreportMap } from "./../models/template.model";
-import {
-  updateReport,
-  createReport,
-  getReports,
-  deleteReport,
-  updateReportList,
-} from "./../services/firebase.srevice";
+import { Itemplate } from "./../models/template.model";
 import { getStatusColor } from "./../services/template.service";
 import uuid from "uuid/v1";
-import { Report } from "./report";
+import { Report, IreportJson, IreportMap } from "./report";
 import { observable, action, toJS, flow } from "mobx";
 import authStore from "./auth.store";
 import uiStore from "./ui.store";
 import templateStore from "./templateStore";
+import firebaseStore from "./firebaseStore";
 
 const ZOOM_STEP: number = 20;
 
 export class ReportStore {
   @observable public template: Itemplate | null = null;
   @observable public reports: Report[] = [];
-  @observable public reportList: Ireport[] = [];
+  @observable public reportList: IreportJson[] = [];
   @observable public activeReport: Report | null = null;
   @observable public fieldHighlighted: boolean = false;
   @observable public zoom: number = 100;
@@ -53,7 +47,7 @@ export class ReportStore {
   }
 
   @action.bound
-  public setReportList = (reports: Ireport[]) => {
+  public setReportList = (reports: IreportJson[]) => {
     this.reportList = reports;
   };
 
@@ -64,13 +58,13 @@ export class ReportStore {
 
   @action.bound
   public getReportList = () => {
-    getReports(authStore.userId, (reports: IreportMap | null) => {
+    firebaseStore.getReports((reports: IreportMap | null) => {
       // Transform object to array
       if (reports === null) {
         this.setReportList([]);
       } else if (reports) {
         this.setReportList(
-          mapToArray(reports).map((report: Ireport) => {
+          mapToArray(reports).map((report: IreportJson) => {
             return {
               ...report,
               inputs: mapToArray(report.inputs),
@@ -106,18 +100,19 @@ export class ReportStore {
       id,
       creationDate: new Date(),
       lastModifiedDate: new Date(),
-      inputs: this.template!.inputs,
+      inputs: [],
       sections: this.template!.sections,
       status: "new",
     });
     this.reports.push(newReport);
+    console.log(newReport);
     this.setActiveReport(id);
+
     window.setTimeout(
       () =>
-        createReport({
-          userId: authStore.userId,
-          report: newReport.asJsonObj(),
-        }),
+        firebaseStore.createReport(newReport.asJsonMap(), () =>
+          message.success(`Nouveau rapport ${this.template!.label} créé`),
+        ),
       100,
     );
   }
@@ -136,7 +131,7 @@ export class ReportStore {
   }
 
   @action.bound
-  loadReportInEditor(report: Ireport) {
+  loadReportInEditor(report: IreportJson) {
     if (!this.isReportLoadedInEditor(report.id)) {
       const newReport = new Report(report);
       this.reports.push(newReport);
@@ -148,17 +143,6 @@ export class ReportStore {
     this.reports = [];
     this.activeReport = null;
     this.template = null;
-  }
-
-  @action.bound
-  public unloadReportFromEditor(reportId: string) {
-    const index = this.reports.findIndex(r => r.id === reportId);
-    if (index !== -1) {
-      this.reports.splice(index, 1);
-    } else {
-      // todo : manage error
-      console.log("no corresponding report");
-    }
   }
 
   @action.bound
@@ -183,13 +167,22 @@ export class ReportStore {
   }
 
   @action.bound
-  public deleteReport = (reportId: string) => {
-    deleteReport(authStore.userId, reportId);
-    message.success("Le rapport a été supprimé");
+  public deleteReports = (ids: string[]) => {
+    ids.forEach(id => {
+      this.unloadReport(id);
+      this.deleteReport(id);
+    });
   };
 
   @action.bound
-  public delete(id: string) {
+  public deleteReport = (reportId: string) => {
+    firebaseStore.deleteReport(reportId, () => {
+      message.success("rapport supprimé");
+    });
+  };
+
+  @action.bound
+  public unloadReport(id: string) {
     const index = this.reports.findIndex(report => report.id === id);
     if (index === -1) return;
     else {
@@ -217,7 +210,7 @@ export class ReportStore {
       const newInputs = this.activeReport!.inputs.map((input: any) =>
         toJS(input),
       );
-      const newReportJson: Ireport = {
+      const newReportJson: IreportJson = {
         ...this.activeReport.asJson(),
         id: newId,
         creationDate: new Date(),
@@ -229,10 +222,9 @@ export class ReportStore {
       this.setActiveReport(newReport.id);
       window.setTimeout(
         () =>
-          createReport({
-            userId: authStore.userId,
-            report: newReport.asJsonObj(),
-          }),
+          firebaseStore.createReport(newReport.asJsonMap(), () =>
+            message.success(`Nouveau rapport ${this.template!.label} créé`),
+          ),
         100,
       );
     }
@@ -248,7 +240,7 @@ export class ReportStore {
         const newInputs = this.activeReport!.inputs.map((input: any) =>
           toJS(input),
         );
-        const newReportJson: Ireport = {
+        const newReportJson: IreportJson = {
           ...this.activeReport.asJson(),
           id: newId,
           creationDate: new Date(),
@@ -260,10 +252,9 @@ export class ReportStore {
         lastId = newReport.id;
 
         // firebase creation
-        createReport({
-          userId: authStore.userId,
-          report: newReport.asJsonObj(),
-        });
+        firebaseStore.createReport(newReport.asJsonMap(), () =>
+          message.success(`Nouveau rapport ${this.template!.label} créé`),
+        );
       }
       this.setActiveReport(lastId);
     }
@@ -340,7 +331,7 @@ export class ReportStore {
       this.activeReport.inputs.forEach((input, index) => {
         this.renderInput({
           id: input.id,
-          type: input.type,
+          type: input.inputRef.type,
           value: input.value,
         });
       });
@@ -371,11 +362,15 @@ export class ReportStore {
       //@ts-ignore
       const inputId = el.dataset.inputId;
       const input = this.activeReport!.inputs.find(
-        (input: any) => input.id === inputId,
+        input => input.id === inputId,
       );
-      const color = getStatusColor(input.status, input.mandatory);
-      el.setAttribute("opacity", "0.6");
-      el.setAttribute("fill", color);
+      if (input) {
+        const color = getStatusColor(input.status, input.inputRef.mandatory);
+        el.setAttribute("opacity", "0.6");
+        el.setAttribute("fill", color);
+      } else {
+        // TODO manage error
+      }
     }
   }
 

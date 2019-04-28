@@ -7,11 +7,12 @@ import styled from "../../../../styled-components";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
 import InputLayoutDirect from "../layouts/InputLayoutDirect";
+import { StringStore } from "../../../../stores/inputs/string";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
-  input?: any;
+  input?: StringStore;
   reportStore?: ReportStore;
 }
 
@@ -50,25 +51,25 @@ const InputContainer: any = styled.div`
 @observer
 class StringInputDirect extends React.Component<Props> {
   private setValue = (e: any) => {
-    this.props.input.setValue(e.currentTarget.value);
+    this.props.input!.setValue(e.currentTarget.value);
   };
   public onOk = () => {
-    this.props.input.confirmValue();
+    this.props.input!.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
     this.props.reportStore!.renderInput({
-      id: this.props.input.id,
-      type: this.props.input.type,
-      value: this.props.input.value,
+      id: this.props.input!.id,
+      type: this.props.input!.inputRef.type,
+      value: this.props.input!.value,
     });
     this.props.reportStore!.fieldHighlighted &&
       this.props.reportStore!.renderContainers();
   };
   public onCancel = () => {
-    this.props.input.retsoreValue();
+    this.props.input!.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
   };
   public onRefresh = () => {
-    this.props.input.reset();
+    this.props.input!.reset();
   };
   public render() {
     return (
@@ -77,7 +78,7 @@ class StringInputDirect extends React.Component<Props> {
         visible={this.props.uiStore!.isInputModalOpen}
       >
         <InputLayoutDirect
-          label={this.props.input!.label}
+          label={this.props.input!.inputRef.label}
           onOk={this.onOk}
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}

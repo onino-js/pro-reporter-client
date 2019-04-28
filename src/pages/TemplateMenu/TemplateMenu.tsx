@@ -60,7 +60,7 @@ class TemplateMenu extends React.Component<Props> {
           <ProContainer>
             <div>
               <ActionButton
-                title="Nouveau template"
+                title="Importer template"
                 icon="plus"
                 onClick={this.newTemplateRequest}
                 size="big"
@@ -82,7 +82,6 @@ class TemplateMenu extends React.Component<Props> {
               close={this.closeNewTemplate}
               onOk={this.closeNewTemplate}
             />
-
           </ProContainer>
         </SubLayout>
       </MainLayout>
