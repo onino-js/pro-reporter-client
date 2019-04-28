@@ -28,7 +28,7 @@ const Text2 = styled.p`
 `;
 
 interface Props {
-  uiStore?: any;
+  uiStore?: UiStore;
 }
 class CloudStorage extends React.Component<Props> {
   public state = {

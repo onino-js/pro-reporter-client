@@ -20,9 +20,7 @@ export interface IstringInput extends IinputBase {
 export interface IstringInputJson extends IinputJsonBase {
   value: IstringValue;
 }
-export interface IstringInputJsonMap {
-  [key: string]: IstringInputJson;
-}
+export interface IstringInputJsonMap extends IstringInputJson {}
 export interface IstringStoreConstructor {
   new (params: IStringStoreParams): StringStore;
 }
@@ -91,11 +89,9 @@ export class StringStore {
 
   public asJsonMap(): IstringInputJsonMap {
     return {
-      [this.id]: {
-        id: this.id,
-        value: this.value,
-        status: this.status,
-      },
+      id: this.id,
+      value: this.value,
+      status: this.status,
     };
   }
 }

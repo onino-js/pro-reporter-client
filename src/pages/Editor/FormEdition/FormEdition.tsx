@@ -8,10 +8,10 @@ import { _measures } from "../../../assets/styles/_measures";
 import { ProContainer } from "../../../components/layouts/ProContainer";
 import { AllStores } from "../../../models/all-stores.model";
 import { StatusButton } from "../../../components/ui/Buttons";
-import { Iinput } from "../../../models/template.model";
+import { IinputStore } from "../../../models/template.model";
 
 interface Props {
-  inputs?: Iinput[];
+  inputs?: IinputStore[];
   sections?: any[];
 }
 
@@ -33,13 +33,6 @@ const SectionTitle = styled.div`
   margin-bottom: 20px;
 `;
 
-const SubsectionTitle = styled.div`
-  width: 100%;
-  /* border-bottom: 1px solid ${props => props.theme.font_primary}; */
-  font-size: 1.3em;
-  margin-bottom: 30px;
-`;
-
 @inject((allStores: AllStores) => ({
   inputs: allStores.reportStore.activeReport!.inputs,
   sections: allStores.reportStore.template!.sections,
@@ -54,16 +47,20 @@ class FormEdition extends React.Component<Props> {
             this.props.sections.map((section, index) => {
               let status = "valid";
               let mandatory = false;
-              this.props.inputs!
-                .filter((input: any) => input.sectionId === section.id)
-                .forEach((input: any) => {
-                  input.mandatory && (mandatory = true);
+              this.props
+                .inputs!.filter(
+                  input => input.inputRef.sectionId === section.id,
+                )
+                .forEach(input => {
+                  input.inputRef.mandatory && (mandatory = true);
                   input.status === "untouched" && (status = "untouched");
                 });
-              this.props.inputs!
-                .filter((input: any) => input.sectionId === section.id)
-                .forEach((input: any) => {
-                  input.mandatory && (mandatory = true);
+              this.props
+                .inputs!.filter(
+                  input => input.inputRef.sectionId === section.id,
+                )
+                .forEach(input => {
+                  input.inputRef.mandatory && (mandatory = true);
                   input.status === "error" && (status = "error");
                 });
               return (
@@ -76,10 +73,12 @@ class FormEdition extends React.Component<Props> {
                   </Flex>
 
                   <div>
-                    {this.props.inputs!
-                      .filter((input: any) => input.sectionId === section.id)
-                      .map((input: any, index2: number) => {
-                        const Input = componentMapping[input.type];
+                    {this.props
+                      .inputs!.filter(
+                        input => input.inputRef.sectionId === section.id,
+                      )
+                      .map((input, index2: number) => {
+                        const Input = componentMapping[input.inputRef.type];
                         return (
                           <Input key={"input-" + index2} inputId={input.id} />
                         );
@@ -88,14 +87,6 @@ class FormEdition extends React.Component<Props> {
                 </SectionContainer>
               );
             })}
-          {/* <React.Fragment key={"subsection-0"}>
-            {this.props.inputs
-              .filter((input: any) => input.subsectionId === false)
-              .map((input: any, index2: number) => {
-                const Input = componentMapping[input.type];
-                return <Input key={"input-" + index2} inputId={input.id} />;
-              })}
-          </React.Fragment> */}
         </Col>
       </ProContainer>
     );

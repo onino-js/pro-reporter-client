@@ -21,9 +21,8 @@ export interface IsingleSelectInput extends IinputBase {
 export interface IsingleSelectJson extends IinputJsonBase {
   value: IsingleSelectValue;
 }
-export interface IsingleSelectJsonMap {
-  [key: string]: IsingleSelectJson;
-}
+export interface IsingleSelectJsonMap extends IsingleSelectJson {}
+
 export interface IsingleSelectStoreConstructor {
   new (params: ISingleSelectStoreParams): SingleSelectStore;
 }
@@ -87,11 +86,9 @@ export class SingleSelectStore {
 
   public asJsonMap(): IsingleSelectJsonMap {
     return {
-      [this.id]: {
-        id: this.id,
-        value: this.value,
-        status: this.status,
-      },
+      id: this.id,
+      value: this.value,
+      status: this.status,
     };
   }
 }

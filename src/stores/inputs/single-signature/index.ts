@@ -1,5 +1,6 @@
+import { IsingleSignatureJsonMap } from './index';
 import { IinputStatus } from "./../../../models/template.model";
-import { observable, action, toJS, computed } from "mobx";
+import { observable, action, computed } from "mobx";
 import uuid from "uuid/v1";
 import { CanvasStore } from "./canvas-store";
 import { Report } from "../../report";
@@ -23,10 +24,9 @@ export interface IsingleSignatureInput extends IinputBase {
 }
 export interface IsingleSignatureJson extends IinputJsonBase {
   value: IsingleSignatureValue;
+  data: any;
 }
-export interface IsingleSignatureJsonMap {
-  [key: string]: IsingleSignatureJson;
-}
+export interface IsingleSignatureJsonMap extends IsingleSignatureJson {}
 
 export interface IsingleSignatureStoreConstructor {
   new (params: ISingleSignatureStoreParams): SingleSignatureStore;
@@ -139,21 +139,21 @@ export class SingleSignatureStore {
     this.original = input.original;
   }
 
-  public asJson() {
+  public asJson(): IsingleSignatureJson {
     return {
       id: this.id,
       value: this.value,
       status: this.status,
+      data : this.data
     };
   }
 
-  public asJsonMap() {
+  public asJsonMap(): IsingleSignatureJsonMap {
     return {
-      [this.id]: {
-        id: this.id,
-        value: this.value,
-        status: this.status,
-      },
+      id: this.id,
+      value: this.value,
+      status: this.status,
+      data: this.data
     };
   }
 }

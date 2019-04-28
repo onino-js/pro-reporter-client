@@ -171,20 +171,20 @@ class EditorSidebar extends React.Component<Props> {
         </MainButtonWrapper>
         {this.props.reportStore!.activeReport &&
           this.props.reportStore!.template!.sections.map(
-            (section: any, index: number) => {
+            (section, index: number) => {
               let status = "valid";
               let mandatory = false;
               const inputs = this.props.activeReport!.inputs;
               inputs
-                .filter((input: any) => input.sectionId === section.id)
-                .forEach((input: any) => {
-                  input.mandatory && (mandatory = true);
+                .filter(input => input.inputRef.sectionId === section.id)
+                .forEach(input => {
+                  input.inputRef.mandatory && (mandatory = true);
                   input.status === "untouched" && (status = "untouched");
                 });
               inputs
-                .filter((input: any) => input.sectionId === section.id)
-                .forEach((input: any) => {
-                  input.mandatory && (mandatory = true);
+                .filter(input => input.inputRef.sectionId === section.id)
+                .forEach(input => {
+                  input.inputRef.mandatory && (mandatory = true);
                   input.status === "error" && (status = "error");
                 });
               return (

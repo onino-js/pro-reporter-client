@@ -10,6 +10,7 @@ import { ProContainer } from "../layouts/ProContainer";
 import { TextDanger } from "../ui/Texts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProIcon } from "../ui/Icons";
+import { Report } from "../../stores/report";
 
 interface Props {
   uiStore?: UiStore;
@@ -116,7 +117,7 @@ class DeleteReportModal extends React.Component<Props, State> {
     });
   };
 
-  private toggleAll = (reports: any[]) => {
+  private toggleAll = (reports: Report[]) => {
     let newIds: string[];
     if (reports.length === this.state.selectedIds.length) {
       newIds = [];

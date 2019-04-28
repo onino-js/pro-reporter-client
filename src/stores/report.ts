@@ -1,4 +1,9 @@
-import { IcompareTwoImagesInput } from "./inputs/compare-two-images/index";
+import { formatDate } from "./../services/app.service";
+import {
+  IcompareTwoImagesInput,
+  IcompareTwoImagesValue,
+  IcompareTwoImagesJson,
+} from "./inputs/compare-two-images/index";
 import {
   IinputMap,
   IinputStore,
@@ -9,13 +14,30 @@ import {
 import { observable, action, computed, toJS } from "mobx";
 import { storeMapping } from "../services/input-mapping.service";
 import templateStore from "./templateStore";
-import { StringStore, IstringInput } from "./inputs/string";
-import { SingleSelectStore, IsingleSelectInput } from "./inputs/single-select";
-import { SingleImageStore, IsingleImageInput } from "./inputs/single-image";
+import {
+  StringStore,
+  IstringInput,
+  IstringInputJson,
+  IstringValue,
+} from "./inputs/string";
+import {
+  SingleSelectStore,
+  IsingleSelectInput,
+  IsingleSelectValue,
+  IsingleSelectJson,
+} from "./inputs/single-select";
+import {
+  SingleImageStore,
+  IsingleImageInput,
+  IsingleImageValue,
+  IsingleImageJson,
+} from "./inputs/single-image";
 import SingleSignatureInput from "../pages/Editor/inputs/SingleSignature/SingleSignatureInput";
 import {
   IsingleSignatureInput,
   SingleSignatureStore,
+  IsingleSignatureValue,
+  IsingleSignatureJson,
 } from "./inputs/single-signature";
 import { CompareTwoImagesStore } from "./inputs/compare-two-images";
 
@@ -40,10 +62,6 @@ export interface IreportMap extends IreportBase {
   inputs: IinputMap;
 }
 
-interface IReportParams extends IreportBase {
-  inputs: Iinput[];
-}
-
 export class Report {
   @observable public inputs: IinputStore[] = [];
   @observable public id: string = "";
@@ -64,19 +82,31 @@ export class Report {
   }
 
   constructor(newReport: IreportJson) {
-    Object.assign(this, newReport);
+    this.id = newReport.id;
+    this.userId = newReport.userId;
+    this.sections = newReport.sections;
+    this.templateId = newReport.templateId;
+    this.templateName = newReport.templateName;
+    this.creationDate = new Date(newReport.creationDate);
+    this.lastModifiedDate = new Date(newReport.lastModifiedDate);
+    this.status = newReport.status;
 
-    if (newReport.inputs.length === 0) {
-      // Get back templates inputs
-      const template = templateStore.templates.find(
-        t => t.id === newReport.templateId,
-      );
-      template && template.inputs.forEach(i => this.createInputFromRef(i));
-    } else {
-      newReport.inputs.forEach(i => this.createInputFromValue(i));
-    }
+    // Get back reference inputs from document
+    const template = templateStore.templates.find(
+      t => t.id === newReport.templateId,
+    );
+    // For each input in document, create reactive input store
+    template &&
+      template.inputs.forEach(iRef => {
+        let iJson;
+        // If newReport contains inputs, then get back values
+        if (newReport.inputs.length !== 0) {
+          iJson = newReport.inputs.find(i => i.id === iRef.id);
+        }
+        this.createInput(iRef, iJson);
+      });
 
-    this.setStatus();
+    // this.setStatus();
     // this.createSections(newReport.sections);
   }
 
@@ -85,63 +115,69 @@ export class Report {
     this.lastModifiedDate = new Date();
   }
 
+  // If IinputJson is undefined, then this is new document so apply default values
   @action.bound
-  public createInputFromRef(input: Iinput) {
-    switch (input.type) {
+  public createInput(inputRef: Iinput, input?: IinputJson) {
+    let _input;
+    switch (inputRef.type) {
       case "string":
+        _input = input as IstringInputJson;
         this.inputs.push(
           new StringStore({
             reportRef: this,
-            inputRef: input as IstringInput,
-            value: "",
+            inputRef: inputRef as IstringInput,
+            value: _input ? _input.value : "",
           }),
         );
         break;
       case "single-select":
+        _input = input as IsingleSelectJson;
         this.inputs.push(
           new SingleSelectStore({
             reportRef: this,
-            inputRef: input as IsingleSelectInput,
-            value: "",
+            inputRef: inputRef as IsingleSelectInput,
+            value: _input ? _input.value : "",
           }),
         );
         break;
       case "single-image":
+        _input = input as IsingleImageJson;
         this.inputs.push(
           new SingleImageStore({
             reportRef: this,
-            inputRef: input as IsingleImageInput,
-            value: "",
+            inputRef: inputRef as IsingleImageInput,
+            value: _input ? _input.value : "",
           }),
         );
         break;
       case "single-signature":
+        _input = input as IsingleSignatureJson;
         this.inputs.push(
           new SingleSignatureStore({
             reportRef: this,
-            inputRef: input as IsingleSignatureInput,
-            value: "",
-            data: {},
+            inputRef: inputRef as IsingleSignatureInput,
+            value: _input ? _input.value : "",
+            data: _input ? _input!.data : {},
           }),
         );
         break;
       case "compare-two-images":
+        _input = input as IcompareTwoImagesJson;
         this.inputs.push(
           new CompareTwoImagesStore({
             reportRef: this,
-            inputRef: input as IcompareTwoImagesInput,
-            value: {
-              before: false,
-              after: false,
-            },
-            data: {},
+            inputRef: inputRef as IcompareTwoImagesInput,
+            value: input
+              ? _input.value
+              : {
+                  before: false,
+                  after: false,
+                },
+            data: _input ? _input!.data : {},
           }),
         );
         break;
     }
-
-    //@ts-ignore
-    // const Store = storeMapping[input.type];
   }
 
   @action.bound

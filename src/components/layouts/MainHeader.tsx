@@ -48,7 +48,7 @@ const Logo = styled.img`
   }
 `;
 
-const Band1: any = styled.div`
+const Band1 = styled.div`
   width: 100%;
   height: 10%;
   background: linear-gradient(
@@ -59,7 +59,7 @@ const Band1: any = styled.div`
   );
   padding: 0;
 `;
-const Band2: any = styled.div`
+const Band2 = styled.div`
   width: 100%;
   height: 10%;
   background: rgba(0, 0, 0, 1);
@@ -113,7 +113,6 @@ const Text = styled.span`
 
 const MenuItem = styled(Menu.Item)`
   display: flex;
-  /* justify-content: space-between; */
 `;
 
 @inject((allStores: AllStores) => ({
@@ -125,7 +124,6 @@ const MenuItem = styled(Menu.Item)`
 class MainHeader extends React.Component<Props> {
   private signOut = () => {
     this.props.authStore!.signout();
-    // this.props.authStore!.setIsLogged(false);
   };
   private goHome = () => {
     this.props.history.push("/");
@@ -142,14 +140,12 @@ class MainHeader extends React.Component<Props> {
         <MenuItem onClick={this.goToUserPage}>
           <FontAwesomeIcon
             icon="user-circle"
-            // style={{ margin: "auto 10px auto 0px" }}
           />
           Mon compte
         </MenuItem>
         <MenuItem onClick={this.signOut}>
           <FontAwesomeIcon
             icon="sign-out-alt"
-            // style={{ margin: "auto 10px auto 0px" }}
           />
           Se déconnecter
         </MenuItem>
@@ -161,25 +157,19 @@ class MainHeader extends React.Component<Props> {
           <LogoBox onClick={this.goHome}>
             <Logo src={logo} />
           </LogoBox>
-          {/* <HeaderButton>
-            LEXIQUE <FontAwesomeIcon icon="book-open" className="gi-icon" />
-          </HeaderButton>
-          <HeaderButton>
-            AIDE <FontAwesomeIcon icon="question-circle" className="gi-icon" />
-          </HeaderButton> */}
         </RightBox>
         <MiddleBox>
-          <Band1 n={0} />
-          <Band2 n={1} />
-          <Band1 n={2} />
-          <Band2 n={3} />
-          <Band1 n={4} />
-          <Band2 n={5} />
-          <Band1 n={6} />
-          <Band2 n={7} />
-          <Band1 n={8} />
-          <Band2 n={9} />
-          <Band1 n={10} />
+          <Band1  />
+          <Band2  />
+          <Band1  />
+          <Band2 />
+          <Band1 />
+          <Band2 />
+          <Band1 />
+          <Band2 />
+          <Band1 />
+          <Band2 />
+          <Band1  />
         </MiddleBox>
         <LeftBox>
           <HeaderButton onClick={this.showInfoModal}>

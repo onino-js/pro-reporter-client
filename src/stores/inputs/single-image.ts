@@ -20,9 +20,7 @@ export interface IsingleImageInput extends IinputBase {
 export interface IsingleImageJson extends IinputJsonBase {
   value: IsingleImageValue;
 }
-export interface IsingleImageJsonMap {
-  [key: string]: IsingleImageJson;
-}
+export interface IsingleImageJsonMap extends IsingleImageJson {}
 
 export interface IsingleImageStoreConstructor {
   new(params: ISingleImageStoreParams): SingleImageStore;
@@ -111,11 +109,9 @@ export class SingleImageStore {
 
   public asJsonMap(): IsingleImageJsonMap {
     return {
-      [this.id]: {
-        id: this.id,
-        value: this.value,
-        status: this.status,
-      },
+      id: this.id,
+      value: this.value,
+      status: this.status,
     };
   }
 }

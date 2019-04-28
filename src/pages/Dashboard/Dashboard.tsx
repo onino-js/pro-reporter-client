@@ -6,6 +6,7 @@ import { ProContainer } from "../../components/layouts/ProContainer";
 import pageInProgress from "./../../assets/images/page-in-progess.jpg";
 import styled from "../../styled-components";
 import { Flex } from "../../components/ui/Flex";
+import { UiStore } from "../../stores/ui.store";
 
 const Img = styled.img`
   height: 100px;
@@ -28,7 +29,7 @@ const Text2 = styled.p`
 `;
 
 interface Props {
-  uiStore?: any;
+  uiStore?: UiStore;
 }
 class DashBoard extends React.Component<Props> {
   public state = {

@@ -5,7 +5,7 @@ export const _fullScreen = css`
   height: 100vh;
 `;
 
-export const _center: any = css`
+export const _center = css`
   display: flex;
   align-items: center;
   justify-content: center;

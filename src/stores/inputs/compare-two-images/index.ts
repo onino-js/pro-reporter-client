@@ -37,9 +37,7 @@ export interface IcompareTwoImagesJson extends IinputJsonBase {
   original: string;
   data: any;
 }
-export interface IcompareTwoImagesJsonMap {
-  [key: string]: IcompareTwoImagesJson;
-}
+export interface IcompareTwoImagesJsonMap extends IcompareTwoImagesJson {}
 export interface IcompareTwoImagesStoreConstructor {
   new (params: ICompareTwoImagesStoreParams): CompareTwoImagesStore;
 }
@@ -331,14 +329,12 @@ export class CompareTwoImagesStore {
   @action.bound
   public asJsonMap(): IcompareTwoImagesJsonMap {
     return {
-      [this.id]: {
-        id: this.id,
-        value: this.value,
-        status: this.status,
-        data: { ...this.data },
-        imageName: this.imageName,
-        original: this.original,
-      },
+      id: this.id,
+      value: this.value,
+      status: this.status,
+      data: { ...this.data },
+      imageName: this.imageName,
+      original: this.original,
     };
   }
 }

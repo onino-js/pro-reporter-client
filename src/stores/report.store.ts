@@ -105,7 +105,6 @@ export class ReportStore {
       status: "new",
     });
     this.reports.push(newReport);
-    console.log(newReport);
     this.setActiveReport(id);
 
     window.setTimeout(
@@ -152,6 +151,7 @@ export class ReportStore {
       const report = this.reportList.find(report => report.id === reportId)!;
       if (report) {
         const newReport = new Report(report);
+        console.log(newReport);
         this.reports.push(newReport);
       } else {
         // todo : manage error
@@ -308,6 +308,7 @@ export class ReportStore {
     ) {
       el = document.getElementById(id);
       //@ts-ignore
+      // console.log(value);
       el && el.setAttribute("xlink:href", value);
     }
     if (type === "compare-two-images") {

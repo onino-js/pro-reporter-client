@@ -6,13 +6,21 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   activePage: string;
 }
 
-const menuItems = [
+interface ImenuItem {
+  title: string,
+  icon: IconProp,
+  color: string,
+  page: string,
+}
+
+const menuItems: ImenuItem[] = [
   {
     title: "Tableau de bord",
     icon: "tachometer-alt",
@@ -126,7 +134,7 @@ class SideNavigation extends React.Component<Props> {
     return (
       <React.Fragment>
         <Menu>
-          {menuItems.map((item: any, index) => (
+          {menuItems.map((item, index) => (
             <MenuItem
               key={"menu-item" + index}
               onClick={() => this.goTo("/" + item.page)}

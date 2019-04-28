@@ -99,6 +99,7 @@ export class FirebaseStore {
     const userId = authStore.userId;
     const reports = database.ref(`users/${userId}/ongoing/`);
     reports.on("value", function(res: any) {
+      console.log(res.val());
       callback(res.val());
     });
   };

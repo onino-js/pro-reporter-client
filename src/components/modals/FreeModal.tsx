@@ -6,12 +6,12 @@ import { _measures } from "../../assets/styles/_measures";
 
 interface Props {
   show: boolean;
-  style?: any;
+  style?: React.CSSProperties;
   close: () => void;
 }
 
-const Modal: any = styled.div`
-  display: ${(props: any) =>
+const Modal = styled.div<{show:boolean}>`
+  display: ${(props: { show: boolean }) =>
     props.show ? "flex" : "none"}; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1000;

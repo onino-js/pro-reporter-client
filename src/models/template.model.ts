@@ -66,6 +66,7 @@ export type Iinput =
   | IsingleSignatureInput
   | IsingleImageInput
   | IcompareTwoImagesInput;
+
 export type IinputJson =
   | IstringInputJson
   | IsingleSelectJson

@@ -2,10 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import styled from "../../styled-components";
-import {
-  CancelButton,
-  OkButton,
-} from "../ui/Buttons";
+import { CancelButton, OkButton } from "../ui/Buttons";
 import { _measures } from "../../assets/styles/_measures";
 
 const DEFAULT_WIDTH = "70%";
@@ -20,7 +17,7 @@ interface Props {
   width?: [string, string];
 }
 
-const ModalHeader: any = styled.div`
+const ModalHeader = styled.div`
   margin: 5px;
   padding: 0px;
   color: ${props => props.theme.secondary};
@@ -65,7 +62,12 @@ const CloseBox = styled.span`
   } */
 `;
 
-const ModalContent: any = styled.div`
+interface IModalContent {
+  width?: [string, string];
+  height?: [string, string];
+}
+
+const ModalContent : any = styled.div<IModalContent>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -75,8 +77,10 @@ const ModalContent: any = styled.div`
   max-height: 100vh;
   max-width: 100vw;
   /* border: 1px solid #888; */
-  width: ${(props: any) => (props.width ? props.width[0] : DEFAULT_WIDTH)};
-  height: ${(props: any) => (props.height ? props.height[0] : DEFAULT_HEIGHT)};
+  width: ${(props: IModalContent) =>
+    props.width ? props.width[0] : DEFAULT_WIDTH};
+  height: ${(props: IModalContent) =>
+    props.height ? props.height[0] : DEFAULT_HEIGHT};
   /* max-width: 500px; */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   animation-name: animatetop;
