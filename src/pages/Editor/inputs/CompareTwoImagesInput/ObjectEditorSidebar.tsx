@@ -80,7 +80,6 @@ class ObjectEditorSidebar extends React.Component<Props> {
     this.props.input.canvasStore.setObjectAttribute(e, "strokeWidth");
     this.forceUpdate();
   };
-
   private remove = () => this.props.input.removeSelection();
 
   public render() {

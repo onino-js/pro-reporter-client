@@ -1,8 +1,7 @@
 import * as React from "react";
 import styled from "../../../../styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProModal from "../../../../components/modals/ProModal";
-import { ActionIconBox } from "../../../../components/ui/Buttons";
+import { ActionButton } from "../../../../components/ui/Buttons";
 
 interface Props {
   input: any;
@@ -32,9 +31,10 @@ const Body = styled.div`
   background-color: ${props => props.theme.bg_primary};
   overflow: hidden;
   padding: 20px;
+  min-height: 500px;
 `;
 const Indication = styled.p`
-  margin-top: 50px;
+  margin-top: 10px;
 `;
 
 class SingleSignatureEditor extends React.Component<Props> {
@@ -45,15 +45,14 @@ class SingleSignatureEditor extends React.Component<Props> {
         close={this.props.onCancel}
         onOk={this.props.onOk}
         width={["80%", "100%"]}
-        height={["100%", "100%"]}
+        height={["auto", "100%"]}
       >
         <Body>
-          <ActionIconBox
-            active={true}
+          <ActionButton
             onClick={this.props.input.canvasStore.clearCanvas}
-          >
-            <FontAwesomeIcon icon="sync-alt" />
-          </ActionIconBox>
+            icon="sync-alt"
+            size="big"
+          />
           <Indication>Dessinez dans la zone ci dessous.</Indication>
           <CanvasContainer>
             <Canvas id={this.props.input.canvasId} />

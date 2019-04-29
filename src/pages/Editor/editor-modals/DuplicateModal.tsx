@@ -133,15 +133,12 @@ class DuplicateModal extends React.Component<Props, State> {
                   icon="plus"
                   m="0px 0px 0px 5px"
                   onClick={this.plusOne}
-                  h="30px"
-                  w="30px"
                 />
+
                 <ActionButton
                   icon="minus"
                   m="0px 0px 0px 5px"
                   onClick={this.minusOne}
-                  h="30px"
-                  w="30px"
                 />
               </Flex>
             </SectionRow>

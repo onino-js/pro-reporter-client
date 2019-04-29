@@ -1,7 +1,5 @@
-import { formatDate } from "./../services/app.service";
 import {
   IcompareTwoImagesInput,
-  IcompareTwoImagesValue,
   IcompareTwoImagesJson,
 } from "./inputs/compare-two-images/index";
 import {
@@ -9,34 +7,24 @@ import {
   IinputStore,
   IinputJson,
   Iinput,
-  IinputStoreConstructor,
 } from "./../models/template.model";
-import { observable, action, computed, toJS } from "mobx";
+import { observable, action } from "mobx";
 import { storeMapping } from "../services/input-mapping.service";
 import templateStore from "./templateStore";
-import {
-  StringStore,
-  IstringInput,
-  IstringInputJson,
-  IstringValue,
-} from "./inputs/string";
+import { StringStore, IstringInput, IstringInputJson } from "./inputs/string";
 import {
   SingleSelectStore,
   IsingleSelectInput,
-  IsingleSelectValue,
   IsingleSelectJson,
 } from "./inputs/single-select";
 import {
   SingleImageStore,
   IsingleImageInput,
-  IsingleImageValue,
   IsingleImageJson,
 } from "./inputs/single-image";
-import SingleSignatureInput from "../pages/Editor/inputs/SingleSignature/SingleSignatureInput";
 import {
   IsingleSignatureInput,
   SingleSignatureStore,
-  IsingleSignatureValue,
   IsingleSignatureJson,
 } from "./inputs/single-signature";
 import { CompareTwoImagesStore } from "./inputs/compare-two-images";
@@ -157,7 +145,6 @@ export class Report {
             reportRef: this,
             inputRef: inputRef as IsingleSignatureInput,
             value: _input ? _input.value : "",
-            data: _input ? _input!.data : {},
           }),
         );
         break;
@@ -170,10 +157,16 @@ export class Report {
             value: input
               ? _input.value
               : {
-                  before: false,
-                  after: false,
+                  before: "",
+                  after: "",
                 },
-            data: _input ? _input!.data : {},
+            data: _input.data
+              ? _input!.data
+              : {
+                  before: [],
+                  after: [],
+                  bg: [],
+                },
           }),
         );
         break;

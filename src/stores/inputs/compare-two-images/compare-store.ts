@@ -1,6 +1,6 @@
 import { observable, action, toJS } from "mobx";
 import { fabric } from "fabric";
-import { Iedited } from ".";
+import { Iedited, ICompareTwoImagesStoreData } from ".";
 
 export class CompareStore {
   // Value
@@ -23,7 +23,7 @@ export class CompareStore {
   }
 
   @action.bound
-  public initialize(data?: any, callbak?: (canvas: any) => void) {
+  public initialize(data?: any[], callbak?: (canvas: fabric.Canvas) => void) {
     this.canvasEl = document.getElementById(this.id);
     this.canvas = new fabric.Canvas(this.id);
     data &&
@@ -35,15 +35,16 @@ export class CompareStore {
 
   @action.bound
   public unmountCanvas() {
-    this.canvas.removeListeners();
+    this.canvas!.removeListeners();
     this.stopResizeLoop();
     this.clearSelection();
-    this.canvas.dispose();
+    this.canvas!.dispose();
   }
 
   @action.bound
   public getPng() {
-    return this.canvas.toDataURL("image/jpeg", 0.1);
+    //@ts-ignore
+    return this.canvas!.toDataURL("image/jpeg");
   }
 
   @action.bound
@@ -52,7 +53,7 @@ export class CompareStore {
       // oImg.scale(0.2);
       // oImg.rotate(90);
       this.styleControl([oImg]);
-      this.canvas.add(oImg);
+      this.canvas!.add(oImg);
       callback(this.canvas, oImg);
     });
   }
@@ -68,14 +69,14 @@ export class CompareStore {
     fabric.util.enlivenObjects(
       payload,
       (objects: any) => {
-        const origRenderOnAddRemove = this.canvas.renderOnAddRemove;
-        this.canvas.renderOnAddRemove = false;
+        const origRenderOnAddRemove = this.canvas!.renderOnAddRemove;
+        this.canvas!.renderOnAddRemove = false;
         objects.forEach((o: any) => {
           this.styleControl([o]);
-          this.canvas.add(o);
+          this.canvas!.add(o);
         });
-        this.canvas.renderOnAddRemove = origRenderOnAddRemove;
-        this.canvas.renderAll();
+        this.canvas!.renderOnAddRemove = origRenderOnAddRemove;
+        this.canvas!.renderAll();
         callback && callback();
       },
       "",
@@ -98,7 +99,7 @@ export class CompareStore {
     const ratio2 = this.width / this.height;
     const width = ratio1 <= ratio2 ? maxWidth : maxHeight * ratio2;
     const height = width / ratio2;
-    this.canvas.setDimensions({
+    this.canvas!.setDimensions({
       width: width,
       height: height,
     });
@@ -119,12 +120,12 @@ export class CompareStore {
 
   @action.bound
   public clearCanvas() {
-    this.canvas.clear();
+    this.canvas!.clear();
   }
 
   @action.bound
   public getActiveObject() {
-    return this.canvas.getActiveObject();
+    return this.canvas!.getActiveObject();
   }
 
   @action.bound
@@ -142,8 +143,8 @@ export class CompareStore {
   @action.bound
   public getData() {
     const res: any[] = [];
-    if (!this.canvas.isEmpty()) {
-      this.canvas.forEachObject((obj: any) => {
+    if (!this.canvas!.isEmpty()) {
+      this.canvas!.forEachObject((obj: any) => {
         // if (obj.excludeFromExport) return;
         res.push(obj.toJSON());
       });
@@ -153,8 +154,8 @@ export class CompareStore {
 
   @action.bound
   public clearSelection() {
-    this.canvas.discardActiveObject();
-    this.canvas.renderAll();
+    this.canvas!.discardActiveObject();
+    this.canvas!.renderAll();
   }
 
   // PHOTO EDITION
@@ -163,46 +164,49 @@ export class CompareStore {
   public rotate(sens: string) {
     const rotateValue = sens === "right" ? 90 : -90;
     this.rotation += rotateValue;
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       objs[0].centeredRotation = true;
       objs[0].rotate(this.rotation);
-      this.canvas.requestRenderAll();
+      this.canvas!.requestRenderAll();
     }
   }
 
   @action.bound
   public scale(payload: number) {
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       const scale = objs[0].getObjectScaling().scaleX;
       const newScale = scale + payload;
       objs[0].scale(newScale);
-      this.canvas.renderAll();
+      this.canvas!.renderAll();
     }
   }
 
   @action.bound
   public center() {
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       objs[0].center();
-      this.canvas.renderAll();
+      this.canvas!.renderAll();
     }
   }
 
   @action.bound
   public adjust() {
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       if (
-        objs[0].height / objs[0].width <=
-        this.canvas.height / this.canvas.width
+        objs[0]!.height! / objs[0]!.width! <=
+        //@ts-ignore
+        this.canvas!.height! / this.canvas!.width!
       ) {
-        objs[0].scaleToWidth(this.canvas.width);
-      } else objs[0].scaleToHeight(this.canvas.height);
+        //@ts-ignore
+        objs[0].scaleToWidth(this.canvas!.width);
+        //@ts-ignore
+      } else objs[0].scaleToHeight(this.canvas!.height!);
       this.center();
-      this.canvas.renderAll();
+      this.canvas!.renderAll();
     }
   }
 
@@ -214,15 +218,17 @@ export class CompareStore {
 
   @action.bound
   public drawingModeOn() {
-    this.canvas.isDrawingMode = true;
-    this.canvas.freeDrawingBrush.color = "#ef0707";
-    this.canvas.freeDrawingBrush.width = 5;
+    this.canvas!.isDrawingMode = true;
+    //@ts-ignore
+    this.canvas!.freeDrawingBrush.color = "#ef0707";
+    //@ts-ignore
+    this.canvas!.freeDrawingBrush.width = 5;
     this.canvasMode = "free";
   }
 
   @action.bound
   public handModeOn() {
-    this.canvas.isDrawingMode = false;
+    this.canvas!.isDrawingMode = false;
     this.canvasMode = "hand";
   }
 
@@ -238,8 +244,8 @@ export class CompareStore {
       strokeWidth: 4,
     });
     this.styleControl([rect]);
-    this.canvas.add(rect);
-    this.canvas.setActiveObject(rect);
+    this.canvas!.add(rect);
+    this.canvas!.setActiveObject(rect);
   }
 
   @action.bound
@@ -253,8 +259,8 @@ export class CompareStore {
       strokeWidth: 4,
     });
     this.styleControl([circle]);
-    this.canvas.add(circle);
-    this.canvas.setActiveObject(circle);
+    this.canvas!.add(circle);
+    this.canvas!.setActiveObject(circle);
   }
 
   @action.bound
@@ -267,8 +273,8 @@ export class CompareStore {
       evented: true,
     });
     this.styleControl([line]);
-    this.canvas.add(line);
-    this.canvas.setActiveObject(line);
+    this.canvas!.add(line);
+    this.canvas!.setActiveObject(line);
   }
 
   @action.bound
@@ -282,8 +288,8 @@ export class CompareStore {
       fontFamily: "sans serif",
     });
     this.styleControl([text]);
-    this.canvas.add(text);
-    this.canvas.setActiveObject(text);
+    this.canvas!.add(text);
+    this.canvas!.setActiveObject(text);
   }
 
   // ******************************************************************************************
@@ -294,28 +300,28 @@ export class CompareStore {
 
   @action.bound
   public toggleObjFond() {
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       objs.forEach((obj: any) => obj.set("fill", "transparent"));
     }
-    this.canvas.renderAll();
+    this.canvas!.renderAll();
   }
 
   @action.bound
   public changeObjColor(e: any) {
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       objs.forEach((obj: any) => obj.set("fill", e.target.value));
     }
-    this.canvas.renderAll();
+    this.canvas!.renderAll();
   }
 
   @action.bound
   public setObjectAttribute(value: any, attr: string) {
-    const objs = this.canvas.getActiveObjects();
+    const objs = this.canvas!.getActiveObjects();
     if (objs.length !== 0) {
       objs.forEach((obj: any) => obj.set(attr, value));
     }
-    this.canvas.renderAll();
+    this.canvas!.renderAll();
   }
 }

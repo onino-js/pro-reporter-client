@@ -359,11 +359,9 @@ export class TemplateStore {
           el.dataset.optional && (input.mandatory = false);
           if (el.dataset.list) {
             //@ts-ignore
-            input.options = {
-              list: el.dataset.list
+            input.list = el.dataset.list
                 .split(",")
-                .map((item: string) => item.trim()),
-            };
+                .map((item: string) => item.trim())
           }
           //input.value = el.textContent;
           break;

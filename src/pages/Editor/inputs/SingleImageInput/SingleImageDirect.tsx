@@ -10,11 +10,12 @@ import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
 import { ActionButton, HiddenInputFile, CancelButton, OkButton } from "../../../../components/ui/Buttons";
+import { SingleImageStore } from "../../../../stores/inputs/single-image";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
-  input?: any;
+  input?: SingleImageStore;
   reportStore?: ReportStore;
 }
 
@@ -54,19 +55,19 @@ const InputContainer: any = styled.div`
 @observer
 class SingleImageDirect extends React.Component<Props> {
   private addPhotoRequest = () => {
-    this.props.input.uploadRequest();
+    this.props.input!.uploadRequest();
   };
   public onOk = () => {
-    this.props.input.confirmValue();
+    this.props.input!.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
     this.props.reportStore!.renderInput({
-      id: this.props.input.id,
-      type: this.props.input.type,
-      value: this.props.input.value,
+      id: this.props.input!.id,
+      type: this.props.input!.inputRef.type,
+      value: this.props.input!.value,
     });
   };
   public onCancel = () => {
-    this.props.input.retsoreValue();
+    this.props.input!.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
   };
   public render() {
@@ -77,20 +78,19 @@ class SingleImageDirect extends React.Component<Props> {
       >
         <Row type="flex">
           <Col xl={16} md={16} xs={24}>
-            <InputLayoutStandard input={this.props.input}>
+            <InputLayoutStandard input={this.props.input!}>
               <HiddenInputFile
                 id={"file-input-" + this.props.input!.id}
                 name="file"
-                onChange={this.props.input.onPhotoUpload}
+                onChange={this.props.input!.onPhotoUpload}
               />
               <ActionButton
-                active={true}
                 onClick={this.addPhotoRequest}
                 icon="camera"
               />
               <InputPrimitive
                 disabled={true}
-                value={this.props.input.imageName}
+                value={this.props.input!.imageName}
               />
             </InputLayoutStandard>
           </Col>
@@ -110,9 +110,9 @@ class SingleImageDirect extends React.Component<Props> {
         </Row>
         <Row style={{ paddingTop: "20px", paddingBottom: "50px" }}>
           <Col xl={24} style={{ display: "flex", justifyContent: "center" }}>
-            {this.props.input.value !== "" ? (
+            {this.props.input!.value !== "" ? (
               <img
-                src={this.props.input.value}
+                src={this.props.input!.value}
                 className="image-preview"
                 width="auto"
                 height="150px"

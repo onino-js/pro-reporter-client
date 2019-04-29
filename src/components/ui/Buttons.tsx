@@ -103,16 +103,17 @@ const ActionButtonLabel = styled.div<IActionButtonLabelProps>`
 
 interface IActionButtonProps {
   title?: string;
-  onClick: () => void;
+  onClick?: () => void;
   icon?: IconProp;
   disabled?: boolean;
   m?: string;
   h?: boolean;
   w?: boolean;
   size?: string;
+  r?: boolean;
 }
 
-export const ActionButton: any = ({
+export const ActionButton: React.SFC<IActionButtonProps> = ({
   title,
   onClick,
   icon,
@@ -123,7 +124,7 @@ export const ActionButton: any = ({
   size = "normal",
 }: IActionButtonProps) => (
   <ActionButtonBox
-    onClick={onClick}
+    onClick={onClick || (() => {})}
     disabled={disabled}
     size={size}
     m={m}

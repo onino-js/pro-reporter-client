@@ -17,12 +17,12 @@ export interface ICompareTwoImagesStoreParams {
   reportRef: Report;
   inputRef: IcompareTwoImagesInput;
   value: IcompareTwoImagesValue;
-  data: any;
+  data: ICompareTwoImagesStoreData;
 }
 
 export interface IcompareTwoImagesValue {
-  after: string | false;
-  before: string | false;
+  after: string;
+  before: string;
 }
 export interface IcompareTwoImagesInput extends IinputBase {
   value: IcompareTwoImagesValue;
@@ -42,22 +42,26 @@ export interface IcompareTwoImagesStoreConstructor {
   new (params: ICompareTwoImagesStoreParams): CompareTwoImagesStore;
 }
 
+export interface ICompareTwoImagesStoreData {
+  before: any[];
+  after: any[];
+  bg: any[];
+}
+
 export class CompareTwoImagesStore {
   @observable public id: string = "";
-  @observable public type: IinputType = "compare-two-images";
   @observable public value: IcompareTwoImagesValue = { before: "", after: "" };
   @observable public tempValue: any = { before: "", after: "" };
-  @observable public mandatory: boolean = false;
 
-  @observable public data: any = {
-    before: false,
-    after: false,
-    bg: false,
+  @observable public data: ICompareTwoImagesStoreData = {
+    before: [],
+    after: [],
+    bg: [],
   };
-  @observable public tempData: any = {
-    before: false,
-    after: false,
-    bg: false,
+  @observable public tempData: ICompareTwoImagesStoreData = {
+    before: [],
+    after: [],
+    bg: [],
   };
   @observable public canvasId: string = "";
   @observable public canvasStore: CompareStore = new CompareStore({
@@ -68,7 +72,6 @@ export class CompareTwoImagesStore {
   @observable public imageName: string = "";
   @observable public isEditVisible: boolean = false;
   @observable public original: string = "";
-  @observable public options: any = {};
   @observable public edited: Iedited = "before";
   @observable public isActiveSelection: boolean = false;
   @observable public isSideMenuOpen: boolean = false;
@@ -102,7 +105,7 @@ export class CompareTwoImagesStore {
   @action.bound
   public initialize() {
     this.canvasStore &&
-      this.canvasStore.initialize(this.data[this.edited], canvas => {
+      this.canvasStore.initialize(this.data[this.edited]! as any[], (canvas:any) => {
         this.edited !== "bg" && this.data["bg"] && this.setBackground(canvas);
         this.addListeners(canvas);
       });
@@ -125,11 +128,11 @@ export class CompareTwoImagesStore {
   public addListeners(canvas: any) {
     canvas.on("selection:updated", () => {
       this.isActiveSelection = true;
-      this.activeObjects = this.canvasStore.canvas.getActiveObjects();
+      this.activeObjects = this.canvasStore.canvas!.getActiveObjects();
     });
     canvas.on("selection:created", () => {
       this.isActiveSelection = true;
-      this.activeObjects = this.canvasStore.canvas.getActiveObjects();
+      this.activeObjects = this.canvasStore.canvas!.getActiveObjects();
     });
     canvas.on("selection:cleared", () => {
       this.isActiveSelection = false;
@@ -140,14 +143,14 @@ export class CompareTwoImagesStore {
 
   @action.bound
   public removeSelection() {
-    const active = this.canvasStore.canvas.getActiveObject();
+    const active = this.canvasStore.canvas!.getActiveObject();
     if (active !== null && active !== undefined) {
       if (active._objects) {
         active._objects.forEach((item: any) =>
-          this.canvasStore.canvas.remove(item),
+          this.canvasStore.canvas!.remove(item),
         );
       } else {
-        this.canvasStore.canvas.remove(active);
+        this.canvasStore.canvas!.remove(active);
       }
     }
     this.isActiveSelection = false;
@@ -224,7 +227,7 @@ export class CompareTwoImagesStore {
   }
 
   @action.bound
-  public validateCanvas(payload: string) {
+  public validateCanvas() {
     this.setData();
     this.tempData[this.edited] = this.data[this.edited];
     // .slice()
@@ -233,8 +236,8 @@ export class CompareTwoImagesStore {
       message.success(
         "La photo d'arrière plan a été ajoutée avec succes. Editer les images avent et après travaux",
       );
-      this.value.before = false;
-      this.value.after = false;
+      this.value.before = "";
+      this.value.after = "";
     }
     this.edited !== "bg" &&
       (this.value[this.edited] = this.canvasStore.getPng());
@@ -266,14 +269,14 @@ export class CompareTwoImagesStore {
       after: "",
     };
     this.data = {
-      before: false,
-      after: false,
-      bg: false,
+      before: [],
+      after: [],
+      bg: [],
     };
     this.tempData = {
-      before: false,
-      after: false,
-      bg: false,
+      before: [],
+      after: [],
+      bg: [],
     };
     this.imageName = "";
     this.original = "";

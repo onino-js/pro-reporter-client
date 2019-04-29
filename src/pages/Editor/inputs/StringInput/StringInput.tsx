@@ -5,6 +5,7 @@ import InputLayoutStandard from "../layouts/InputLayoutStandard";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
 import { StringStore } from "../../../../stores/inputs/string";
+import { InputList } from "../layouts/InputList";
 
 interface Props {
   uiStore?: UiStore;
@@ -25,13 +26,16 @@ class StringInput extends React.Component<Props> {
     this.props.input!.setValue(e.currentTarget.value);
   };
   public render() {
+    const list = this.props.input!.inputRef.list;
+    const input = this.props.input!;
     return (
-      <InputLayoutStandard input={this.props.input!}>
+      <InputLayoutStandard input={input}>
         <InputPrimitive
           type="text"
-          value={this.props.input!.value}
+          value={input.value}
           onChange={this.setValue}
         />
+        {list && <InputList list={list} setValue={input.setValue} />}
       </InputLayoutStandard>
     );
   }

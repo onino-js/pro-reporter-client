@@ -3,11 +3,11 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import styled from "../../../../styled-components";
 import { ReportStore } from "../../../../stores/report.store";
-import { _measures } from "../../../../assets/styles/_measures";
 import InputLayoutDirect from "../layouts/InputLayoutDirect";
 import { StringStore } from "../../../../stores/inputs/string";
+import { InputContainer } from "../../../../components/layouts/InputContainer";
+import { InputList } from "../layouts/InputList";
 
 interface Props {
   uiStore?: UiStore;
@@ -15,31 +15,6 @@ interface Props {
   input?: StringStore;
   reportStore?: ReportStore;
 }
-
-const InputContainer: any = styled.div`
-  display: ${(props: any) => (props.visible ? "flex" : "none")};
-  background-color: ${props => props.theme.bg_secondary};
-  border-top: 5px solid ${props => props.theme.secondary};
-  flex-direction: column;
-  /* justify-content: space-between; */
-  animation-name: animatetop;
-  animation-duration: 0.4s;
-  @keyframes animatetop {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  /* @media (max-width: ${_measures.tablet}px) {
-    padding: 20px;
-  }
-  @media (max-width: 500px) {
-    padding-top: 0px;
-    padding-bottom: 10px;
-  } */
-`;
 
 @inject((allStores: AllStores, { inputId }) => ({
   uiStore: allStores.uiStore,
@@ -72,23 +47,26 @@ class StringInputDirect extends React.Component<Props> {
     this.props.input!.reset();
   };
   public render() {
+    const list = this.props.input!.inputRef.list;
+    const input = this.props.input!;
     return (
       <InputContainer
         close={this.onCancel}
         visible={this.props.uiStore!.isInputModalOpen}
       >
         <InputLayoutDirect
-          label={this.props.input!.inputRef.label}
+          label={input.inputRef.label}
           onOk={this.onOk}
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
-          status={this.props.input!.status}
+          status={input.status}
         >
           <InputPrimitive
             type="text"
-            value={this.props.input!.value}
+            value={input.value}
             onChange={this.setValue}
           />
+          {list && <InputList list={list} setValue={input.setValue} />}
         </InputLayoutDirect>
       </InputContainer>
     );

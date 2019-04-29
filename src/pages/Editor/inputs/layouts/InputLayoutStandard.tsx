@@ -2,13 +2,9 @@ import * as React from "react";
 import { Row, Col, Dropdown, Menu, Popover } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "../../../../styled-components";
-import {
-  RefreshButton,
-  StatusButton,
-  SearchIconBox,
-} from "../../../../components/ui/Buttons";
-import { StringStore } from "../../../../stores/inputs/string";
+import { RefreshButton, StatusButton } from "../../../../components/ui/Buttons";
 import { IinputStore } from "../../../../models/template.model";
+import { InputList } from "./InputList";
 
 interface Props {
   input: IinputStore;
@@ -29,13 +25,6 @@ const InputLabel = styled.div`
 `;
 
 // Change button to div to enable antd dropdown
-const SearchBox = styled.div`
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const col2 = {
   xl: 8,
@@ -82,7 +71,6 @@ class InputLayoutStandard extends React.Component<Props> {
   public render() {
     const { input } = this.props;
     //@ts-ignore
-    const list = this.props.input.inputRef.list
     return (
       <React.Fragment>
         <MyRow type="flex" align="middle">
@@ -104,31 +92,6 @@ class InputLayoutStandard extends React.Component<Props> {
           {/* <Col {...col3}>{this.props.actions}</Col> */}
           <Col {...col4}>
             {this.props.children}
-
-            {
-            list && (
-              <Dropdown
-                overlay={
-                  <Menu>
-                    {list
-                      .map((item: any, index: number) => (
-                        <Menu.Item
-                          onClick={() => input.setValue(item)}
-                          key={"menu-item" + index}
-                        >
-                          {item}
-                        </Menu.Item>
-                      ))}
-                  </Menu>
-                }
-                trigger={["click", "hover"]}
-                placement="bottomLeft"
-              >
-                <SearchBox>
-                  <FontAwesomeIcon icon="search" />
-                </SearchBox>
-              </Dropdown>
-            )}
           </Col>
           <Col {...col5}>
             {this.props.input.status !== "untouched" && (

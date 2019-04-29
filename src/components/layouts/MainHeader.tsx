@@ -10,6 +10,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 import InfoModal from "../modals/InfoModal";
 import { _measures } from "../../assets/styles/_measures";
 import { AuthStore } from "../../stores/auth.store";
+import { ProIcon } from "../ui/Icons";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -113,6 +114,8 @@ const Text = styled.span`
 
 const MenuItem = styled(Menu.Item)`
   display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
 `;
 
 @inject((allStores: AllStores) => ({
@@ -138,15 +141,11 @@ class MainHeader extends React.Component<Props> {
     const UserMenu = () => (
       <Menu style={{ width: "170px" }}>
         <MenuItem onClick={this.goToUserPage}>
-          <FontAwesomeIcon
-            icon="user-circle"
-          />
+          <ProIcon icon="user-circle" m="0px 5px 0px 0px" />
           Mon compte
         </MenuItem>
         <MenuItem onClick={this.signOut}>
-          <FontAwesomeIcon
-            icon="sign-out-alt"
-          />
+          <ProIcon icon="sign-out-alt" m="0px 5px 0px 0px" />
           Se déconnecter
         </MenuItem>
       </Menu>
@@ -159,22 +158,22 @@ class MainHeader extends React.Component<Props> {
           </LogoBox>
         </RightBox>
         <MiddleBox>
-          <Band1  />
-          <Band2  />
-          <Band1  />
-          <Band2 />
           <Band1 />
           <Band2 />
           <Band1 />
           <Band2 />
           <Band1 />
           <Band2 />
-          <Band1  />
+          <Band1 />
+          <Band2 />
+          <Band1 />
+          <Band2 />
+          <Band1 />
         </MiddleBox>
         <LeftBox>
           <HeaderButton onClick={this.showInfoModal}>
             <Text>A propos</Text>
-            <FontAwesomeIcon icon="question-circle" />
+            <ProIcon icon="question-circle" />
           </HeaderButton>
           <Dropdown overlay={<UserMenu />} placement="bottomRight">
             <HeaderButton>

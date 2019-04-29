@@ -1,4 +1,4 @@
-import { IsingleSignatureJsonMap } from './index';
+import { IsingleSignatureJsonMap } from "./index";
 import { IinputStatus } from "./../../../models/template.model";
 import { observable, action, computed } from "mobx";
 import uuid from "uuid/v1";
@@ -10,7 +10,6 @@ interface ISingleSignatureStoreParams {
   reportRef: Report;
   inputRef: IsingleSignatureInput;
   value: IsingleSignatureValue;
-  data: any;
 }
 
 export type IsingleSignatureValue = string;
@@ -24,7 +23,6 @@ export interface IsingleSignatureInput extends IinputBase {
 }
 export interface IsingleSignatureJson extends IinputJsonBase {
   value: IsingleSignatureValue;
-  data: any;
 }
 export interface IsingleSignatureJsonMap extends IsingleSignatureJson {}
 
@@ -36,8 +34,6 @@ export class SingleSignatureStore {
   @observable public id: string = "";
   @observable public value: string = "";
   @observable public tempValue: string = "";
-  @observable public data: any = {};
-  @observable public tempData: any = {};
   @observable public canvasId: string = "";
   @observable public canvasStore: CanvasStore = new CanvasStore({
     id: this.canvasId,
@@ -58,7 +54,6 @@ export class SingleSignatureStore {
     this.id = params.inputRef.id;
     this.reportRef = params.reportRef;
     this.inputRef = params.inputRef;
-    this.data = params.data;
     this.canvasId = uuid();
     this.canvasStore = new CanvasStore({
       id: this.canvasId,
@@ -69,7 +64,7 @@ export class SingleSignatureStore {
 
   @action.bound
   public initialize() {
-    this.canvasStore && this.canvasStore.initialize(this.data);
+    this.canvasStore && this.canvasStore.initialize();
   }
 
   @action.bound
@@ -98,9 +93,7 @@ export class SingleSignatureStore {
   };
 
   @action.bound
-  public validateCanvas(payload: string) {
-    this.setData();
-    this.tempData = this.data;
+  public validateCanvas() {
     this.value = this.canvasStore.getPng();
   }
 
@@ -110,31 +103,21 @@ export class SingleSignatureStore {
   }
 
   @action.bound
-  public setData() {
-    this.canvasStore.canvas && (this.data = this.canvasStore.getData()[0]);
-  }
-
-  @action.bound
   public restore() {
     this.canvasStore.canvas.clear();
-    this.canvasStore.addObjects([this.tempData]);
   }
 
   @action.bound
   public reset() {
     this.value = "";
-    this.data = {};
-    this.tempData = {};
     this.imageName = "";
     this.original = "";
-    this.canvasStore.clearCanvas();
+    this.canvasStore && this.canvasStore.clearCanvas();
   }
 
   @action.bound
   public clone(input: SingleSignatureStore) {
     this.value = input.value;
-    this.data = { ...input.data };
-    this.tempData = { ...input.tempData };
     this.imageName = input.imageName;
     this.original = input.original;
   }
@@ -144,7 +127,6 @@ export class SingleSignatureStore {
       id: this.id,
       value: this.value,
       status: this.status,
-      data : this.data
     };
   }
 
@@ -153,7 +135,6 @@ export class SingleSignatureStore {
       id: this.id,
       value: this.value,
       status: this.status,
-      data: this.data
     };
   }
 }

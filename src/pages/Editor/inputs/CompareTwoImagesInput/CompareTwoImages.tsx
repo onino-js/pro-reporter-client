@@ -7,8 +7,7 @@ import { InputPrimitive } from "../layouts/InputPrimitive";
 import { Row, Col } from "antd";
 import ImageEditor from "./ImageEditor";
 import { ActionButton, ActionLink } from "../../../../components/ui/Buttons";
-import { CompareTwoImagesStore } from "../../../../stores/inputs/compare-two-images";
-
+import { CompareTwoImagesStore, Iedited } from "../../../../stores/inputs/compare-two-images";
 
 interface Props {
   inputId: string;
@@ -58,7 +57,7 @@ class CompareTwoImagesInput extends React.Component<Props> {
       .getElementById("file-hidden-input-" + this.props.input!.id)!
       .click();
   };
-  private openEditor = (edited: string) => {
+  private openEditor = (edited: Iedited) => {
     this.props.input!.setEdited(edited);
     window.setTimeout(() => {
       this.props.input!.setIsEditVisible(true);
@@ -93,7 +92,6 @@ class CompareTwoImagesInput extends React.Component<Props> {
             onChange={this.props.input!.updateImage}
           />
           <ActionButton
-            active={true}
             onClick={this.requestImage}
             icon="camera"
           />
@@ -104,7 +102,7 @@ class CompareTwoImagesInput extends React.Component<Props> {
             <Col xl={6}>
               <Row>
                 <ActionLink
-                  disabled={this.props.input!.data.bg === false}
+                  disabled={this.props.input!.data.bg.length === 0}
                   onClick={() => this.openEditor("bg")}
                   label="Editer le fond"
                   icon="edit"
@@ -115,16 +113,16 @@ class CompareTwoImagesInput extends React.Component<Props> {
               {this.props.input!.value.before === "" && (
                 <p>Aucun apperçu disponible</p>
               )}
-              {this.props.input!.value.before === false && (
+              {this.props.input!.value.before === "" && (
                 <ActionLink
-                  disabled={this.props.input!.data.bg === false}
+                  disabled={this.props.input!.data.bg.length === 0}
                   onClick={() => this.openEditor("before")}
                   label="Editer 'Avant travaux'"
                   icon="edit"
                 />
               )}
               {this.props.input!.value.before !== "" &&
-                this.props.input!.value.before !== false && (
+                this.props.input!.value.before !== "" && (
                   <Img
                     src={this.props.input!.value.before}
                     onClick={() => this.openEditor("before")}
@@ -136,16 +134,16 @@ class CompareTwoImagesInput extends React.Component<Props> {
               {this.props.input!.value.after === "" && (
                 <p>Aucun apperçu disponible</p>
               )}
-              {this.props.input!.value.after === false && (
+              {this.props.input!.value.after === "" && (
                 <ActionLink
-                  disabled={this.props.input!.data.bg === false}
+                  disabled={this.props.input!.data.bg.length === 0}
                   onClick={() => this.openEditor("after")}
                   label="Editer 'Après travaux'"
                   icon="edit"
                 />
               )}
               {this.props.input!.value.after !== "" &&
-                this.props.input!.value.after !== false && (
+                this.props.input!.value.after !== "" && (
                   <Img
                     src={this.props.input!.value.after}
                     onClick={() => this.openEditor("after")}

@@ -73,8 +73,9 @@ const SideMenuItemTitle = styled.span`
 const ActionLink = styled.span`
   color: ${props => props.theme.font_secondary};
   cursor: pointer;
-  margin-left: 10px;
   font-size: 14px;
+  width: 100%;
+  text-align: center;
 `;
 
 const MenuItem = styled(Menu.Item)`

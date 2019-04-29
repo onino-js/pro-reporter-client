@@ -11,11 +11,12 @@ import ImageEditor from "./ImageEditor";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
 import { HiddenInputFile, ActionButton, ActionLink, CancelButton, OkButton } from "../../../../components/ui/Buttons";
+import { CompareTwoImagesStore, Iedited } from "../../../../stores/inputs/compare-two-images";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
-  input?: any;
+  input?: CompareTwoImagesStore;
   reportStore?: ReportStore;
 }
 
@@ -77,39 +78,39 @@ const BottomRow = styled.div`
 @observer
 class CompareTwoImagesDirect extends React.Component<Props> {
   public onOk = () => {
-    this.props.input.confirmValue();
+    this.props.input!.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
     this.props.reportStore!.renderInput({
-      id: this.props.input.id,
-      type: this.props.input.type,
-      value: this.props.input.value,
+      id: this.props.input!.id,
+      type: this.props.input!.inputRef.type,
+      value: this.props.input!.value,
     });
   };
   public onCancel = () => {
-    this.props.input.retsoreValue();
+    this.props.input!.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
   };
   private requestImage = () => {
-    this.props.input.reset();
+    this.props.input!.reset();
     document
-      .getElementById("file-hidden-input-" + this.props.input.id)!
+      .getElementById("file-hidden-input-" + this.props.input!.id)!
       .click();
   };
-  private openEditor = (edited: string) => {
-    this.props.input.setEdited(edited);
+  private openEditor = (edited: Iedited) => {
+    this.props.input!.setEdited(edited);
     window.setTimeout(() => {
-      this.props.input.setIsEditVisible(true);
+      this.props.input!.setIsEditVisible(true);
       this.props.input!.canvasStore.resizeCanvas();
     }, 200);
   };
 
   private onEditorCancel = () => {
-    this.props.input.restore();
-    this.props.input.setIsEditVisible(false);
+    this.props.input!.restore();
+    this.props.input!.setIsEditVisible(false);
   };
   private onEditorOk = () => {
-    this.props.input.validateCanvas();
-    this.props.input.setIsEditVisible(false);
+    this.props.input!.validateCanvas();
+    this.props.input!.setIsEditVisible(false);
   };
   public render() {
     return (
@@ -120,20 +121,19 @@ class CompareTwoImagesDirect extends React.Component<Props> {
         >
           <UpperRow>
             <Col xl={24} xs={24}>
-              <InputLayoutStandard input={this.props.input}>
+              <InputLayoutStandard input={this.props.input!}>
                 <HiddenInputFile
                   id={"file-hidden-input-" + this.props.input!.id}
                   name="file"
-                  onChange={this.props.input.updateImage}
+                  onChange={this.props.input!.updateImage}
                 />
                 <ActionButton
-                  active={true}
                   onClick={this.requestImage}
                   icon="camera"
                 />
                 <InputPrimitive
                   disabled={true}
-                  value={this.props.input.imageName}
+                  value={this.props.input!.imageName}
                 />
               </InputLayoutStandard>
             </Col>
@@ -143,7 +143,7 @@ class CompareTwoImagesDirect extends React.Component<Props> {
               <Col xl={8} xs={8}>
                 <Row>
                   <ActionLink
-                    disabled={this.props.input.data.bg === false}
+                    disabled={this.props.input!.data.bg.length === 0}
                     onClick={() => this.openEditor("bg")}
                     label="Editer le fond"
                     icon="edit"
@@ -151,42 +151,42 @@ class CompareTwoImagesDirect extends React.Component<Props> {
                 </Row>
               </Col>
               <Col xl={8} xs={8}>
-                {this.props.input.value.before === "" && (
+                {this.props.input!.value.before === "" && (
                   <p>Aucun apperçu disponible</p>
                 )}
-                {this.props.input.value.before === false && (
+                {this.props.input!.value.before === "" && (
                   <ActionLink
-                    disabled={this.props.input.data.bg === false}
+                    disabled={this.props.input!.data.bg.length === 0}
                     onClick={() => this.openEditor("before")}
                     label="Editer 'Avant travaux'"
                     icon="edit"
                   />
                 )}
-                {this.props.input.value.before !== "" &&
-                  this.props.input.value.before !== false && (
+                {this.props.input!.value.before !== "" &&
+                  this.props.input!.value.before !== "" && (
                     <Img
-                      src={this.props.input.value.before}
+                      src={this.props.input!.value.before}
                       onClick={() => this.openEditor("before")}
                       alt="#"
                     />
                   )}
               </Col>
               <Col xl={8} xs={8}>
-                {this.props.input.value.after === "" && (
+                {this.props.input!.value.after === "" && (
                   <p>Aucun apperçu disponible</p>
                 )}
-                {this.props.input.value.after === false && (
+                {this.props.input!.value.after === "" && (
                   <ActionLink
-                    disabled={this.props.input.data.bg === false}
+                    disabled={this.props.input!.data.bg.length === 0}
                     onClick={() => this.openEditor("after")}
                     label="Editer 'Après travaux'"
                     icon="edit"
                   />
                 )}
-                {this.props.input.value.after !== "" &&
-                  this.props.input.value.after !== false && (
+                {this.props.input!.value.after !== "" &&
+                  this.props.input!.value.after !== "" && (
                     <Img
-                      src={this.props.input.value.after}
+                      src={this.props.input!.value.after}
                       onClick={() => this.openEditor("after")}
                       alt="#"
                     />
@@ -201,16 +201,16 @@ class CompareTwoImagesDirect extends React.Component<Props> {
         </InputContainer>
 
         <ImageEditor
-          show={this.props.input.isEditVisible}
-          addObjects={this.props.input.edited !== "bg"}
+          show={this.props.input!.isEditVisible}
+          addObjects={this.props.input!.edited !== "bg"}
           input={this.props.input}
           onOk={this.onEditorOk}
           onCancel={this.onEditorCancel}
-          isActiveSelection={this.props.input.isActiveSelection}
-          isSideMenuOpen={this.props.input.isSideMenuOpen}
-          isObjectEditOpen={this.props.input.isObjectEditOpen}
-          canvasMode={this.props.input.canvasStore.canvasMode}
-          activeObjects={this.props.input.activeObjects}
+          isActiveSelection={this.props.input!.isActiveSelection}
+          isSideMenuOpen={this.props.input!.isSideMenuOpen}
+          isObjectEditOpen={this.props.input!.isObjectEditOpen}
+          canvasMode={this.props.input!.canvasStore.canvasMode}
+          activeObjects={this.props.input!.activeObjects}
           // addObjectsPanel={this.edited !== "bg"}
         />
       </React.Fragment>

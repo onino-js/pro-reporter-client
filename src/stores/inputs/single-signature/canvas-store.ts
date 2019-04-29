@@ -7,13 +7,13 @@ export class CanvasStore {
   // data
   @observable public id: string = "";
   @observable public canvas: any = null;
-  @observable public canvasEl: any = null;
-  @observable public canvasBox: any = null;
+  @observable public canvasEl: HTMLCanvasElement | null = null;
+  @observable public canvasBox: HTMLElement | null = null;
   @observable public resizeLoop: any = false;
   @observable public canvasHeight: any = false;
   @observable public canvasWidth: any = false;
-  @observable public width: any = false;
-  @observable public height: any = false;
+  @observable public width: number = 0;
+  @observable public height: number = 0;
   @observable public rotation: number = 90;
 
   constructor(options: any) {
@@ -21,12 +21,11 @@ export class CanvasStore {
   }
 
   @action.bound
-  public initialize(data: any) {
-    this.canvasEl = document.getElementById(this.id);
+  public initialize() {
+    this.canvasEl = document.getElementById(this.id) as HTMLCanvasElement;
     this.canvasBox = document.getElementById("canvas-container" + this.id);
     this.canvas = new fabric.Canvas(this.id);
     this.canvas.isDrawingMode = true;
-    data && this.addObjects([data]);
   }
 
   @action.bound
@@ -52,31 +51,6 @@ export class CanvasStore {
     });
   }
 
-  // @action.bound
-  // public restoreData(payload: any) {
-  //   this.canvas.clear();
-  //   this.addObjects([payload]);
-  // }
-
-  @action.bound
-  public addObjects(payload: any) {
-    if (payload.length === 0) return;
-    fabric.util.enlivenObjects(
-      payload,
-      (objects: any) => {
-        const origRenderOnAddRemove = this.canvas.renderOnAddRemove;
-        this.canvas.renderOnAddRemove = false;
-        objects.forEach((o: any) => {
-          this.styleControl(o);
-          this.canvas.add(o);
-        });
-        this.canvas.renderOnAddRemove = origRenderOnAddRemove;
-        this.canvas.renderAll();
-      },
-      "",
-    );
-  }
-
   @action.bound
   public resizeCanvas() {
     const canvasBox = document.getElementById(this.id)!.parentElement!
@@ -97,8 +71,8 @@ export class CanvasStore {
   @action.bound
   public startResizeLoop() {
     const test =
-      this.canvasWidth !== this.canvasBox.offsetWidth ||
-      this.canvasHeight !== this.canvasBox.offsetHeight;
+      this.canvasWidth !== this.canvasBox!.offsetWidth ||
+      this.canvasHeight !== this.canvasBox!.offsetHeight;
     if (test) {
       this.resizeCanvas();
     }
@@ -127,17 +101,17 @@ export class CanvasStore {
     return item;
   }
 
-  @action.bound
-  public getData() {
-    const res: any[] = [];
-    if (!this.canvas.isEmpty()) {
-      this.canvas.forEachObject((obj: any) => {
-        // if (obj.excludeFromExport) return;
-        res.push(obj.toJSON());
-      });
-    }
-    return res;
-  }
+  // @action.bound
+  // public getData() {
+  //   const res: any[] = [];
+  //   if (!this.canvas.isEmpty()) {
+  //     this.canvas.forEachObject((obj: any) => {
+  //       // if (obj.excludeFromExport) return;
+  //       res.push(obj.toJSON());
+  //     });
+  //   }
+  //   return res;
+  // }
 
   @action.bound
   public clearSelection() {

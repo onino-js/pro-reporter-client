@@ -4,16 +4,11 @@ import { AllStores } from "../../../../models/all-stores.model";
 import { UiStore } from "../../../../stores/ui.store";
 
 import styled from "../../../../styled-components";
-import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import { Col } from "antd";
 import SingleSignatureEditor from "./SingleSignatureEditor";
-import { _measures } from "../../../../assets/styles/_measures";
 import { ReportStore } from "../../../../stores/report.store";
-import {
-  ActionButton,
-  CancelButton,
-  OkButton,
-} from "../../../../components/ui/Buttons";
+import { ActionButton } from "../../../../components/ui/Buttons";
+import InputLayoutDirect from "../layouts/InputLayoutDirect";
+import { InputContainer } from "../../../../components/layouts/InputContainer";
 
 interface Props {
   uiStore?: UiStore;
@@ -22,53 +17,22 @@ interface Props {
   reportStore?: ReportStore;
 }
 
-const InputContainer: any = styled.div`
-  display: ${(props: any) => (props.visible ? "flex" : "none")};
-  background-color: ${props => props.theme.bg_secondary};
-  border-top: 5px solid ${props => props.theme.secondary};
-  padding: 50px;
-  flex-direction: column;
-  justify-content: space-between;
-  animation-name: animatetop;
-  animation-duration: 0.4s;
-  @keyframes animatetop {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  @media (max-width: ${_measures.tablet}px) {
-    padding: 20px;
-  }
-`;
-
 const Img = styled.img`
   border: 6px solid ${props => props.theme.disabled};
-  max-width: 90%;
+  max-width: 150px;
+  max-height: 100px;
   height: auto;
   cursor: pointer;
   background-color: white;
 `;
 
-const UpperRow = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
 const MiddleRow = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 20px;
   margin-bottom: 30px;
-`;
-
-const BottomRow = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
 `;
 
 @inject((allStores: AllStores, { inputId }) => ({
@@ -104,13 +68,16 @@ class SingleSignatureDirect extends React.Component<Props> {
     this.props.uiStore!.setIsInputModalOpen(false);
     this.props.reportStore!.renderInput({
       id: this.props.input.id,
-      type: this.props.input.type,
+      type: this.props.input.inputRef.type,
       value: this.props.input.value,
     });
   };
   public onCancel = () => {
     this.props.input.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
+  };
+  public onRefresh = () => {
+    this.props.input!.reset();
   };
   public render() {
     return (
@@ -119,32 +86,21 @@ class SingleSignatureDirect extends React.Component<Props> {
           close={this.onCancel}
           visible={this.props.uiStore!.isInputModalOpen}
         >
-          <UpperRow>
-            <Col xl={24} xs={24}>
-              <InputLayoutStandard input={this.props.input}>
-                <ActionButton
-                  icon="edit"
-                  active={true}
-                  onClick={this.openModal}
-                />
-              </InputLayoutStandard>
-            </Col>
-          </UpperRow>
-          <MiddleRow>
-            <Col xl={24} xs={24}>
-              <Col xl={8} xs={8}>
-                {this.props.input.value !== "" ? (
-                  <Img src={this.props.input.value} />
-                ) : (
-                  <p>Pas d'aperçu disponible</p>
-                )}
-              </Col>
-            </Col>
-          </MiddleRow>
-          <BottomRow>
-            <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
-            <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
-          </BottomRow>
+          <InputLayoutDirect
+            label={this.props.input!.inputRef.label}
+            onOk={this.onOk}
+            onCancel={this.onCancel}
+            onRefresh={this.onRefresh}
+            status={this.props.input!.status}
+          >
+            <MiddleRow>
+              {this.props.input.value !== "" ? (
+                <Img onClick={this.openModal} src={this.props.input.value} />
+              ) : (
+                <ActionButton icon="edit" size="big" onClick={this.openModal} />
+              )}
+            </MiddleRow>
+          </InputLayoutDirect>
         </InputContainer>
 
         <SingleSignatureEditor

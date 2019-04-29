@@ -340,7 +340,6 @@ export class ReportStore {
   }
 
   // TEMPLATE EDITION
-
   @action.bound
   public zoomIn() {
     const el = document.getElementById("canvas-container");
