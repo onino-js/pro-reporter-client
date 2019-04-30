@@ -14,10 +14,10 @@ interface Props extends RouteComponentProps {
 }
 
 interface ImenuItem {
-  title: string,
-  icon: IconProp,
-  color: string,
-  page: string,
+  title: string;
+  icon: IconProp;
+  color: string;
+  page: string;
 }
 
 const menuItems: ImenuItem[] = [
@@ -98,9 +98,10 @@ const MenuItem = styled.div`
   }
 `;
 
-const Menu = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: "0";
 `;
 
 const MenuItemTitle = styled.span`
@@ -133,7 +134,7 @@ class SideNavigation extends React.Component<Props> {
   public render() {
     return (
       <React.Fragment>
-        <Menu>
+        <Container>
           {menuItems.map((item, index) => (
             <MenuItem
               key={"menu-item" + index}
@@ -148,7 +149,7 @@ class SideNavigation extends React.Component<Props> {
               <MenuItemTitle>{item.title}</MenuItemTitle>
             </MenuItem>
           ))}
-        </Menu>
+        </Container>
       </React.Fragment>
     );
   }

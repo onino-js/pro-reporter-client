@@ -5,6 +5,9 @@ import { _measures } from "../../assets/styles/_measures";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { getStatusColor, getStatusIcon } from "../../services/template.service";
 import { Menu, Dropdown } from "antd";
+import { IreportStatus } from "../../stores/report";
+import { IinputStatus } from "../../models/template.model";
+import { ItemplateStatus } from "../../stores/templateStore";
 
 export const IconBox = styled.button<IIconBoxProps>`
   display: flex;
@@ -204,7 +207,7 @@ export const RefreshButton = (props: any) => (
 );
 
 interface IStatusButtonProps extends IIconBoxProps {
-  status: string;
+  status: IreportStatus | IinputStatus | ItemplateStatus;
   mandatory?: boolean;
 }
 

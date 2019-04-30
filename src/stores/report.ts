@@ -40,6 +40,10 @@ export interface IreportBase {
   creationDate: Date | string;
   lastModifiedDate: Date | string;
   status: IreportStatus;
+  errorsNb: number;
+  warningsNb: number;
+  untouchedNb: number;
+  validNb: number;
 }
 
 export interface IreportJson extends IreportBase {
@@ -60,13 +64,39 @@ export class Report {
   @observable public creationDate: Date = new Date();
   @observable public lastModifiedDate: Date = new Date();
   @observable public status: IreportStatus = "new";
+  @observable public errorsNb: number = 0;
+  @observable public warningsNb: number = 0;
+  @observable public untouchedNb: number = 0;
+  @observable public validNb: number = 0;
 
   @action.bound
   public setStatus() {
-    let status: IreportStatus = "new";
-    this.inputs.forEach(i => i.status === "warning" && (status = "warning"));
-    this.inputs.forEach(i => i.status === "error" && (status = "error"));
-    this.status = status;
+    this.computeStatusNumbers();
+    if (this.untouchedNb === this.inputs.length) {
+      this.status = "new";
+    } else if (this.warningsNb > 0 && this.errorsNb === 0) {
+      this.status = "warning";
+    } else if (this.errorsNb > 0) {
+      this.status = "error";
+    } else {
+      this.status = "valid";
+    }
+  }
+
+  @action
+  public computeStatusNumbers() {
+    this.errorsNb = 0;
+    this.warningsNb = 0;
+    this.untouchedNb = 0;
+    this.validNb = 0;
+    this.inputs.forEach(i => {
+      i.status === "untouched" &&
+        i.inputRef!.mandatory &&
+        (this.warningsNb += 1);
+      i.status === "error" && (this.errorsNb += 1);
+      i.status === "untouched" && (this.untouchedNb += 1);
+      i.status === "valid" && (this.validNb += 1);
+    });
   }
 
   constructor(newReport: IreportJson) {
@@ -93,8 +123,8 @@ export class Report {
         }
         this.createInput(iRef, iJson);
       });
-
-    // this.setStatus();
+    //this.computeStatusNumbers();
+    this.setStatus();
     // this.createSections(newReport.sections);
   }
 
@@ -154,19 +184,20 @@ export class Report {
           new CompareTwoImagesStore({
             reportRef: this,
             inputRef: inputRef as IcompareTwoImagesInput,
-            value: input
+            value: _input
               ? _input.value
               : {
                   before: "",
                   after: "",
                 },
-            data: _input.data
-              ? _input!.data
-              : {
-                  before: [],
-                  after: [],
-                  bg: [],
-                },
+            data:
+              _input && _input.data
+                ? _input!.data
+                : {
+                    before: [],
+                    after: [],
+                    bg: [],
+                  },
           }),
         );
         break;
@@ -203,6 +234,10 @@ export class Report {
       templateName: this.templateName,
       sections: this.sections,
       status: this.status,
+      errorsNb: this.errorsNb,
+      warningsNb: this.warningsNb,
+      validNb: this.validNb,
+      untouchedNb: this.untouchedNb,
     };
   }
 
@@ -223,6 +258,10 @@ export class Report {
       templateName: this.templateName,
       sections: this.sections,
       status: this.status,
+      errorsNb: this.errorsNb,
+      warningsNb: this.warningsNb,
+      validNb: this.validNb,
+      untouchedNb: this.untouchedNb,
     };
   }
 }

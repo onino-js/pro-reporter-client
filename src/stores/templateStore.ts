@@ -7,7 +7,7 @@ interface ItemplateError {
   msg: string;
 }
 
-type ItemplateStatus = "valid" | "warning" | "error" | "unchecked";
+export type ItemplateStatus = "valid" | "warning" | "error" | "unchecked";
 
 interface InewTemplateStatus {
   svgLoaded: boolean;

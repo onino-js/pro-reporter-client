@@ -12,7 +12,7 @@ interface Props {
   p?: string;
 }
 
-const ProLayout = styled.section<{p?:string}>`
+const ProLayout = styled.section<{ p?: string }>`
   padding: ${(props: { p?: string }) => props.p || "24px 24px"};
   transition: padding 300ms ease-in-out;
   display: flex;
@@ -36,6 +36,7 @@ const SideMenu = styled.div`
   background-size: 400px auto;
   transition: width 300ms ease-in-out;
   background-repeat: no-repeat;
+  flex-shrink: 0;
   @media (max-width: ${_measures.mobile}px) {
     width: 50px;
   }

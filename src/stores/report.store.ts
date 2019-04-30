@@ -1,3 +1,4 @@
+import { InputList } from "./../pages/Editor/inputs/layouts/InputList";
 import { message } from "antd";
 import { mapToArray } from "./../services/app.service";
 import { Itemplate } from "./../models/template.model";
@@ -103,6 +104,10 @@ export class ReportStore {
       inputs: [],
       sections: this.template!.sections,
       status: "new",
+      errorsNb: 0,
+      warningsNb: 0,
+      validNb: 0,
+      untouchedNb: this.template!.inputs.length,
     });
     this.reports.push(newReport);
     this.setActiveReport(id);

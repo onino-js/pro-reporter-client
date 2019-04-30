@@ -8,7 +8,7 @@ import { Report } from "../../stores/report";
 import { ReportStore } from "../../stores/report.store";
 import { Dropdown, Icon, Menu } from "antd";
 import { TemplateStore } from "../../stores/templateStore";
-import { Itemplate } from "../../models/template.model";
+import { Itemplate, IinputStatus } from "../../models/template.model";
 import { SpiralSpinner } from "react-spinners-kit";
 import { mainTheme } from "../../assets/styles/_colors";
 import { StatusButton, ProDropdown } from "../../components/ui/Buttons";
@@ -173,7 +173,7 @@ class EditorSidebar extends React.Component<Props> {
         {this.props.reportStore!.activeReport &&
           this.props.reportStore!.template!.sections.map(
             (section, index: number) => {
-              let status = "valid";
+              let status: IinputStatus = "valid";
               let mandatory = false;
               const inputs = this.props.activeReport!.inputs;
               inputs
@@ -192,13 +192,7 @@ class EditorSidebar extends React.Component<Props> {
                 <SideMenuItem
                   key={"menu-item" + index}
                   onClick={() => this.sectionClick(section.label)}
-                  // className={`${
-                  //   this.props.activeSectionIndex === index ? "active" : ""
-                  // }`}
                 >
-                  {/* <IconBox color={item.color}>
-                <FontAwesomeIcon className="gi-menu-icon" icon={item.icon} />
-              </IconBox> */}
                   <SideMenuItemTitle>
                     {section.label.toUpperCase()}
                   </SideMenuItemTitle>

@@ -6,14 +6,14 @@ import {
   StatusButton,
   RefreshButton,
 } from "../../../../components/ui/Buttons";
-import { InputList } from "./InputList";
+import { IinputStatus } from "../../../../models/template.model";
 
 interface Props {
   label: string;
   onOk: () => void;
   onRefresh: () => void;
   onCancel: () => void;
-  status: string;
+  status: IinputStatus;
   additionalInfos?: React.ReactChild;
 }
 
@@ -77,9 +77,7 @@ class InputLayoutDirect extends React.Component<Props> {
             </StatusButtonBox>
           </HeaderRight>
         </Header>
-        <Body>
-          {this.props.children}
-        </Body>
+        <Body>{this.props.children}</Body>
         <Footer>
           <CancelButton onClick={this.props.onCancel}> ANNULER </CancelButton>
           <OkButton onClick={this.props.onOk}>CONFIRMER</OkButton>

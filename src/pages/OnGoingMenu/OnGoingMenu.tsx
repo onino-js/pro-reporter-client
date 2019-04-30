@@ -92,16 +92,20 @@ class OnGoingMenu extends React.Component<Props> {
                     trigger={["click"]}
                     overlay={
                       <Menu style={{ maxWidth: "300px" }}>
-                        {["Tous les status", "new", "warning", "error"].map(
-                          (s, index) => (
-                            <Menu.Item
-                              key={"status-choice-" + index}
-                              onClick={() => this.filterStatus(s)}
-                            >
-                              {s}
-                            </Menu.Item>
-                          ),
-                        )}
+                        {[
+                          "Tous les status",
+                          "new",
+                          "warning",
+                          "error",
+                          "valid",
+                        ].map((s, index) => (
+                          <Menu.Item
+                            key={"status-choice-" + index}
+                            onClick={() => this.filterStatus(s)}
+                          >
+                            {s}
+                          </Menu.Item>
+                        ))}
                       </Menu>
                     }
                   >

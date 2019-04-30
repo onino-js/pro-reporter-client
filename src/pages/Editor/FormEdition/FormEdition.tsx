@@ -8,7 +8,7 @@ import { _measures } from "../../../assets/styles/_measures";
 import { ProContainer } from "../../../components/layouts/ProContainer";
 import { AllStores } from "../../../models/all-stores.model";
 import { StatusButton } from "../../../components/ui/Buttons";
-import { IinputStore } from "../../../models/template.model";
+import { IinputStore, IinputStatus } from "../../../models/template.model";
 
 interface Props {
   inputs?: IinputStore[];
@@ -45,7 +45,7 @@ class FormEdition extends React.Component<Props> {
         <Col xl={20} md={24} sm={24} xs={24}>
           {this.props.sections &&
             this.props.sections.map((section, index) => {
-              let status = "valid";
+              let status: IinputStatus = "valid";
               let mandatory = false;
               this.props
                 .inputs!.filter(

@@ -1,4 +1,7 @@
+import { IreportStatus } from "./../stores/report";
 import { mainTheme } from "./../assets/styles/_colors";
+import { IinputStatus } from "../models/template.model";
+import { ItemplateStatus } from "../stores/templateStore";
 interface IvalidationMsg {
   status: "clean" | "error";
   numberOfInputs: number;
@@ -82,7 +85,10 @@ export const checkTemplate = (template: string) => {
 
 export const buildSections = (template: string) => {};
 
-export const getStatusColor = (status: string, mandatory?: boolean) => {
+export const getStatusColor = (
+  status: IinputStatus | IreportStatus | ItemplateStatus,
+  mandatory?: boolean,
+) => {
   if (status === "valid") {
     return mainTheme.success;
   } else if (status === "error") {
@@ -98,13 +104,16 @@ export const getStatusColor = (status: string, mandatory?: boolean) => {
   }
 };
 
-export const getStatusIcon = (status: string, mandatory?: boolean) => {
+export const getStatusIcon = (
+  status: IinputStatus | IreportStatus | ItemplateStatus,
+  mandatory?: boolean,
+) => {
   switch (status) {
     case "valid":
       return "check";
     case "error":
       return "bug";
-    case "exclamation-triangle":
+    case "untouched":
       return "exclamation-triangle";
     case "warning":
       return "exclamation-triangle";

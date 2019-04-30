@@ -6,10 +6,11 @@ import { ReportStore } from "../../stores/report.store";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { Col, Row } from "antd";
-import OnGoingItem from "./OnGoingItem";
 import { _measures } from "../../assets/styles/_measures";
 import { UiStore } from "../../stores/ui.store";
 import { IreportJson } from "../../stores/report";
+import ReportListItem from "../../components/items/ReportListItem";
+import OnGoingItemMenu from "./OnGoingItemMenu";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -25,9 +26,11 @@ const Wrapper = styled(Col).attrs({
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  max-width: 500px;
+  max-width: 800px;
+  margin-top: 20px;
   @media (max-width: ${_measures.tablet}px) {
     width: 100%;
+    margin-top: 5px;
   }
 `;
 
@@ -38,7 +41,7 @@ const Wrapper = styled(Col).attrs({
 @observer
 class OnGoingList extends React.Component<Props> {
   componentDidMount() {
-    this.props.reportStore!.getReportList();
+    // this.props.reportStore!.getReportList();
   }
   public render() {
     const reports = this.props.reportStore!.reportList;
@@ -75,9 +78,10 @@ class OnGoingList extends React.Component<Props> {
               }
             })
             .map((report: IreportJson, index: number) => (
-              <OnGoingItem
+              <ReportListItem
                 key={"report-list-item" + index}
                 reportId={report.id}
+                actionMenu={<OnGoingItemMenu reportId={report.id} />}
               />
             ))}
         </Wrapper>
