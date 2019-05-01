@@ -62,6 +62,7 @@ import {
   faChartPie,
   faMinus,
   faFileExport,
+  faFileImport,
   faDoorOpen,
   faSave,
   faEyeSlash,
@@ -145,6 +146,7 @@ library.add(faQuestion);
 library.add(faChartPie);
 library.add(faMinus);
 library.add(faFileExport);
+library.add(faFileImport);
 library.add(faDoorOpen);
 library.add(faSave);
 library.add(faEyeSlash);

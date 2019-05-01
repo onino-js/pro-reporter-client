@@ -80,6 +80,7 @@ export class SingleSignatureStore {
   @action.bound
   public setValue(payload: string) {
     this.value = payload;
+    this.reportRef!.setStatus();
   }
 
   @action
@@ -89,12 +90,12 @@ export class SingleSignatureStore {
 
   @action
   public retsoreValue = (): void => {
-    this.value = this.tempValue;
+    this.setValue(this.tempValue);
   };
 
   @action.bound
   public validateCanvas() {
-    this.value = this.canvasStore.getPng();
+    this.setValue(this.canvasStore.getPng());
   }
 
   @action.bound
@@ -109,7 +110,7 @@ export class SingleSignatureStore {
 
   @action.bound
   public reset() {
-    this.value = "";
+    this.setValue("");
     this.imageName = "";
     this.original = "";
     this.canvasStore && this.canvasStore.clearCanvas();

@@ -55,6 +55,9 @@ class DuplicateModal extends React.Component<Props, State> {
     nb: 1,
     sectionsToClone: [],
   };
+  componentWillUnmount() {
+    this.setState({ sectionsToClone: [] });
+  }
   private setNb = (e: any) => {
     let value = Number(e.currentTarget.value);
     value > 0 && this.setState({ nb: value });

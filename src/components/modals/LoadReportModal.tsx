@@ -7,6 +7,7 @@ import styled from "../../styled-components";
 import { ReportStore } from "../../stores/report.store";
 import ProModal from "./ProModal";
 import { ProContainer } from "../layouts/ProContainer";
+import ReportListItem from "../items/ReportListItem";
 
 interface Props {
   uiStore?: UiStore;
@@ -31,16 +32,17 @@ const Title = styled.h3`
 
 const AllChoice = styled.div`
   width: 100%;
-  max-width: 360px;
   height: 30px;
   margin: 10px 0px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
 `;
 
 const ReportList = styled.div`
   width: 100%;
-  max-width: 360px;
+  max-width: 500px;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -50,24 +52,10 @@ const ReportList = styled.div`
   /* margin: 5px 5px; */
 `;
 
-const ReportItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  height: 30px;
-  width: 100%;
-  margin: 5px auto;
-  padding: 0px 5px;
-  background-color: ${props => props.theme.disabled};
-  cursor: pointer;
-`;
-
-const ReportId = styled.div`
-  width: 200px;
+const AllChoiceText = styled.div`
   height: 100%;
   line-height: 30px;
-  overflow: hidden;
+  margin-right: 20px;
 `;
 
 @inject((allStores: AllStores) => ({
@@ -151,9 +139,6 @@ class LoadReportModal extends React.Component<Props, State> {
       );
 
     const isAll = this.state.selectedIds.length === reports.length;
-    // const isReferenceValid = this.props.domainStore!.isReferenceValid;
-    // const showMesage =
-    //   !isReferenceValid && this.props.domainStore!.newReference !== "";
     return (
       <ProModal
         show={this.props.uiStore!.showLoadReportModal}
@@ -164,26 +149,28 @@ class LoadReportModal extends React.Component<Props, State> {
         <ProContainer>
           <Title>Choisissez les rapports à charger</Title>
           <Body>
-            {reports.length !== 0 && (
-              <AllChoice onClick={() => this.toggleAll(reports)}>
-                <ReportId>Tous les rapports</ReportId>
-                <Switch checked={isAll} />
-              </AllChoice>
-            )}
             <ReportList>
               {reports.length !== 0 ? (
-                reports.map((report, index) => (
-                  <ReportItem
-                    key={"load-report-item-" + index}
-                    onClick={() => this.toggleItem(report.id)}
-                  >
-                    <ReportId>{report.id}</ReportId>
-                    <Switch
-                      //@ts-ignore
-                      checked={this.state.selectedIds.includes(report.id)}
+                <React.Fragment>
+                  <AllChoice onClick={() => this.toggleAll(reports)}>
+                    <AllChoiceText>Tous les rapports</AllChoiceText>
+                    <Switch checked={isAll} />
+                  </AllChoice>
+                  {reports.map((report, index) => (
+                    <ReportListItem
+                      key={"load-report-item-" + index}
+                      onClick={() => this.toggleItem(report.id)}
+                      report={report}
+                      actionMenu={
+                        <Switch
+                          size="small"
+                          //@ts-ignore
+                          checked={this.state.selectedIds.includes(report.id)}
+                        />
+                      }
                     />
-                  </ReportItem>
-                ))
+                  ))}
+                </React.Fragment>
               ) : (
                 <p>Pas de rapport à charger</p>
               )}

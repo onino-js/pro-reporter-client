@@ -53,6 +53,7 @@ export class SingleSelectStore {
   @action
   public setValue = (value: string): void => {
     this.value = value;
+    this.reportRef!.setStatus();
   };
 
   @action
@@ -62,12 +63,12 @@ export class SingleSelectStore {
 
   @action
   public retsoreValue = (): void => {
-    this.value = this.tempValue;
+    this.setValue(this.tempValue);
   };
 
   @action.bound
   public reset() {
-    this.value = "";
+    this.setValue("");
   }
 
   @action.bound

@@ -9,8 +9,16 @@ import InputLayoutStandard from "../layouts/InputLayoutStandard";
 import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
-import { ActionButton, HiddenInputFile, CancelButton, OkButton } from "../../../../components/ui/Buttons";
+import {
+  ActionButton,
+  HiddenInputFile,
+  CancelButton,
+  OkButton,
+} from "../../../../components/ui/Buttons";
 import { SingleImageStore } from "../../../../stores/inputs/single-image";
+import InputLayoutDirect from "../layouts/InputLayoutDirect";
+import { InputContainer } from "../../../../components/layouts/InputContainer";
+import { Flex } from "../../../../components/ui/Flex";
 
 interface Props {
   uiStore?: UiStore;
@@ -19,30 +27,24 @@ interface Props {
   reportStore?: ReportStore;
 }
 
-const InputContainer: any = styled.div`
-  display: ${(props: any) => (props.visible ? "flex" : "none")};
-  background-color: ${props => props.theme.bg_secondary};
-  border-top: 5px solid ${props => props.theme.secondary};
-  padding: 30px;
+const Img = styled.img`
+  border: 6px solid ${props => props.theme.disabled};
+  width: "100px";
+  height: auto;
+  max-height: 100px;
+  max-width: 100%;
+  background-color: white;
+  margin-top: 20px;
+`;
+
+const Body = styled.div`
+  width: 100%;
+  display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  animation-name: animatetop;
-  animation-duration: 0.4s;
-  @keyframes animatetop {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  @media (max-width: ${_measures.tablet}px) {
-    padding: 20px;
-  }
-  @media (max-width: 500px) {
-    padding-top: 0px;
-    padding-bottom: 10px;
-  }
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
 `;
 
 @inject((allStores: AllStores, { inputId }) => ({
@@ -70,60 +72,103 @@ class SingleImageDirect extends React.Component<Props> {
     this.props.input!.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
   };
+  public onRefresh = () => {
+    this.props.input!.reset();
+  };
   public render() {
+    const input = this.props.input!;
     return (
-      <InputContainer
-        close={this.onCancel}
-        visible={this.props.uiStore!.isInputModalOpen}
-      >
-        <Row type="flex">
-          <Col xl={16} md={16} xs={24}>
-            <InputLayoutStandard input={this.props.input!}>
-              <HiddenInputFile
-                id={"file-input-" + this.props.input!.id}
-                name="file"
-                onChange={this.props.input!.onPhotoUpload}
-              />
-              <ActionButton
-                onClick={this.addPhotoRequest}
-                icon="camera"
-              />
-              <InputPrimitive
-                disabled={true}
-                value={this.props.input!.imageName}
-              />
-            </InputLayoutStandard>
-          </Col>
-          <Col
-            xl={8}
-            md={8}
-            xs={24}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
+      <React.Fragment>
+        <InputContainer
+          close={this.onCancel}
+          visible={this.props.uiStore!.isInputModalOpen}
+        >
+          <InputLayoutDirect
+            label={input.inputRef.label}
+            onOk={this.onOk}
+            onCancel={this.onCancel}
+            onRefresh={this.onRefresh}
+            status={input.status}
           >
-            <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
-            <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
-          </Col>
-        </Row>
-        <Row style={{ paddingTop: "20px", paddingBottom: "50px" }}>
-          <Col xl={24} style={{ display: "flex", justifyContent: "center" }}>
-            {this.props.input!.value !== "" ? (
-              <img
-                src={this.props.input!.value}
-                className="image-preview"
-                width="auto"
-                height="150px"
-                style={{ maxWidth: "600px" }}
+            <Body>
+              <HiddenInputFile
+                id={"file-input-" + input.id}
+                name="file"
+                onChange={input.onPhotoUpload}
               />
-            ) : (
-              <p>Pas d'aperçu disponible</p>
-            )}
-          </Col>
-        </Row>
-      </InputContainer>
+              <Flex>
+                <ActionButton onClick={this.addPhotoRequest} icon="camera" />
+                <InputPrimitive disabled={true} value={input.imageName} />
+              </Flex>
+              {input.value && (
+                <Img
+                  src={input.value}
+                  className="image-preview"
+                  width="auto"
+                  height="150px"
+                  style={{ maxWidth: "600px" }}
+                />
+              )}
+            </Body>
+          </InputLayoutDirect>
+        </InputContainer>
+        {/* <InputContainer
+          close={this.onCancel}
+          visible={this.props.uiStore!.isInputModalOpen}
+        >
+          <Row type="flex">
+            <Col xl={16} md={16} xs={24}>
+              <InputLayoutStandard input={this.props.input!}>
+                <HiddenInputFile
+                  id={"file-input-" + this.props.input!.id}
+                  name="file"
+                  onChange={this.props.input!.onPhotoUpload}
+                />
+                <ActionButton onClick={this.addPhotoRequest} icon="camera" />
+                <InputPrimitive
+                  disabled={true}
+                  value={this.props.input!.imageName}
+                />
+                <Img
+                  src={this.props.input!.value}
+                  className="image-preview"
+                  width="auto"
+                  height="150px"
+                  style={{ maxWidth: "600px" }}
+                />
+              </InputLayoutStandard>
+            </Col>
+            <Col
+              xl={8}
+              md={8}
+              xs={24}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              <CancelButton onClick={this.onCancel}> ANNULER </CancelButton>
+              <OkButton onClick={this.onOk}>CONFIRMER</OkButton>
+            </Col>
+          </Row>
+          <Row style={{ paddingTop: "20px", paddingBottom: "50px" }}>
+            <Col xl={24} style={{ display: "flex", justifyContent: "center" }}>
+              {this.props.input!.value !== "" ? (
+                <img
+                  src={this.props.input!.value}
+                  className="image-preview"
+                  width="auto"
+                  height="150px"
+                  style={{ maxWidth: "600px" }}
+                />
+              ) : (
+                <p>Pas d'aperçu disponible</p>
+              )}
+            </Col>
+          </Row>
+        </InputContainer> */}
+      </React.Fragment>
     );
   }
 }

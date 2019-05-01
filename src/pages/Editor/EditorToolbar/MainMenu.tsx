@@ -53,7 +53,7 @@ class MainMenu extends React.Component<Iprops> {
         </ProMenuItem>
         <ProMenuItem disabled={!isEditedReport}>
           <div>Importer</div>
-          <ProMenuIcon icon="file-export" />
+          <ProMenuIcon icon="file-import" />
         </ProMenuItem>
         <ProMenuItem onClick={this.empty}>
           <div>Vider l'éditeur</div>

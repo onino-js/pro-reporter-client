@@ -105,10 +105,13 @@ export class CompareTwoImagesStore {
   @action.bound
   public initialize() {
     this.canvasStore &&
-      this.canvasStore.initialize(this.data[this.edited]! as any[], (canvas:any) => {
-        this.edited !== "bg" && this.data["bg"] && this.setBackground(canvas);
-        this.addListeners(canvas);
-      });
+      this.canvasStore.initialize(
+        this.data[this.edited]! as any[],
+        (canvas: any) => {
+          this.edited !== "bg" && this.data["bg"] && this.setBackground(canvas);
+          this.addListeners(canvas);
+        },
+      );
   }
 
   @action.bound
@@ -194,16 +197,12 @@ export class CompareTwoImagesStore {
     // TODO : arrange types
     //@ts-ignore
     this.value[this.edited] = payload;
+    this.reportRef!.setStatus();
   }
 
   @action
   public confirmValue = (): void => {
     this.tempValue = this.value;
-  };
-
-  @action
-  public retsoreValue = (): void => {
-    this.value = this.tempValue;
   };
 
   @action.bound
@@ -229,7 +228,7 @@ export class CompareTwoImagesStore {
   @action.bound
   public validateCanvas() {
     this.setData();
-    this.tempData[this.edited] = this.data[this.edited];
+    // this.tempData[this.edited] = this.data[this.edited];
     // .slice()
     // .map((item: any) => ({ ...item }));
     if (this.edited === "bg") {
@@ -239,8 +238,7 @@ export class CompareTwoImagesStore {
       this.value.before = "";
       this.value.after = "";
     }
-    this.edited !== "bg" &&
-      (this.value[this.edited] = this.canvasStore.getPng());
+    this.edited !== "bg" && this.setValue(this.canvasStore.getPng());
   }
 
   @action.bound
@@ -255,11 +253,18 @@ export class CompareTwoImagesStore {
 
   @action.bound
   public restore() {
-    // this.canvasStore.canvas.clear();
-    // this.canvasStore.addObjects([this.tempData[this.edited]]);
+    this.data = this.tempData;
+    this.value = this.tempValue;
+    this.reportRef!.setStatus();
+  }
+
+  @action.bound
+  public restoreEdited() {
     this.data[this.edited] = this.tempData[this.edited];
-    // .slice()
-    // .map((item: any) => ({ ...item }));
+    // TODO types this.edited with keyof
+    //@ts-ignore
+    this.value[this.edited] = this.tempValue[this.edited];
+    this.reportRef!.setStatus();
   }
 
   @action.bound
@@ -280,6 +285,7 @@ export class CompareTwoImagesStore {
     };
     this.imageName = "";
     this.original = "";
+    this.reportRef.setStatus();
   }
 
   @action.bound
@@ -301,7 +307,7 @@ export class CompareTwoImagesStore {
             //this.canvasStore.adjust();
             // this.setValue(this.canvasStore.getPng());
             this.data[this.edited] = this.canvasStore.getData();
-            this.tempData[this.edited] = this.data[this.edited];
+            // this.tempData[this.edited] = this.data[this.edited];
             canvas.setActiveObject(canvas.item(0));
             this.canvasStore.resizeCanvas();
             this.canvasStore.adjust();

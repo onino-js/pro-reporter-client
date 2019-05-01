@@ -80,7 +80,7 @@ class OnGoingList extends React.Component<Props> {
             .map((report: IreportJson, index: number) => (
               <ReportListItem
                 key={"report-list-item" + index}
-                reportId={report.id}
+                report={report}
                 actionMenu={<OnGoingItemMenu reportId={report.id} />}
               />
             ))}

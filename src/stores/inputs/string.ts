@@ -65,12 +65,12 @@ export class StringStore {
 
   @action
   public retsoreValue = (): void => {
-    this.value = this.tempValue;
+    this.setValue(this.tempValue);
   };
 
   @action.bound
   public reset() {
-    this.value = "";
+    this.setValue("");
   }
 
   @action.bound

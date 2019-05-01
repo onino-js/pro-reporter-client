@@ -45,8 +45,11 @@ class TemplateMenu extends React.Component<Props> {
     this.props.uiStore!.hideModal("new-template");
   };
 
-  private newTemplateRequest = () => {
+  private importTemplateRequest = () => {
     this.props.uiStore!.showModal("new-template");
+  };
+  private newTemplateRequest = () => {
+    this.props.uiStore!.showModal("in-progress");
   };
 
   public render() {
@@ -58,14 +61,21 @@ class TemplateMenu extends React.Component<Props> {
           sideContent={<SideNavigation activePage={"templates"} />}
         >
           <ProContainer>
-            <div>
+            <Flex>
               <ActionButton
                 title="Importer template"
+                icon="file-import"
+                onClick={this.importTemplateRequest}
+                size="big"
+                m="0px 10px 0px 0px"
+              />
+              <ActionButton
+                title="Créer template"
                 icon="plus"
                 onClick={this.newTemplateRequest}
                 size="big"
               />
-            </div>
+            </Flex>
             {templatesLoaded ? (
               <TemplateList />
             ) : (

@@ -26,4 +26,5 @@ export const TextBase = styled.span<ITextBaseProps>`
 
 export const TextDanger = styled(TextBase)`
   color: ${props => props.theme.danger};
+  font-size: 12px;
 `;

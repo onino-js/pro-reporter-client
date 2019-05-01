@@ -23,7 +23,7 @@ export interface IsingleImageJson extends IinputJsonBase {
 export interface IsingleImageJsonMap extends IsingleImageJson {}
 
 export interface IsingleImageStoreConstructor {
-  new(params: ISingleImageStoreParams): SingleImageStore;
+  new (params: ISingleImageStoreParams): SingleImageStore;
 }
 
 export class SingleImageStore {
@@ -49,6 +49,7 @@ export class SingleImageStore {
   @action
   public setValue = (value: string): void => {
     this.value = value;
+    this.reportRef!.setStatus();
   };
 
   @action
@@ -58,12 +59,12 @@ export class SingleImageStore {
 
   @action
   public retsoreValue = (): void => {
-    this.value = this.tempValue;
+    this.setValue(this.tempValue);
   };
 
   @action.bound
   public reset() {
-    this.value = "";
+    this.setValue("");
   }
 
   @action.bound
@@ -77,7 +78,7 @@ export class SingleImageStore {
     reader.addEventListener(
       "load",
       () => {
-        this.value = reader.result as string;
+        this.setValue(reader.result as string);
       },
       false,
     );

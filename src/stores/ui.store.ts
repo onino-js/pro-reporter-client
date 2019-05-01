@@ -22,6 +22,7 @@ export class UiStore {
 
   @action.bound
   public showModal(modal: string) {
+    console.log(modal);
     switch (modal) {
       case "info":
         this.showInfoModal = true;

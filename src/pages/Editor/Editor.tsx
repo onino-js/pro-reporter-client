@@ -18,6 +18,7 @@ import { NoTemplate } from "./NoTemplate";
 import LoadReportModal from "../../components/modals/LoadReportModal";
 import SyncModal from "../../components/modals/SyncModal";
 import DeleteReportModal from "../../components/modals/DeleteReportModal";
+import EditorStatusBar from "./EditorStatusBar/EditorStatusBar";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -52,6 +53,7 @@ class Editor extends React.Component<Props> {
         <SubLayout p="0px" sideContent={<EditorSidebar />}>
           <Flex dir="c" flex={1}>
             {template && <EditorToolbar />}
+            {activeReport && <EditorStatusBar />}
             {!template ? (
               <NoTemplate />
             ) : !activeReport ? (

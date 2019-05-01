@@ -29,7 +29,7 @@ const Container = styled.span<IContainerProps>`
   margin-left: 5px;
 `;
 
-class BulletNumber extends React.Component<Props> {
+class StatusNumber extends React.Component<Props> {
   public render() {
     const color = getStatusColor(this.props.status);
     const displayedColor =
@@ -43,4 +43,4 @@ class BulletNumber extends React.Component<Props> {
   }
 }
 
-export default BulletNumber;
+export default StatusNumber;

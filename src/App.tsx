@@ -11,6 +11,7 @@ import * as firebase from "firebase";
 import templateStore, { TemplateStore } from "./stores/templateStore";
 import Signin from "./pages/Signin/Signin";
 import firebaseStore from "./stores/firebaseStore";
+import { AppModals } from "./components/modals/AppModals";
 
 const config = {
   apiKey: "AIzaSyBDHfw2EEgmWWIE7V7lPgpPLScx8C3lnVo",
@@ -87,7 +88,10 @@ class App extends Component<Props> {
         {!this.state.isSignedIn ? (
           <Signin uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
         ) : (
-          <Routes />
+          <React.Fragment>
+            <Routes />
+            <AppModals />
+          </React.Fragment>
         )}
       </ThemeProvider>
     );
