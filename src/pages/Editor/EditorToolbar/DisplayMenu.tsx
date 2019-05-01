@@ -2,7 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../models/all-stores.model";
 import { Report } from "../../../stores/report";
-import {  Menu } from "antd";
+import { Menu } from "antd";
 import { withRouter, RouteComponentProps } from "react-router";
 import { ReportStore } from "../../../stores/report.store";
 import { UiStore } from "../../../stores/ui.store";
@@ -17,7 +17,6 @@ interface Props extends RouteComponentProps {
   authStore?: AuthStore;
   firebaseStore?: FirebaseStore;
 }
-
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
@@ -52,38 +51,39 @@ class DisplayMenu extends React.Component<Props> {
     const isEditedReport = this.props.reportStore!.activeReport !== null;
     return (
       <Menu>
-        <ProMenuItem
-          onClick={this.formEditionMode}
-          disabled={editionMode === "form"}
-        >
-          <div>Mode formulaire</div>
-        </ProMenuItem>
-        <ProMenuItem
-          onClick={this.templateEditionMode}
-          disabled={editionMode === "direct"}
-        >
-          <div>Mode template</div>
-        </ProMenuItem>
-        <ProMenuItem
-          onClick={this.hightlight}
-          disabled={editionMode === "form" || !isEditedReport}
-        >
-          {this.props.reportStore!.fieldHighlighted ? "Masquer" : "Montrer"} les
-          champs
-          <ProMenuIcon
-            icon={
-              !this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
-            }
-          />
-        </ProMenuItem>
-        <ProMenuItem onClick={this.zoomIn} disabled={editionMode === "form"}>
-          Zoom in
-          <ProMenuIcon icon="plus" />
-        </ProMenuItem>
-        <ProMenuItem onClick={this.zoomOut} disabled={editionMode === "form"}>
-          Zoom out
-          <ProMenuIcon icon="minus" />
-        </ProMenuItem>
+        {editionMode === "direct" && (
+          <ProMenuItem onClick={this.formEditionMode}>
+            <div>Mode formulaire</div>
+          </ProMenuItem>
+        )}
+        {editionMode === "form" && (
+          <ProMenuItem onClick={this.templateEditionMode}>
+            <div>Mode template</div>
+          </ProMenuItem>
+        )}
+        {editionMode === "direct" && (
+          <ProMenuItem onClick={this.hightlight} disabled={!isEditedReport}>
+            {this.props.reportStore!.fieldHighlighted ? "Masquer" : "Montrer"}{" "}
+            les champs
+            <ProMenuIcon
+              icon={
+                !this.props.reportStore!.fieldHighlighted ? "eye" : "eye-slash"
+              }
+            />
+          </ProMenuItem>
+        )}
+        {editionMode === "direct" && (
+          <ProMenuItem onClick={this.zoomIn}>
+            Zoom in
+            <ProMenuIcon icon="plus" />
+          </ProMenuItem>
+        )}
+        {editionMode === "direct" && (
+          <ProMenuItem onClick={this.zoomOut}>
+            Zoom out
+            <ProMenuIcon icon="minus" />
+          </ProMenuItem>
+        )}
       </Menu>
     );
   }

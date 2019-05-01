@@ -48,12 +48,12 @@ class MainMenu extends React.Component<Iprops> {
           <ProMenuIcon icon="download" />
         </ProMenuItem>
         <ProMenuItem disabled={!isEditedReport}>
-          <div>Exporter</div>
-          <ProMenuIcon icon="file-export" />
-        </ProMenuItem>
-        <ProMenuItem disabled={!isEditedReport}>
           <div>Importer</div>
           <ProMenuIcon icon="file-import" />
+        </ProMenuItem>
+        <ProMenuItem disabled={!isEditedReport}>
+          <div>Exporter</div>
+          <ProMenuIcon icon="file-export" />
         </ProMenuItem>
         <ProMenuItem onClick={this.empty}>
           <div>Vider l'éditeur</div>

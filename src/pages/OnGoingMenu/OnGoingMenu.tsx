@@ -9,15 +9,25 @@ import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
 import LoadingZone from "../../components/ui/LoadingZone";
 import { ReportStore } from "../../stores/report.store";
-import { Dropdown, Menu } from "antd";
+import { Menu } from "antd";
 import { ActionButton, ProDropdown } from "../../components/ui/Buttons";
 import { TemplateStore } from "../../stores/templateStore";
 import { Flex } from "../../components/ui/Flex";
+import { ReportFilterStatusButton } from "../../components/items/ReportFilterStatusButton";
+import { Istatus } from "../../models/app.models";
+import TemplateChoiceButton from "../../components/items/TemplateChoiceButton";
+import { Itemplate } from "../../models/template.model";
+import { withRouter, RouteComponentProps } from "react-router";
 
-interface Props {
+interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   reportStore?: ReportStore;
   templateStore?: TemplateStore;
+}
+
+interface State {
+  selectedTemplateId: string | null;
+  selectedStatus: Istatus | null;
 }
 
 @inject((allStores: AllStores) => ({
@@ -26,30 +36,31 @@ interface Props {
   templateStore: allStores.templateStore,
 }))
 @observer
-class OnGoingMenu extends React.Component<Props> {
+class OnGoingMenu extends React.Component<Props, State> {
   componentDidMount() {
     this.props.reportStore!.getReportList();
   }
 
   public state = {
     selectedTemplateId: "",
-    selectedStatus: "Tous les status",
+    selectedStatus: null,
   };
 
-  private filterTemplate = (id?: string) =>
+  private filterTemplate = (id: string | null) =>
     this.setState({ selectedTemplateId: id });
-  private filterStatus = (status?: string) =>
+
+  private filterStatus = (status: Istatus | null) =>
     this.setState({ selectedStatus: status });
+
+  private createNewReport = (template: Itemplate) => {
+    this.props.reportStore!.setTemplate(template);
+    const id = this.props.reportStore!.create(template);
+    this.props.history.push(`editor/direct${id}`);
+  };
 
   public render() {
     const isReportsLoaded = this.props.uiStore!.isReportsLoaded;
     const templates = this.props.templateStore!.templates;
-    let selectedTemplate = this.props.templateStore!.templates.find(
-      t => t.id === this.state.selectedTemplateId,
-    );
-    const selectedTemplateLabel = selectedTemplate
-      ? selectedTemplate.label
-      : "Tous les templates";
     return (
       <MainLayout>
         <SubLayout
@@ -64,17 +75,11 @@ class OnGoingMenu extends React.Component<Props> {
                     trigger={["click"]}
                     overlay={
                       <Menu style={{ maxWidth: "300px" }}>
-                        <Menu.Item
-                          key={"template-choice-0"}
-                          onClick={() => this.filterTemplate("")}
-                        >
-                          Tous les templates
-                        </Menu.Item>
                         {templates &&
                           templates.map((t, index) => (
                             <Menu.Item
                               key={"template-choice-" + (index + 1)}
-                              onClick={() => this.filterTemplate(t.id)}
+                              onClick={() => this.createNewReport(t)}
                             >
                               {t.label}
                             </Menu.Item>
@@ -83,39 +88,22 @@ class OnGoingMenu extends React.Component<Props> {
                     }
                   >
                     <ActionButton
-                      title={selectedTemplateLabel}
-                      icon="chevron-down"
+                      title={"Nouveau rapport"}
+                      icon="plus"
                       size="big"
                     />
                   </ProDropdown>
-                  <ProDropdown
-                    trigger={["click"]}
-                    overlay={
-                      <Menu style={{ maxWidth: "300px" }}>
-                        {[
-                          "Tous les status",
-                          "new",
-                          "warning",
-                          "error",
-                          "valid",
-                        ].map((s, index) => (
-                          <Menu.Item
-                            key={"status-choice-" + index}
-                            onClick={() => this.filterStatus(s)}
-                          >
-                            {s}
-                          </Menu.Item>
-                        ))}
-                      </Menu>
-                    }
-                  >
-                    <ActionButton
-                      title={this.state.selectedStatus}
-                      icon="chevron-down"
-                      size="big"
-                      m="0px 5px"
-                    />
-                  </ProDropdown>
+                  <Flex m="0px 10px" alignV="center">
+                    Filtres :
+                  </Flex>
+                  <TemplateChoiceButton
+                    filterTemplate={this.filterTemplate}
+                    selectedTemplateId={this.state.selectedTemplateId}
+                  />
+                  <ReportFilterStatusButton
+                    selectedStatus={this.state.selectedStatus}
+                    filterStatus={this.filterStatus}
+                  />
                 </Flex>
                 <OnGoingList
                   templateFilter={this.state.selectedTemplateId}
@@ -132,4 +120,4 @@ class OnGoingMenu extends React.Component<Props> {
   }
 }
 
-export default OnGoingMenu;
+export default withRouter(OnGoingMenu);

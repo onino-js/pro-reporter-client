@@ -48,11 +48,21 @@ class Editor extends React.Component<Props> {
     const template = this.props.reportStore!.template;
     const reportsLoaded = reports.length !== 0;
     const editionMode = this.props.reportStore!.editionMode;
+    // Set active report when
+    if (!activeReport && !!template) {
+      const rIndex = reports.findIndex(r => r.templateId === template.id);
+      if (rIndex !== -1) {
+        window.setTimeout(
+          () => this.props.reportStore!.setActiveReport(reports[rIndex].id),
+          100,
+        );
+      }
+    }
     return (
       <MainLayout>
         <SubLayout p="0px" sideContent={<EditorSidebar />}>
           <Flex dir="c" flex={1}>
-            {template && <EditorToolbar />}
+            {template && <EditorToolbar isEditedReport={!!activeReport} />}
             {activeReport && <EditorStatusBar />}
             {!template ? (
               <NoTemplate />

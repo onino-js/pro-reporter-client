@@ -109,7 +109,7 @@ class SyncModal extends React.Component<Props> {
             </CheckBox>
             <SyncWrapper>
               {syncList.map((syncItem: string, index) => (
-                <SyncItemBox>
+                <SyncItemBox key={`sync-item-${index}`}>
                   <SyncItem>{syncItem}</SyncItem>
                   <SmallCheck />
                 </SyncItemBox>

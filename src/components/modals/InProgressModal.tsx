@@ -24,13 +24,6 @@ const Text = styled.p`
   max-width: 500px;
   font-size: 24px;
 `;
-const Text2 = styled.p`
-  margin: 0px auto;
-  text-align: center;
-  max-width: 500px;
-  font-size: 14px;
-  margin-top: 20px;
-`;
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
@@ -41,6 +34,7 @@ class InProgressModal extends React.Component<Props> {
     this.props.uiStore!.hideModal("in-progress");
   };
   public render() {
+    const message = this.props.uiStore!.inProgressMessage;
     return (
       <ProModal
         show={this.props.uiStore!.showInProgressModal}
@@ -53,10 +47,7 @@ class InProgressModal extends React.Component<Props> {
           <Flex dir="c" alignH="center" alignV="center">
             <Img src={pageInProgress} />
             <Text>Cette fonctionnalité n'est pas terminée</Text>
-            <Text2>
-              Avec la page contact, vous pourrez facilement partager des
-              documents avec tous vos contacts
-            </Text2>
+            <div style={{ textAlign: "center" }}>{message}</div>
           </Flex>
         </ProContainer>
       </ProModal>

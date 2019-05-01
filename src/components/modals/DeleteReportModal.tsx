@@ -22,12 +22,14 @@ interface State {
 }
 
 const Body = styled.div`
-  padding: 20px;
+  /* padding: 20px; */
   background-color: ${props => props.theme.bg_primary};
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 1;
+  max-width: 500px;
+  margin: 0px auto;
 `;
 
 const Title = styled.h3`
@@ -85,6 +87,7 @@ class DeleteReportModal extends React.Component<Props, State> {
 
   private handleOk = () => {
     this.props.uiStore!.hideModal("delete-report");
+    console.log(this.state.selectedIds);
     this.props.reportStore!.deleteReports(this.state.selectedIds);
   };
   private handleCancel = () => {
@@ -142,28 +145,28 @@ class DeleteReportModal extends React.Component<Props, State> {
             Attention ! cette action supprimer définitivement les données
           </TextDanger>
           <Body>
+            {reports.length !== 0 && (
+              <AllChoice onClick={() => this.toggleAll(reports)}>
+                <AllChoiceText>Tous les rapports</AllChoiceText>
+                <Switch checked={isAll} />
+              </AllChoice>
+            )}
             <ReportList>
               {reports.length !== 0 ? (
-                <React.Fragment>
-                  <AllChoice onClick={() => this.toggleAll(reports)}>
-                    <AllChoiceText>Tous les rapports</AllChoiceText>
-                    <Switch checked={isAll} />
-                  </AllChoice>
-                  {reports.map((report, index) => (
-                    <ReportListItem
-                      key={"load-report-item-" + index}
-                      onClick={() => this.toggleItem(report.id)}
-                      report={report}
-                      actionMenu={
-                        <Switch
-                          size="small"
-                          //@ts-ignore
-                          checked={this.state.selectedIds.includes(report.id)}
-                        />
-                      }
-                    />
-                  ))}
-                </React.Fragment>
+                reports.map((report, index) => (
+                  <ReportListItem
+                    key={"load-report-item-" + index}
+                    onClick={() => this.toggleItem(report.id)}
+                    report={report}
+                    actionMenu={
+                      <Switch
+                        size="small"
+                        //@ts-ignore
+                        checked={this.state.selectedIds.includes(report.id)}
+                      />
+                    }
+                  />
+                ))
               ) : (
                 <p>Pas de rapport à charger</p>
               )}

@@ -18,11 +18,10 @@ export class UiStore {
   @observable public isTemplatesLoaded: boolean = false;
   @observable public isReportsLoaded: boolean = false;
 
-  @observable public inProgressMessage: string = "";
+  @observable public inProgressMessage: string | React.ReactChild = "";
 
   @action.bound
   public showModal(modal: string) {
-    console.log(modal);
     switch (modal) {
       case "info":
         this.showInfoModal = true;
@@ -108,7 +107,7 @@ export class UiStore {
   };
 
   @action.bound
-  public setInProgressMessage = (payload: string): void => {
+  public setInProgressMessage = (payload: string | React.ReactChild): void => {
     this.inProgressMessage = payload;
   };
 }

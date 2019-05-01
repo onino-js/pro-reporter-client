@@ -11,12 +11,13 @@ import { UiStore } from "../../stores/ui.store";
 import { IreportJson } from "../../stores/report";
 import ReportListItem from "../../components/items/ReportListItem";
 import OnGoingItemMenu from "./OnGoingItemMenu";
+import { Istatus } from "../../models/app.models";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   reportStore?: ReportStore;
   templateFilter: string;
-  statusFilter: string;
+  statusFilter: Istatus | null;
 }
 
 const Wrapper = styled(Col).attrs({
@@ -71,7 +72,7 @@ class OnGoingList extends React.Component<Props> {
               }
             })
             .filter(r => {
-              if (this.props.statusFilter === "Tous les status") {
+              if (this.props.statusFilter === null) {
                 return true;
               } else {
                 return r.status === this.props.statusFilter;
@@ -84,6 +85,11 @@ class OnGoingList extends React.Component<Props> {
                 actionMenu={<OnGoingItemMenu reportId={report.id} />}
               />
             ))}
+          {reports.length === 0 && (
+            <Flex flex={1} alignH="center" alignV="center">
+              Aucun rapport
+            </Flex>
+          )}
         </Wrapper>
       </Flex>
     );

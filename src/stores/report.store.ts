@@ -27,6 +27,13 @@ export class ReportStore {
     if (!(this.template && template.id === this.template.id)) {
       this.template = template;
       this.activeReport = null;
+      // const reportIndex = this.reports.findIndex(
+      //   r => r.templateId === template.id,
+      // );
+      // const reportId = reportIndex !== -1 ? this.reports[reportIndex].id : null;
+      // reportId && this.setActiveReport(reportId);
+      // // don't render template again
+      // !reportId && (this.template = template);
     }
   }
 
@@ -119,6 +126,7 @@ export class ReportStore {
         ),
       100,
     );
+    return id;
   }
 
   @action.bound

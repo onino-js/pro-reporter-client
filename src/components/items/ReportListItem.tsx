@@ -24,6 +24,7 @@ interface IContainerProps {
 
 const Container = styled.div<IContainerProps>`
   display : flex;
+  flex-shrink : 0;
   height: 50px;
   background-color: ${props => props.theme.disabled};
   margin-top: 5px;

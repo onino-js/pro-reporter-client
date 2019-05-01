@@ -10,7 +10,7 @@ import { Flex } from "../../../components/ui/Flex";
 import { _measures } from "../../../assets/styles/_measures";
 import { ReportStore } from "../../../stores/report.store";
 
-interface Props  {
+interface Props {
   uiStore?: UiStore;
   Report?: Report;
   activeReport?: Report;

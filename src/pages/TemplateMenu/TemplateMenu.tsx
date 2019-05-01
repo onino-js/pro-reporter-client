@@ -16,7 +16,6 @@ import { SpiralSpinner } from "react-spinners-kit";
 import { mainTheme } from "../../assets/styles/_colors";
 import NewTemplate from "../../components/modals/NewTemplate";
 import { ActionButton } from "../../components/ui/Buttons";
-import TemplateInfoModal from "../../components/modals/TemplateInfoModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -44,11 +43,25 @@ class TemplateMenu extends React.Component<Props> {
   private closeNewTemplate = () => {
     this.props.uiStore!.hideModal("new-template");
   };
-
   private importTemplateRequest = () => {
     this.props.uiStore!.showModal("new-template");
   };
   private newTemplateRequest = () => {
+    this.props.uiStore!.setInProgressMessage(
+      <React.Fragment>
+        <p key="msg-inprogess-1">
+          Cette fonctionnalité vous permettra de construire vos template à
+          partir d'une interface en ligne et optimisée pour une création simple
+          et intuitive. En attendant, vous avez le choix de faire faire vos
+          templates par la société Onino.js, ou bien créez vos templates à avec
+          un éditeur de svg comme Adobe illustrator ou Inkscape.
+        </p>
+        <p key="msg-inprogess-2">
+          Cette fonctionnalité vous importe ? Supportez nous en parlant de
+          PROREPORTER autour de vous et accélerez la croissance du produit :).
+        </p>
+      </React.Fragment>,
+    );
     this.props.uiStore!.showModal("in-progress");
   };
 

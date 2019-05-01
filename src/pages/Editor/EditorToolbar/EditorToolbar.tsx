@@ -19,6 +19,7 @@ import { ProDropdown } from "../../../components/ui/Buttons";
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   firebaseStore?: FirebaseStore;
+  isEditedReport: boolean;
 }
 
 const Container = styled.div`
@@ -31,14 +32,12 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-
 const ActionLink = styled.span`
   color: ${props => props.theme.font_secondary};
   cursor: pointer;
   margin-left: 10px;
   font-size: 14px;
 `;
-
 
 const SyncButtton = styled(Button)`
   border: none;
@@ -49,7 +48,6 @@ const SyncButtton = styled(Button)`
     color: ${props => props.theme.primary};
   }
 `;
-
 
 const LeftWrapperPc = styled(Flex)`
   @media (max-width: ${_measures.mobile}px) {
@@ -84,16 +82,20 @@ class EditorToolbar extends React.Component<Props> {
               Fichiers <Icon type="down" />
             </ActionLink>
           </ProDropdown>
-          <ProDropdown overlay={<ReportMenu />}>
-            <ActionLink>
-              Rapport <Icon type="down" />
-            </ActionLink>
-          </ProDropdown>
-          <ProDropdown overlay={<DisplayMenu />}>
-            <ActionLink>
-              Affichage <Icon type="down" />
-            </ActionLink>
-          </ProDropdown>
+          {this.props.isEditedReport && (
+            <ProDropdown overlay={<ReportMenu />}>
+              <ActionLink>
+                Rapport <Icon type="down" />
+              </ActionLink>
+            </ProDropdown>
+          )}
+          {this.props.isEditedReport && (
+            <ProDropdown overlay={<DisplayMenu />}>
+              <ActionLink>
+                Affichage <Icon type="down" />
+              </ActionLink>
+            </ProDropdown>
+          )}
         </LeftWrapperPc>
         <LeftWrapperMobile>
           <FontAwesomeIcon icon="ellipsis-h" />
