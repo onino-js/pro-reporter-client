@@ -33,6 +33,7 @@ import {
   CompareTwoImagesStore,
   IcompareTwoImagesInput,
 } from "../stores/inputs/compare-two-images";
+import { IreportStatus } from "../stores/report";
 
 export type IinputType =
   | "string"
@@ -115,4 +116,14 @@ export interface IinputMap {
 
 export interface ItemplateMap {
   [key: string]: Itemplate;
+}
+
+export interface Iarchive {
+  id : string;
+  stattus : IreportStatus;
+  pdfPath : string
+}
+
+export interface IarchiveMap {
+  [key: string]: Iarchive;
 }

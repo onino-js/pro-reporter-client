@@ -59,7 +59,7 @@ class OnGoingMenu extends React.Component<Props, State> {
   };
 
   public render() {
-    const isReportsLoaded = this.props.uiStore!.isReportsLoaded;
+    const isReportsLoaded = this.props.uiStore!.loadingState["reports"];
     const templates = this.props.templateStore!.templates;
     return (
       <MainLayout>
@@ -90,7 +90,7 @@ class OnGoingMenu extends React.Component<Props, State> {
                     <ActionButton
                       title={"Nouveau rapport"}
                       icon="plus"
-                      size="big"
+                     // size="big"
                     />
                   </ProDropdown>
                   <Flex m="0px 10px" alignV="center">

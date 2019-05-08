@@ -41,7 +41,7 @@ const SideMenuItem = styled.div`
     background-color: #000;
     color: #fff;
   }
-   @media (max-width: ${_measures.mobile}px) {
+   @media (max-width: ${_measures.phablet}px) {
     justify-content : center;
   }
 `;
@@ -52,7 +52,7 @@ const Container = styled.div`
   width: 200px;
   font-size: 0.8em;
   background-color: ${props => props.theme.disabled};
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     width: 50px;
   }
 `;
@@ -65,7 +65,7 @@ const SideMenuItemTitle = styled.span`
   font-size: 0.8em;
   letter-spacing: 3px;
   font-weight: bolder;
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     display: none;
   }
 `;
@@ -94,7 +94,7 @@ const MainButtonWrapper = styled.div`
 `;
 
 const TemplateChoiceButton = styled.span`
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     display: none;
   }
 `;
@@ -138,7 +138,7 @@ class EditorSidebar extends React.Component<Props> {
   };
 
   public render() {
-    const templatesLoaded = this.props.uiStore!.isTemplatesLoaded;
+    const templatesLoaded = this.props.uiStore!.loadingState["reports"];
     const template = this.props.reportStore!.template!;
 
     const menu = (

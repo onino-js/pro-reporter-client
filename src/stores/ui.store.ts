@@ -1,4 +1,17 @@
 import { observable, action } from "mobx";
+import { ImodalName } from "../models/ui.models";
+
+interface IloadingState {
+  templates: boolean;
+  reports: boolean;
+  archives: boolean;
+}
+
+const initialLodingState: IloadingState = {
+  templates: false,
+  reports: false,
+  archives: false,
+};
 
 export class UiStore {
   // MODALS
@@ -14,14 +27,12 @@ export class UiStore {
   @observable public showInProgressModal: boolean = false;
   @observable public isInputModalOpen: boolean = false;
 
-  // STATE OF SYNC
-  @observable public isTemplatesLoaded: boolean = false;
-  @observable public isReportsLoaded: boolean = false;
-
+  @observable public loadingState: IloadingState = initialLodingState;
+  @observable public isTopMenuActive: boolean = false;
   @observable public inProgressMessage: string | React.ReactChild = "";
 
   @action.bound
-  public showModal(modal: string) {
+  public showModal(modal: ImodalName) {
     switch (modal) {
       case "info":
         this.showInfoModal = true;
@@ -54,7 +65,7 @@ export class UiStore {
   }
 
   @action.bound
-  public hideModal(modal: string) {
+  public hideModal(modal: ImodalName) {
     switch (modal) {
       case "info":
         this.showInfoModal = false;
@@ -87,6 +98,14 @@ export class UiStore {
   }
 
   @action.bound
+  public setLoadingState = (
+    key: keyof IloadingState,
+    payload: boolean,
+  ): void => {
+    this.loadingState[key] = payload;
+  };
+
+  @action.bound
   public setState = (key: keyof UiStore, value: boolean): void => {
     this[key] = value;
   };
@@ -97,18 +116,13 @@ export class UiStore {
   };
 
   @action.bound
-  public setIsTemplatesLoaded = (payload: boolean): void => {
-    this.isTemplatesLoaded = payload;
-  };
-
-  @action.bound
-  public setIsReportsLoaded = (payload: boolean): void => {
-    this.isReportsLoaded = payload;
-  };
-
-  @action.bound
   public setInProgressMessage = (payload: string | React.ReactChild): void => {
     this.inProgressMessage = payload;
+  };
+
+  @action.bound
+  public setIsTopMenuActive = (payload: boolean): void => {
+    this.isTopMenuActive = payload;
   };
 }
 

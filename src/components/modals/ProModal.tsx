@@ -15,6 +15,7 @@ interface Props {
   headerTitle?: string;
   height?: [string, string];
   width?: [string, string];
+  styles?: any;
 }
 
 const ModalHeader = styled.div`
@@ -67,7 +68,9 @@ interface IModalContent {
   height?: [string, string];
 }
 
-const ModalContent : any = styled.div<IModalContent>`
+const ModalContent: any = styled.div.attrs({
+  style: (props: any) => props.styles,
+})<IModalContent>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -82,6 +85,7 @@ const ModalContent : any = styled.div<IModalContent>`
   height: ${(props: IModalContent) =>
     props.height ? props.height[0] : DEFAULT_HEIGHT};
   /* max-width: 500px; */
+  min-width : 360px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   animation-name: animatetop;
   animation-duration: 0.4s;
@@ -134,7 +138,11 @@ class ProModal extends React.Component<Props> {
     return (
       <Modal show={this.props.show}>
         <ClickLayer onClick={this.props.close} />
-        <ModalContent width={this.props.width} height={this.props.height}>
+        <ModalContent
+          width={this.props.width}
+          height={this.props.height}
+          styles={this.props.styles}
+        >
           <ModalHeader>
             <span>{this.props.headerTitle}</span>
             <CloseBox onClick={this.props.close}>&times;</CloseBox>

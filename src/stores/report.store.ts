@@ -1,7 +1,7 @@
 import { InputList } from "./../pages/Editor/inputs/layouts/InputList";
 import { message } from "antd";
 import { mapToArray } from "./../services/app.service";
-import { Itemplate } from "./../models/template.model";
+import { Itemplate, Iinput, IinputJson } from "./../models/template.model";
 import { getStatusColor } from "./../services/template.service";
 import uuid from "uuid/v1";
 import { Report, IreportJson, IreportMap } from "./report";
@@ -80,7 +80,7 @@ export class ReportStore {
           }),
         );
       }
-      uiStore!.setIsReportsLoaded(true);
+      uiStore!.setLoadingState('reports', true);
     });
   };
 
@@ -244,15 +244,16 @@ export class ReportStore {
   }
 
   @action.bound
-  public customDuplicate({ nb, sectionsIds }: any) {
+  public customDuplicate({ nb, sectionsIds }: { nb : number, sectionsIds : string[] }) {
     if (!this.activeReport) return;
     else {
       let lastId = "";
       for (let i = 0; i < nb; i++) {
         const newId = uuid();
-        const newInputs = this.activeReport!.inputs.map((input: any) =>
-          toJS(input),
-        );
+        const newInputs : IinputJson[] = this.activeReport!.inputs
+        .filter(i => sectionsIds.includes(i.inputRef.sectionId))
+        .map(i => toJS(i));
+
         const newReportJson: IreportJson = {
           ...this.activeReport.asJson(),
           id: newId,

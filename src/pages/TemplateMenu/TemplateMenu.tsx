@@ -37,7 +37,7 @@ class TemplateMenu extends React.Component<Props> {
   };
   componentDidMount() {
     this.props.templateStore!.getTemplates(() =>
-      this.props.uiStore!.setIsTemplatesLoaded(true),
+      this.props.uiStore!.setLoadingState("templates", true),
     );
   }
   private closeNewTemplate = () => {
@@ -66,7 +66,7 @@ class TemplateMenu extends React.Component<Props> {
   };
 
   public render() {
-    const templatesLoaded = this.props.uiStore!.isTemplatesLoaded;
+    const templatesLoaded = this.props.uiStore!.loadingState["templates"];
     return (
       <MainLayout>
         <SubLayout

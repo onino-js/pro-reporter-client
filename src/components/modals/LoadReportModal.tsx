@@ -180,7 +180,6 @@ class LoadReportModal extends React.Component<Props, State> {
               />
               <ActionButton
                 title="Plus de filtres"
-                size="big"
                 icon="plus"
                 m="0px 10px"
               />

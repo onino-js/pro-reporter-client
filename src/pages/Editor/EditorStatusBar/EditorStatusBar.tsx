@@ -26,7 +26,7 @@ const Container = styled.div`
 `;
 
 const LeftWrapperPc = styled(Flex)`
-  /* @media (max-width: ${_measures.mobile}px) {
+  /* @media (max-width: ${_measures.phablet}px) {
     display: none;
   } */
 `;
@@ -34,7 +34,7 @@ const LeftWrapperPc = styled(Flex)`
 // const LeftWrapperMobile = styled(Flex)`
 //   padding-left: 10px;
 //   color: ${props => props.theme.bg_primary};
-//   @media (min-width: ${_measures.mobile}px) {
+//   @media (min-width: ${_measures.phablet}px) {
 //     display: none;
 //   }
 // `;

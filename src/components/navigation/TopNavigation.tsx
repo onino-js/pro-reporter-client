@@ -11,6 +11,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
   activePage: string;
+  active: boolean;
 }
 
 interface ImenuItem {
@@ -77,10 +78,22 @@ const menuItems: ImenuItem[] = [
   },
 ];
 
+const Container: any = styled.div.attrs({
+  className: (props: any) => (props.active ? "active" : ""),
+})`
+  display: none;
+  flex-direction: column;
+  flex-shrink: "0";
+  &.active {
+    display: flex;
+  }
+`;
+
 const MenuItem = styled.div`
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
-  height: 50px;
+  height: 30px;
   align-items: center;
   width: 100%;
   overflow: hidden;
@@ -90,26 +103,17 @@ const MenuItem = styled.div`
     cursor: pointer;
   }
   .gi-menu-icon {
-    font-size: 1.2em;
+    font-size: 12px;
   }
   &.active {
     background-color: #000;
   }
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: "0";
-`;
-
 const MenuItemTitle = styled.span`
   padding-left: 10px;
   display: flex;
   flex: 1;
-  /* @media (max-width: ${_measures.tablet}px) {
-    display: none;
-  } */
 `;
 
 const IconBox = styled.div`
@@ -126,23 +130,23 @@ const IconBox = styled.div`
   isLogged: allStores.authStore.isLogged,
 }))
 @observer
-class SideNavigation extends React.Component<Props> {
+class TopNavigation extends React.Component<Props> {
   private goTo = (page: string) => {
     this.props.history.push(page);
   };
   public render() {
     return (
-      <Container>
+      <Container active={this.props.active}>
         {menuItems.map((item, index) => (
           <MenuItem
             key={"menu-item" + index}
             onClick={() => this.goTo("/" + item.page)}
             className={`${this.props.activePage === item.page ? "active" : ""}`}
           >
+            <MenuItemTitle>{item.title}</MenuItemTitle>
             <IconBox color={item.color}>
               <FontAwesomeIcon className="gi-menu-icon" icon={item.icon} />
             </IconBox>
-            <MenuItemTitle>{item.title}</MenuItemTitle>
           </MenuItem>
         ))}
       </Container>
@@ -150,4 +154,4 @@ class SideNavigation extends React.Component<Props> {
   }
 }
 
-export default withRouter(SideNavigation);
+export default withRouter(TopNavigation);

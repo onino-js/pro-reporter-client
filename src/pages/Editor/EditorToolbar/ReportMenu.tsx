@@ -55,6 +55,13 @@ class ReportMenu extends React.Component<Props> {
   private customDuplicateRequest = () =>
     this.props.uiStore!.showModal("duplicate");
 
+  private cloneReport = () => {
+    this.props.uiStore!.setInProgressMessage(
+      "Cette fonctionnalité permet de récupérer les valeurs d'une ou plusieurs sections d'un raport antérieur.",
+    );
+    this.props.uiStore!.showModal("in-progress");
+  };
+
   public render() {
     const isEditedReport = this.props.reportStore!.activeReport !== null;
     return (
@@ -70,7 +77,7 @@ class ReportMenu extends React.Component<Props> {
           <div>Dupliquer custom</div>
           <ProMenuIcon icon="clone" />
         </ProMenuItem>
-        <ProMenuItem disabled={!isEditedReport}>
+        <ProMenuItem onClick={this.cloneReport} disabled={!isEditedReport}>
           <div>Cloner les champs</div>
         </ProMenuItem>
         <ProMenuItem onClick={this.exportReportSvg} disabled={!isEditedReport}>

@@ -12,6 +12,7 @@ import templateStore, { TemplateStore } from "./stores/templateStore";
 import Signin from "./pages/Signin/Signin";
 import firebaseStore from "./stores/firebaseStore";
 import { AppModals } from "./components/modals/AppModals";
+import archiveStore from "./stores/archive.store";
 
 const config = {
   apiKey: "AIzaSyBDHfw2EEgmWWIE7V7lPgpPLScx8C3lnVo",
@@ -65,9 +66,9 @@ class App extends Component<Props> {
 
   // Listen to the Firebase Auth state and set the local state.
   componentDidMount() {
-    !this.props.uiStore!.isTemplatesLoaded &&
+    !this.props.uiStore!.loadingState["templates"] &&
       this.props.templateStore!.getTemplates(() =>
-        this.props.uiStore!.setIsTemplatesLoaded(true),
+        this.props.uiStore!.setLoadingState("templates", true),
       );
 
     firebase.auth().languageCode = "fr";
@@ -105,6 +106,7 @@ export default () => (
     authStore={authStore}
     templateStore={templateStore}
     firebaseStore={firebaseStore}
+    archiveStore={archiveStore}
   >
     <App />
   </Provider>

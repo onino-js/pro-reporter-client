@@ -1,26 +1,38 @@
 import * as React from "react";
-import { Layout } from "antd";
 import MainHeader from "./MainHeader";
+import styled from "../../styled-components";
+import { _measures } from "../../assets/styles/_measures";
 
 interface Props {
   // uiStore?: UiStore;
 }
 
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  flex-direction: column;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex: 1;
+  @media (max-width: ${_measures.mobile}px) {
+    flex-direction: column;
+  }
+`;
+
 class MainLayout extends React.Component<Props> {
   public render() {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100vh",
-          width: "100vw",
-          overflow: "hidden",
-        }}
-      >
+      <Container>
         <MainHeader />
-        <div style={{ display: "flex", flex: 1 }}>{this.props.children}</div>
-      </div>
+        <Wrapper style={{ display: "flex", flex: 1 }}>
+          {this.props.children}
+        </Wrapper>
+      </Container>
     );
   }
 }

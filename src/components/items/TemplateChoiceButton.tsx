@@ -53,7 +53,7 @@ class TemplateChoiceButton extends React.Component<Props> {
               : "Tous les templates"
           }
           icon="chevron-down"
-          size="big"
+         // size="big"
         />
       </ProDropdown>
     );

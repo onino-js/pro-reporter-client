@@ -72,7 +72,7 @@ export const ReportFilterStatusButton = ({
           : "Tous les status"
       }
       icon="chevron-down"
-      size="big"
+      // size="big"
       m="0px 5px"
     />
   </ProDropdown>

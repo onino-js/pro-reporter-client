@@ -81,25 +81,18 @@ export class FirebaseStore {
     });
   };
 
-  public getReportsList = (callback?: (e: any) => void) => {
-    const reports = database.ref("projects/");
-    reports.on("value", function(res: any) {
-      callback && callback(res.val());
-    });
-  };
-
-  public getReportList = (callback: any) => {
-    const reports = database.ref(`reports/`);
+  public getArchives = (callback: (d: any) => void) => {
+    const userId = authStore.userId;
+    const reports = database.ref(`users/${userId}/archives/`);
     reports.on("value", function(res: any) {
       callback(res.val());
     });
   };
 
-  public getReports = (callback: any) => {
+  public getReports = (callback: (d: any) => void) => {
     const userId = authStore.userId;
     const reports = database.ref(`users/${userId}/ongoing/`);
     reports.on("value", function(res: any) {
-      console.log(res.val());
       callback(res.val());
     });
   };
@@ -109,6 +102,11 @@ export class FirebaseStore {
     database.ref(`users/${userId}/ongoing/${reportId}`).remove((e: any) => {
       callback && callback(e);
     });
+  };
+
+  public deleteArchive = (reportId: string) => {
+    const userId = authStore.userId;
+    return database.ref(`users/${userId}/archives/${reportId}`).remove();
   };
 
   public deleteAllActiveReports = (callback?: any) => {
@@ -126,13 +124,28 @@ export class FirebaseStore {
     });
   };
 
-  public updateReport = ({ reportId, doc, callback }: any) => {
+  public archiveReport = async (reportId: string) => {
     const userId = authStore.userId;
-    database.ref(`users/${userId}/${reportId}/inputs`).update(doc, (e: any) => {
-      if (callback) {
-        callback(e);
-      }
-    });
+    const oldRef = database.ref(`users/${userId}/ongoing/${reportId}`);
+    const newRef = database.ref(`users/${userId}/archives/${reportId}`);
+    const snap = await oldRef.once("value");
+    if (snap && snap.val) {
+      await newRef.set(snap.val());
+      const res = await oldRef.remove();
+      return res;
+    } else return snap;
+  };
+
+  public resurectArchive = async (reportId: string) => {
+    const userId = authStore.userId;
+    const oldRef = database.ref(`users/${userId}/archives/${reportId}`);
+    const newRef = database.ref(`users/${userId}/ongoing/${reportId}`);
+    const snap = await oldRef.once("value");
+    if (snap && snap.val) {
+      await newRef.set(snap.val());
+      const res = await oldRef.remove();
+      return res;
+    } else return snap;
   };
 
   public updateReportList = async ({

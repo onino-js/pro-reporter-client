@@ -32,7 +32,7 @@ interface Props extends RouteComponentProps {
 @observer
 class Editor extends React.Component<Props> {
   componentWillMount() {
-    if (!this.props.uiStore!.isReportsLoaded) {
+    if (!this.props.uiStore!.loadingState["reports"]) {
       this.props.history.push("/on-going");
     }
     const params: any = this.props.match.params;

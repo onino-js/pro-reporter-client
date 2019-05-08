@@ -3,40 +3,59 @@ import MainLayout from "../../components/layouts/MainLayout";
 import SubLayout from "../../components/layouts/SubLayout";
 import SideNavigation from "../../components/navigation/SideNavigation";
 import { ProContainer } from "../../components/layouts/ProContainer";
-import pageInProgress from "./../../assets/images/page-in-progess.jpg";
-import styled from "../../styled-components";
-import { Flex } from "../../components/ui/Flex";
+import { inject, observer } from "mobx-react";
+import { AllStores } from "../../models/all-stores.model";
 import { UiStore } from "../../stores/ui.store";
+import LoadingZone from "../../components/ui/LoadingZone";
+import { Menu } from "antd";
+import { ActionButton, ProDropdown } from "../../components/ui/Buttons";
+import { TemplateStore } from "../../stores/templateStore";
+import { Flex } from "../../components/ui/Flex";
+import { ReportFilterStatusButton } from "../../components/items/ReportFilterStatusButton";
+import { Istatus } from "../../models/app.models";
+import TemplateChoiceButton from "../../components/items/TemplateChoiceButton";
+import { Itemplate } from "../../models/template.model";
+import { withRouter, RouteComponentProps } from "react-router";
+import ArchivesList from "./ArchivesList";
+import { ArchiveStore } from "../../stores/archive.store";
+import TopNavigation from "../../components/navigation/TopNavigation";
 
-const Img = styled.img`
-  height: 100px;
-  width: auto;
-  margin: 40px auto 40px auto;
-`;
-
-const Text = styled.p`
-  margin: 0px auto;
-  text-align: center;
-  max-width: 500px;
-  font-size: 24px;
-`;
-const Text2 = styled.p`
-  margin: 0px auto;
-  text-align: center;
-  max-width: 500px;
-  font-size: 14px;
-  margin-top: 20px;
-`;
-
-interface Props {
+interface Props extends RouteComponentProps {
   uiStore?: UiStore;
+  archiveStore?: ArchiveStore;
+  templateStore?: TemplateStore;
 }
-class Archives extends React.Component<Props> {
+
+interface State {
+  selectedTemplateId: string | null;
+  selectedStatus: Istatus | null;
+}
+
+@inject((allStores: AllStores) => ({
+  uiStore: allStores.uiStore,
+  archiveStore: allStores.archiveStore,
+  templateStore: allStores.templateStore,
+}))
+@observer
+class Archives extends React.Component<Props, State> {
+  componentDidMount() {
+    this.props.archiveStore!.getArchiveList();
+  }
+
   public state = {
-    activeItemIndex: 0,
+    selectedTemplateId: "",
+    selectedStatus: null,
   };
 
+  private filterTemplate = (id: string | null) =>
+    this.setState({ selectedTemplateId: id });
+
+  private filterStatus = (status: Istatus | null) =>
+    this.setState({ selectedStatus: status });
+
   public render() {
+    const isArchivesLoaded = this.props.uiStore!.loadingState["archives"];
+    const templates = this.props.templateStore!.templates;
     return (
       <MainLayout>
         <SubLayout
@@ -44,14 +63,29 @@ class Archives extends React.Component<Props> {
           sideContent={<SideNavigation activePage={"archives"} />}
         >
           <ProContainer>
-            <Flex dir="c" alignH="center" alignV="center">
-              <Img src={pageInProgress} />
-              <Text>Cette fonctionnalité n'est pas terminée</Text>
-              <Text2>
-                Avec la page "Archives", vous pourrez facilement retrouver vos
-                document pour les rééditer ou les transmettre à vos contacts.
-              </Text2>
-            </Flex>
+            {isArchivesLoaded ? (
+              <React.Fragment>
+                <Flex>
+                  <Flex m="0px 10px" alignV="center">
+                    Filtres :
+                  </Flex>
+                  <TemplateChoiceButton
+                    filterTemplate={this.filterTemplate}
+                    selectedTemplateId={this.state.selectedTemplateId}
+                  />
+                  <ReportFilterStatusButton
+                    selectedStatus={this.state.selectedStatus}
+                    filterStatus={this.filterStatus}
+                  />
+                </Flex>
+                <ArchivesList
+                  templateFilter={this.state.selectedTemplateId}
+                  statusFilter={this.state.selectedStatus}
+                />
+              </React.Fragment>
+            ) : (
+              <LoadingZone message="Chargement des documents en cours" />
+            )}
           </ProContainer>
         </SubLayout>
       </MainLayout>
@@ -59,4 +93,4 @@ class Archives extends React.Component<Props> {
   }
 }
 
-export default Archives;
+export default withRouter(Archives);

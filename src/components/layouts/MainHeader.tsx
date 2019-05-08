@@ -26,7 +26,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0;
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     height: 40px;
   }
 `;
@@ -44,7 +44,7 @@ const LogoBox = styled.div`
 const Logo = styled.img`
   width: auto;
   height: 50px;
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     height: 35px;
   }
 `;
@@ -81,7 +81,7 @@ const HeaderButton = styled.button`
   .gi-icon {
     margin-left: 10px;
   }
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     padding-right: 10px;
     padding-left: 10px;
     width: 40px;
@@ -107,7 +107,7 @@ const MiddleBox = styled.div`
 
 const Text = styled.span`
   margin-right: 10px;
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     display: none;
   }
 `;

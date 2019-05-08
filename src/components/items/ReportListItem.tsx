@@ -42,7 +42,7 @@ const DateCol = styled.div`
   align-items: center;
   font-size: 10px;
   margin-left: 20px;
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     width: 70px;
     margin-left: 10px;
   }

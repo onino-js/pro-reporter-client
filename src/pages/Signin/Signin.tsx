@@ -22,7 +22,7 @@ const SigninContainer = styled.div`
 const LogoImg = styled.img`
   width: 400px;
   margin-bottom: 20px;
-  @media (max-width: ${_measures.mobile}px) {
+  @media (max-width: ${_measures.phablet}px) {
     width: 250px;
   }
 `;

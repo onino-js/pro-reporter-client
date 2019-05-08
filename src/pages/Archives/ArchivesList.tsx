@@ -2,7 +2,6 @@ import * as React from "react";
 import styled from "../../styled-components";
 import { Flex } from "../../components/ui/Flex";
 import { withRouter, RouteComponentProps } from "react-router";
-import { ReportStore } from "../../stores/report.store";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { Col, Row } from "antd";
@@ -10,12 +9,13 @@ import { _measures } from "../../assets/styles/_measures";
 import { UiStore } from "../../stores/ui.store";
 import { IreportJson } from "../../stores/report";
 import ReportListItem from "../../components/items/ReportListItem";
-import OnGoingItemMenu from "./OnGoingItemMenu";
 import { Istatus } from "../../models/app.models";
+import { ArchiveStore } from "../../stores/archive.store";
+import ArchivesItemMenu from "./ArchivesItemMenu";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
-  reportStore?: ReportStore;
+  archiveStore?: ArchiveStore;
   templateFilter: string;
   statusFilter: Istatus | null;
 }
@@ -38,16 +38,16 @@ const Wrapper = styled(Col).attrs({
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
-  reportStore: allStores.reportStore,
+  archiveStore: allStores.archiveStore,
 }))
 @observer
-class OnGoingList extends React.Component<Props> {
+class ArchivesList extends React.Component<Props> {
   componentDidMount() {
-    // this.props.reportStore!.getReportList();
+    // this.props.archiveStore!.getReportList();
   }
   public render() {
-    const reports = this.props
-      .reportStore!.reportList.filter(r => {
+    const filteredArchives = this.props
+      .archiveStore!.archiveList.filter(r => {
         if (this.props.templateFilter === "") {
           return true;
         } else {
@@ -78,16 +78,16 @@ class OnGoingList extends React.Component<Props> {
               status
             </Col>
           </Row> */}
-        {reports.map((report: IreportJson, index: number) => (
+        {filteredArchives.map((report: IreportJson, index: number) => (
           <ReportListItem
             key={"report-list-item" + index}
             report={report}
-            actionMenu={<OnGoingItemMenu reportId={report.id} />}
+            actionMenu={<ArchivesItemMenu reportId={report.id} />}
           />
         ))}
-        {reports.length === 0 && (
+        {filteredArchives.length === 0 && (
           <Flex flex={1} alignH="center" alignV="center">
-            Aucun rapport
+            Aucune archive
           </Flex>
         )}
       </Wrapper>
@@ -95,4 +95,4 @@ class OnGoingList extends React.Component<Props> {
   }
 }
 
-export default withRouter(OnGoingList);
+export default withRouter(ArchivesList);

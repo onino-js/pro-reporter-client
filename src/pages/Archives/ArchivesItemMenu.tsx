@@ -1,6 +1,5 @@
 import * as React from "react";
 import styled from "../../styled-components";
-import { ReportStore } from "../../stores/report.store";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { Dropdown, Menu } from "antd";
@@ -8,14 +7,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UiStore } from "../../stores/ui.store";
 import { RouteComponentProps, withRouter } from "react-router";
 import { IreportJson } from "../../stores/report";
+import { ArchiveStore } from "../../stores/archive.store";
 
 interface Props extends RouteComponentProps {
   reportId: string;
   uiStore?: UiStore;
-  reportStore?: ReportStore;
+  archiveStore?: ArchiveStore;
   report?: IreportJson;
-  deleteReport?: (id: string) => void;
-  archiveReport?: (id: string) => void;
+  deleteArchive?: (id: string) => void;
+  resurectArchive?: (id: string) => void;
 }
 
 const MenuIcon = styled(FontAwesomeIcon)`
@@ -41,31 +41,25 @@ const ActionWrapper = styled.div`
 
 @inject((allStores: AllStores, { reportId }) => ({
   uiStore: allStores.uiStore,
-  report: allStores.reportStore.reportList.find(
+  report: allStores.archiveStore.archiveList.find(
     report => reportId === report.id,
   ),
-  deleteReport: allStores.reportStore.deleteReport,
-  archiveReport: allStores.archiveStore.archiveReport,
+  deleteArchive: allStores.archiveStore.deleteArchive,
+  resurectArchive: allStores.archiveStore.resurectArchive,
 }))
 @observer
-class OnGoingItemMenu extends React.Component<Props> {
+class ArchivesItemMenu extends React.Component<Props> {
   private delete = () => {
-    this.props.deleteReport!(this.props.reportId);
+    this.props.deleteArchive!(this.props.reportId);
   };
-  private archive = () => {
-    this.props.archiveReport!(this.props.reportId);
-  };
-  private edit = () => {
-    this.props.history.push(`editor/${this.props.reportId}`);
+  private resurect = () => {
+    this.props.resurectArchive!(this.props.reportId);
   };
   public render() {
     const actionMenu = (
       <Menu>
-        <MenuItem onClick={this.edit}>
-          Editer <MenuIcon icon="edit" />
-        </MenuItem>
-        <MenuItem onClick={this.archive}>
-          Archiver <MenuIcon icon="archive" />
+        <MenuItem onClick={this.resurect}>
+          Déterrer <MenuIcon icon="archive" />
         </MenuItem>
         <MenuItem onClick={this.delete}>
           Supprimer <MenuIcon icon="trash" />
@@ -82,4 +76,4 @@ class OnGoingItemMenu extends React.Component<Props> {
   }
 }
 
-export default withRouter(OnGoingItemMenu);
+export default withRouter(ArchivesItemMenu);

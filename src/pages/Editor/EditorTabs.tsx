@@ -6,6 +6,7 @@ import styled from "../../styled-components";
 import { ReportStore } from "../../stores/report.store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Itemplate } from "../../models/template.model";
+import { getStatusColor } from "../../services/template.service";
 
 interface Props {
   Report?: Report;
@@ -25,9 +26,14 @@ const Container = styled.div`
   flex-wrap : wrap;
 `;
 
+interface ITabProps {
+  color: string;
+  active: boolean;
+}
+
 const Tab: any = styled.div.attrs({
   className: (props: any) => (props.active ? "active" : ""),
-})`
+})<ITabProps>`
   flex: 1;
   max-width: 70px;
   min-width: 40px;
@@ -37,9 +43,11 @@ const Tab: any = styled.div.attrs({
   cursor: pointer;
   color: ${props => props.theme.font_secondary};
   font-weight: bold;
-  background-color: ${props => props.theme.disabled};
+  background-color: ${props => props.color};
   &.active {
-    background-color: ${props => props.theme.secondary};
+    /* border-color: ${props => props.theme.secondary}; */
+    border: 2px solid ${props => props.theme.secondary};
+    border-top : none;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
   }
@@ -47,6 +55,7 @@ const Tab: any = styled.div.attrs({
 
 const PlusTab = styled(Tab)`
   width: 70px;
+  background-color: ${props => props.theme.secondary};
 `;
 
 @inject((allStores: AllStores) => ({
@@ -91,6 +100,7 @@ class EditorTabs extends React.Component<Props> {
               onClick={() => {
                 this.change(report.id);
               }}
+              color={getStatusColor(report.status)}
             >
               {index}
             </Tab>
