@@ -6,32 +6,32 @@ import {
   IinputJsonBase,
 } from "../../models/template.model";
 
-interface IMultilineTextStoreParams {
+interface ISimpleDateStoreParams {
   reportRef: Report;
-  inputRef: ImultilineTextInput;
-  value: ImultilineTextValue;
+  inputRef: IsimpleDateInput;
+  value: IsimpleDateValue;
 }
 
-export type ImultilineTextValue = string;
-export interface ImultilineTextInput extends IinputBase {
-  value: ImultilineTextValue;
+export type IsimpleDateValue = string;
+export interface IsimpleDateInput extends IinputBase {
+  value: IsimpleDateValue;
   values: string[];
 }
-export interface ImultilineTextJson extends IinputJsonBase {
-  value: ImultilineTextValue;
+export interface IsimpleDateJson extends IinputJsonBase {
+  value: IsimpleDateValue;
 }
-export interface ImultilineTextJsonMap extends ImultilineTextJson {}
+export interface IsimpleDateJsonMap extends IsimpleDateJson {}
 
-export interface ImultilineTextStoreConstructor {
-  new (params: IMultilineTextStoreParams): MultilineTextStore;
+export interface IsimpleDateStoreConstructor {
+  new (params: ISimpleDateStoreParams): SimpleDateStore;
 }
 
-export class MultilineTextStore {
+export class SimpleDateStore {
   @observable public value: string = "";
   @observable public tempValue: string = "";
   @observable public id: string = "";
   public reportRef: Report;
-  public inputRef: ImultilineTextInput;
+  public inputRef: IsimpleDateInput;
 
   @computed
   get status(): IinputStatus {
@@ -46,7 +46,7 @@ export class MultilineTextStore {
     return status;
   }
 
-  constructor(params: IMultilineTextStoreParams) {
+  constructor(params: ISimpleDateStoreParams) {
     this.value = params.value;
     this.tempValue = params.value;
     this.id = params.inputRef.id;
@@ -67,6 +67,7 @@ export class MultilineTextStore {
 
   @action
   public retsoreValue = (): void => {
+    console.log(this.tempValue);
     this.setValue(this.tempValue);
   };
 
@@ -76,12 +77,12 @@ export class MultilineTextStore {
   }
 
   @action.bound
-  public clone(input: MultilineTextStore) {
+  public clone(input: SimpleDateStore) {
     this.value = input.value;
     this.tempValue = input.tempValue;
   }
 
-  public asJson(): ImultilineTextJson {
+  public asJson(): IsimpleDateJson {
     return {
       id: this.id,
       value: this.value,
@@ -89,7 +90,7 @@ export class MultilineTextStore {
     };
   }
 
-  public asJsonMap(): ImultilineTextJsonMap {
+  public asJsonMap(): IsimpleDateJsonMap {
     return {
       id: this.id,
       value: this.value,
@@ -98,4 +99,4 @@ export class MultilineTextStore {
   }
 }
 
-export default MultilineTextStore;
+export default SimpleDateStore;

@@ -90,6 +90,7 @@ export class CompareTwoImagesStore {
 
   constructor(params: ICompareTwoImagesStoreParams) {
     this.value = params.value;
+    this.tempValue = params.value;
     this.id = params.inputRef.id;
     this.data = params.data;
     this.reportRef = params.reportRef;

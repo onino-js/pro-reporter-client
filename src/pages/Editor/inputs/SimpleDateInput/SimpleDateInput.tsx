@@ -2,14 +2,15 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
 import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import { TextareaInput } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
-import { MultilineTextStore } from "../../../../stores/inputs/multiline-text";
+import { SimpleDateStore } from "../../../../stores/inputs/simple-date";
+import { DatePicker } from "antd";
+import moment from "moment";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
-  input?: MultilineTextStore;
+  input?: SimpleDateStore;
   layout?: any;
 }
 
@@ -20,18 +21,21 @@ interface Props {
   )[0],
 }))
 @observer
-class MultilineTextInput extends React.Component<Props> {
-  private setValue = (e: any) => {
-    this.props.input!.setValue(e.currentTarget.value);
+class SimpleDateInput extends React.Component<Props> {
+  private setValue = (date: any, dateString: string) => {
+    this.props.input!.setValue(dateString);
   };
   public render() {
     const input = this.props.input!;
     return (
       <InputLayoutStandard input={input}>
-        <TextareaInput value={input.value} onChange={this.setValue} />
+        <DatePicker
+          onChange={this.setValue}
+          value={moment(input.value || new Date())}
+        />
       </InputLayoutStandard>
     );
   }
 }
 
-export default MultilineTextInput;
+export default SimpleDateInput;

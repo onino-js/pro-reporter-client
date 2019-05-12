@@ -1,3 +1,4 @@
+import { IsimpleDateJson, IsimpleDateInput, SimpleDateStore } from './inputs/simple-date';
 import { ImultilineTextJson, ImultilineTextInput, MultilineTextStore } from './inputs/multiline-text';
 import {
   IcompareTwoImagesInput,
@@ -185,6 +186,16 @@ export class Report {
           new SingleSignatureStore({
             reportRef: this,
             inputRef: inputRef as IsingleSignatureInput,
+            value: _input ? _input.value : "",
+          }),
+        );
+        break;
+      case "simple-date":
+        _input = input as IsimpleDateJson;
+        this.inputs.push(
+          new SimpleDateStore({
+            reportRef: this,
+            inputRef: inputRef as IsimpleDateInput,
             value: _input ? _input.value : "",
           }),
         );

@@ -1,17 +1,18 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../../models/all-stores.model";
-import { TextareaInput } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
 import { ReportStore } from "../../../../stores/report.store";
 import InputLayoutDirect from "../layouts/InputLayoutDirect";
 import { InputContainer } from "../../../../components/layouts/InputContainer";
-import { MultilineTextStore } from "../../../../stores/inputs/multiline-text";
+import { SimpleDateStore } from "../../../../stores/inputs/simple-date";
+import { DatePicker } from "antd";
+import moment from "moment";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
-  input?: MultilineTextStore;
+  input?: SimpleDateStore;
   reportStore?: ReportStore;
 }
 
@@ -23,9 +24,9 @@ interface Props {
   reportStore: allStores.reportStore,
 }))
 @observer
-class MultilineTextDirect extends React.Component<Props> {
-  private setValue = (e: any) => {
-    this.props.input!.setValue(e.currentTarget.value);
+class SimpleDateDirect extends React.Component<Props> {
+  private setValue = (date: any, dateString: string) => {
+    this.props.input!.setValue(dateString);
   };
   public onOk = () => {
     this.props.input!.confirmValue();
@@ -59,10 +60,9 @@ class MultilineTextDirect extends React.Component<Props> {
           onRefresh={this.onRefresh}
           status={input.status}
         >
-          <TextareaInput
-            rows={4}
-            value={input.value}
+          <DatePicker
             onChange={this.setValue}
+            value={moment(input.value || new Date())}
           />
         </InputLayoutDirect>
       </InputContainer>
@@ -70,4 +70,4 @@ class MultilineTextDirect extends React.Component<Props> {
   }
 }
 
-export default MultilineTextDirect;
+export default SimpleDateDirect;

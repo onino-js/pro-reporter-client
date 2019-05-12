@@ -13,6 +13,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0px 10px;
+  cursor: pointer;
 `;
 
 const Img = styled.img`

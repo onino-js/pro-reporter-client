@@ -33,6 +33,9 @@ import CompareTwoImagesDirect from "../pages/Editor/inputs/CompareTwoImagesInput
 import SingleSignatureDirect from "../pages/Editor/inputs/SingleSignature/SingleSignatureDirect";
 import MultilineTextDirect from "../pages/Editor/inputs/MultilineTextInput/MultilineTextDirect";
 import MultilineTextInput from "../pages/Editor/inputs/MultilineTextInput/MultilineTextInput";
+import { SimpleDateStore } from "../stores/inputs/simple-date";
+import SimpleDateInput from "../pages/Editor/inputs/SimpleDateInput/SimpleDateInput";
+import SimpleDateDirect from "../pages/Editor/inputs/SimpleDateInput/SimpleDateDirect";
 
 export const storeMapping: {
   string: IstringStoreConstructor;
@@ -58,6 +61,7 @@ export const componentMapping: any = {
   slider: SliderInput,
   "compare-two-images": CompareTwoImagesInput,
   "multiline-text": MultilineTextInput,
+  "simple-date": SimpleDateInput,
 };
 
 // export const componentModalMapping: any = {
@@ -81,6 +85,7 @@ export const componentDirectMapping: any = {
   slider: SliderInput,
   "compare-two-images": CompareTwoImagesDirect,
   "multiline-text": MultilineTextDirect,
+  "simple-date": SimpleDateDirect,
 };
 
 // TODO : check data file

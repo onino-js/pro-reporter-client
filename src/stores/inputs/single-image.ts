@@ -41,6 +41,7 @@ export class SingleImageStore {
 
   constructor(params: ISingleImageStoreParams) {
     this.value = params.value;
+    this.tempValue = params.value;
     this.id = params.inputRef.id;
     this.reportRef = params.reportRef;
     this.inputRef = params.inputRef;

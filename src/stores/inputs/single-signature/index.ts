@@ -117,10 +117,11 @@ export class SingleSignatureStore {
   }
 
   @action.bound
-  public clone(input: SingleSignatureStore) {
-    this.value = input.value;
-    this.imageName = input.imageName;
-    this.original = input.original;
+  public clone(params: SingleSignatureStore) {
+    this.value = params.value;
+    this.tempValue = params.value;
+    this.imageName = params.imageName;
+    this.original = params.original;
   }
 
   public asJson(): IsingleSignatureJson {

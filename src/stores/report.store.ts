@@ -309,6 +309,11 @@ export class ReportStore {
       el = document.getElementById(id).getElementsByTagName("tspan")[0];
       el && (el.textContent = value);
     }
+    if (type === "simple-date") {
+      // @ts-ignore
+      el = document.getElementById(id).getElementsByTagName("tspan")[0];
+      el && (el.textContent = value);
+    }
     if (type === "multiline-text") {
       const values = value.split("\n");
       // @ts-ignore

@@ -47,6 +47,7 @@ export class StringStore {
 
   constructor(params: IStringStoreParams) {
     this.value = params.value;
+    this.tempValue = params.value;
     this.id = params.inputRef.id;
     this.reportRef = params.reportRef;
     this.inputRef = params.inputRef;
