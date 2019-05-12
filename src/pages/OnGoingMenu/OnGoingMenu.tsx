@@ -18,6 +18,9 @@ import { Istatus } from "../../models/app.models";
 import TemplateChoiceButton from "../../components/items/TemplateChoiceButton";
 import { Itemplate } from "../../models/template.model";
 import { withRouter, RouteComponentProps } from "react-router";
+import { TemplateMenuItemSmall } from "../../components/items/TemplateMenuItemSmall";
+import styled from "../../styled-components";
+import { _measures } from "../../assets/styles/_measures";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -29,6 +32,12 @@ interface State {
   selectedTemplateId: string | null;
   selectedStatus: Istatus | null;
 }
+
+const ButtonWrapper = styled.div`
+  @media (max-width: ${_measures.mobile}px) {
+    margin: 5px 0px;
+  }
+`;
 
 @inject((allStores: AllStores) => ({
   uiStore: allStores.uiStore,
@@ -70,40 +79,44 @@ class OnGoingMenu extends React.Component<Props, State> {
           <ProContainer>
             {isReportsLoaded ? (
               <React.Fragment>
-                <Flex>
-                  <ProDropdown
-                    trigger={["click"]}
-                    overlay={
-                      <Menu style={{ maxWidth: "300px" }}>
-                        {templates &&
-                          templates.map((t, index) => (
-                            <Menu.Item
-                              key={"template-choice-" + (index + 1)}
-                              onClick={() => this.createNewReport(t)}
-                            >
-                              {t.label}
-                            </Menu.Item>
-                          ))}
-                      </Menu>
-                    }
-                  >
-                    <ActionButton
-                      title={"Nouveau rapport"}
-                      icon="plus"
-                     // size="big"
+                <Flex flexWrap="wrap">
+                  <ButtonWrapper>
+                    <ProDropdown
+                      trigger={["click"]}
+                      overlay={
+                        <Menu style={{ maxWidth: "300px" }}>
+                          {templates &&
+                            templates.map((t, index) => (
+                              <TemplateMenuItemSmall
+                                key={"template-choice-" + (index + 1)}
+                                img={t.imgPath}
+                                title={t.label}
+                                onClick={() => this.createNewReport(t)}
+                              />
+                            ))}
+                        </Menu>
+                      }
+                    >
+                      <ActionButton
+                        title={"Nouveau rapport"}
+                        icon="plus"
+                        m="0px 10px 0px 0px"
+                        // size="big"
+                      />
+                    </ProDropdown>
+                  </ButtonWrapper>
+                  <ButtonWrapper>
+                    <TemplateChoiceButton
+                      filterTemplate={this.filterTemplate}
+                      selectedTemplateId={this.state.selectedTemplateId}
                     />
-                  </ProDropdown>
-                  <Flex m="0px 10px" alignV="center">
-                    Filtres :
-                  </Flex>
-                  <TemplateChoiceButton
-                    filterTemplate={this.filterTemplate}
-                    selectedTemplateId={this.state.selectedTemplateId}
-                  />
-                  <ReportFilterStatusButton
-                    selectedStatus={this.state.selectedStatus}
-                    filterStatus={this.filterStatus}
-                  />
+                  </ButtonWrapper>
+                  <ButtonWrapper>
+                    <ReportFilterStatusButton
+                      selectedStatus={this.state.selectedStatus}
+                      filterStatus={this.filterStatus}
+                    />
+                  </ButtonWrapper>
                 </Flex>
                 <OnGoingList
                   templateFilter={this.state.selectedTemplateId}

@@ -6,8 +6,8 @@ import { ReportStore } from "../../stores/report.store";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { Itemplate } from "../../models/template.model";
-import TemplateItem from "./TemplateItem";
 import TemplateInfoModal from "../../components/modals/TemplateInfoModal";
+import TemplateItem from "../../components/items/TemplateItem";
 
 interface Props extends RouteComponentProps {
   uiStore?: any;
@@ -22,6 +22,7 @@ const Text = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
+  flex-direction: column;
   overflow-x: scroll;
   ::-webkit-scrollbar {
     display: none;
@@ -40,10 +41,10 @@ class TemplateList extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.renderTemplateIcon();
+    // this.renderTemplateIcon();
   }
   componentDidUpdate() {
-    this.renderTemplateIcon();
+    // this.renderTemplateIcon();
   }
 
   private renderTemplateIcon = () => {
@@ -73,8 +74,17 @@ class TemplateList extends React.Component<Props> {
   public render() {
     return this.props.templates!.length !== 0 ? (
       <Flex dir="c" m="20px 0px 0px 0px">
-        <Text>Choisissez un template à éditer : </Text>
         <Wrapper>
+          {this.props.templates!.map((template: Itemplate, index: number) => (
+            <TemplateItem
+              key={"template-list-item" + index}
+              template={template}
+            />
+          ))}
+          {this.props.templates!.length === 0 && <div> Aucun template</div>}
+        </Wrapper>
+
+        {/* <Wrapper>
           {this.props.templates!.map((template: Itemplate, index: number) => (
             <TemplateItem
               key={"template-list-item" + index}
@@ -86,7 +96,7 @@ class TemplateList extends React.Component<Props> {
               viewTemplate={this.viewTemplate}
             />
           ))}
-        </Wrapper>
+        </Wrapper> */}
         <TemplateInfoModal
           templateId={this.state.selectedTemplateId}
           show={this.props.uiStore!.showTemplateInfoModal}

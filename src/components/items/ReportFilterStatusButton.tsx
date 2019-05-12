@@ -73,7 +73,7 @@ export const ReportFilterStatusButton = ({
       }
       icon="chevron-down"
       // size="big"
-      m="0px 5px"
+      m="0px 10px 0px 0px"
     />
   </ProDropdown>
 );

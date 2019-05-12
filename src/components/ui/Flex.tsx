@@ -18,6 +18,7 @@ interface Iprops {
     | "space around";
   flex?: number | string;
   scrollY?: string;
+  flexWrap?: string;
 }
 
 export const Flex = styled.div<Iprops>`
@@ -32,4 +33,5 @@ export const Flex = styled.div<Iprops>`
   flex: ${props => (props.flex ? props.flex : "0 1 auto")};
   flex-shrink: 0;
   overflow-y: ${props => props.scrollY || "hidden"};
+  flex-wrap: ${props => props.flexWrap || "initial"};
 `;

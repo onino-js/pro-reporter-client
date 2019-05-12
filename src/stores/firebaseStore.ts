@@ -7,6 +7,7 @@ import * as firebase from "firebase/app";
 import { IreportMap } from "./report";
 
 let database: any;
+let storage: any;
 
 type IsyncStatus = "ongoing" | "done" | "error";
 
@@ -28,6 +29,7 @@ export class FirebaseStore {
 
   public initializeDataBase = () => {
     database = firebase.database();
+    storage = firebase.storage();
   };
 
   @action.bound
@@ -166,8 +168,8 @@ export class FirebaseStore {
   // CRUD OPERATIONS FOR TEMPLATES
 
   public getTemplates = (callback: any) => {
-    const reports = database.ref("templates/");
-    reports.on("value", function(res: any) {
+    const templates = database.ref("templates/");
+    templates.on("value", function(res: any) {
       res && res.val && callback(res.val());
     });
   };
@@ -184,6 +186,11 @@ export class FirebaseStore {
     if (snapshot.exists()) {
       return true;
     } else return false;
+  };
+
+  public deleteTemplate = async (id: string) => {
+    const snapshot = database.ref(`templates/${id}`);
+    await snapshot.remove();
   };
 }
 

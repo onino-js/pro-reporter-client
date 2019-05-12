@@ -79,14 +79,14 @@ class TemplateMenu extends React.Component<Props> {
                 title="Importer template"
                 icon="file-import"
                 onClick={this.importTemplateRequest}
-                size="big"
+                // size="big"
                 m="0px 10px 0px 0px"
               />
               <ActionButton
                 title="Créer template"
                 icon="plus"
                 onClick={this.newTemplateRequest}
-                size="big"
+                // size="big"
               />
             </Flex>
             {templatesLoaded ? (

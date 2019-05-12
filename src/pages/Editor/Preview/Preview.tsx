@@ -3,7 +3,6 @@ import { inject, observer } from "mobx-react";
 import { AllStores } from "../../../models/all-stores.model";
 import { UiStore } from "../../../stores/ui.store";
 import { Report } from "../../../stores/report";
-import { RouteChildrenProps } from "react-router";
 import styled from "styled-components";
 import { componentDirectMapping } from "../../../services/input-mapping.service";
 import { Flex } from "../../../components/ui/Flex";

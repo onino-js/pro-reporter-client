@@ -1,4 +1,5 @@
 import styled from "../../../../styled-components";
+import { _measures } from "../../../../assets/styles/_measures";
 
 export const InputPrimitive = styled.input`
   width: 100%;
@@ -22,5 +23,13 @@ export const InputPrimitive = styled.input`
     border-color: ${props => props.theme.secondary}; */
     transition: border-bottom-width 200ms ease-in-out;
     border-bottom-width: 3px;
+  }
+`;
+
+export const TextareaInput = styled.textarea`
+  width: 400px;
+  @media (max-width: ${_measures.mobile}px) {
+    flex: 1;
+    margin: 0px 10px;
   }
 `;

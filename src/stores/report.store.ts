@@ -10,6 +10,7 @@ import authStore from "./auth.store";
 import uiStore from "./ui.store";
 import templateStore from "./templateStore";
 import firebaseStore from "./firebaseStore";
+import * as d3 from "d3";
 
 const ZOOM_STEP: number = 20;
 
@@ -80,7 +81,7 @@ export class ReportStore {
           }),
         );
       }
-      uiStore!.setLoadingState('reports', true);
+      uiStore!.setLoadingState("reports", true);
     });
   };
 
@@ -244,15 +245,21 @@ export class ReportStore {
   }
 
   @action.bound
-  public customDuplicate({ nb, sectionsIds }: { nb : number, sectionsIds : string[] }) {
+  public customDuplicate({
+    nb,
+    sectionsIds,
+  }: {
+    nb: number;
+    sectionsIds: string[];
+  }) {
     if (!this.activeReport) return;
     else {
       let lastId = "";
       for (let i = 0; i < nb; i++) {
         const newId = uuid();
-        const newInputs : IinputJson[] = this.activeReport!.inputs
-        .filter(i => sectionsIds.includes(i.inputRef.sectionId))
-        .map(i => toJS(i));
+        const newInputs: IinputJson[] = this.activeReport!.inputs.filter(i =>
+          sectionsIds.includes(i.inputRef.sectionId),
+        ).map(i => toJS(i));
 
         const newReportJson: IreportJson = {
           ...this.activeReport.asJson(),
@@ -301,6 +308,25 @@ export class ReportStore {
       // @ts-ignore
       el = document.getElementById(id).getElementsByTagName("tspan")[0];
       el && (el.textContent = value);
+    }
+    if (type === "multiline-text") {
+      const values = value.split("\n");
+      // @ts-ignore
+      // el = document.getElementById(id)
+      //console.log(d3.select("#" + id).selectAll("tspan"));
+      d3.select("#" + id)
+        .selectAll("tspan")
+        .text("");
+
+      d3.select("#" + id)
+        .selectAll("tspan")
+        .data(values)
+        //.append("tspan")
+        .text((d: any) => {
+          console.log(d);
+          return d;
+        });
+      // el && (el.textContent = value);
     }
     if (type === "single-select") {
       const textElems = document

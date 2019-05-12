@@ -4,6 +4,7 @@ import { Menu } from "antd";
 import { inject, observer } from "mobx-react";
 import { AllStores } from "../../models/all-stores.model";
 import { TemplateStore } from "../../stores/templateStore";
+import { TemplateMenuItemSmall } from "./TemplateMenuItemSmall";
 
 interface Props {
   templateStore?: TemplateStore;
@@ -35,12 +36,12 @@ class TemplateChoiceButton extends React.Component<Props> {
             </Menu.Item>
             {templates &&
               templates.map((t, index) => (
-                <Menu.Item
+                <TemplateMenuItemSmall
                   key={"template-choice-" + (index + 1)}
+                  title={t.label}
+                  img={t.imgPath}
                   onClick={() => this.props.filterTemplate(t.id)}
-                >
-                  {t.label}
-                </Menu.Item>
+                />
               ))}
           </Menu>
         }
@@ -53,7 +54,8 @@ class TemplateChoiceButton extends React.Component<Props> {
               : "Tous les templates"
           }
           icon="chevron-down"
-         // size="big"
+          m="0px 10px 0px 0px"
+          // size="big"
         />
       </ProDropdown>
     );

@@ -1,33 +1,47 @@
 import { StringStore, IstringStoreConstructor } from "../stores/inputs/string";
-import { SingleSelectStore, IsingleSelectStoreConstructor } from "../stores/inputs/single-select";
-import { SingleImageStore, IsingleImageStoreConstructor } from "../stores/inputs/single-image";
+import {
+  SingleSelectStore,
+  IsingleSelectStoreConstructor,
+} from "../stores/inputs/single-select";
+import {
+  SingleImageStore,
+  IsingleImageStoreConstructor,
+} from "../stores/inputs/single-image";
 import { SingleImageEditableStore } from "../stores/inputs/single-image-editable/index";
 import StringInput from "../pages/Editor/inputs/StringInput/StringInput";
 import SingleSelectInput from "../pages/Editor/inputs/SingleSelectInput/SingleSelectInput";
 import SingleImageInput from "../pages/Editor/inputs/SingleImageInput/SingleImageInput";
 import SingleImageEditableInput from "../pages/Editor/inputs/SingleImageEditableInput/SingleImageEditableInput";
-import { SingleSignatureStore, IsingleSignatureStoreConstructor } from "../stores/inputs/single-signature";
+import {
+  SingleSignatureStore,
+  IsingleSignatureStoreConstructor,
+} from "../stores/inputs/single-signature";
 import SingleSignatureInput from "../pages/Editor/inputs/SingleSignature/SingleSignatureInput";
 import { NumberStore } from "../stores/inputs/number";
 import NumberInput from "../pages/Editor/inputs/NumberInput/NumberInput";
 import { SliderStore } from "../stores/inputs/slider";
 import SliderInput from "../pages/Editor/inputs/SliderInput/SliderInput";
-import { CompareTwoImagesStore, IcompareTwoImagesStoreConstructor } from "../stores/inputs/compare-two-images";
+import {
+  CompareTwoImagesStore,
+  IcompareTwoImagesStoreConstructor,
+} from "../stores/inputs/compare-two-images";
 import CompareTwoImagesInput from "../pages/Editor/inputs/CompareTwoImagesInput/CompareTwoImages";
 import StringInputDirect from "../pages/Editor/inputs/StringInput/StringInputDirect";
 import SingleSelectDirect from "../pages/Editor/inputs/SingleSelectInput/SingleSelectDirect";
 import SingleImageDirect from "../pages/Editor/inputs/SingleImageInput/SingleImageDirect";
 import CompareTwoImagesDirect from "../pages/Editor/inputs/CompareTwoImagesInput/CompareTwoImagesDirect";
 import SingleSignatureDirect from "../pages/Editor/inputs/SingleSignature/SingleSignatureDirect";
+import MultilineTextDirect from "../pages/Editor/inputs/MultilineTextInput/MultilineTextDirect";
+import MultilineTextInput from "../pages/Editor/inputs/MultilineTextInput/MultilineTextInput";
 
 export const storeMapping: {
-  "string": IstringStoreConstructor,
-  "single-select": IsingleSelectStoreConstructor,
-  "single-image": IsingleImageStoreConstructor,
-  "single-signature": IsingleSignatureStoreConstructor,
-  "compare-two-images": IcompareTwoImagesStoreConstructor,
+  string: IstringStoreConstructor;
+  "single-select": IsingleSelectStoreConstructor;
+  "single-image": IsingleImageStoreConstructor;
+  "single-signature": IsingleSignatureStoreConstructor;
+  "compare-two-images": IcompareTwoImagesStoreConstructor;
 } = {
-  "string": StringStore,
+  string: StringStore,
   "single-select": SingleSelectStore,
   "single-image": SingleImageStore,
   "single-signature": SingleSignatureStore,
@@ -43,6 +57,7 @@ export const componentMapping: any = {
   number: NumberInput,
   slider: SliderInput,
   "compare-two-images": CompareTwoImagesInput,
+  "multiline-text": MultilineTextInput,
 };
 
 // export const componentModalMapping: any = {
@@ -65,6 +80,7 @@ export const componentDirectMapping: any = {
   number: NumberInput,
   slider: SliderInput,
   "compare-two-images": CompareTwoImagesDirect,
+  "multiline-text": MultilineTextDirect,
 };
 
 // TODO : check data file

@@ -34,13 +34,21 @@ import {
   IcompareTwoImagesInput,
 } from "../stores/inputs/compare-two-images";
 import { IreportStatus } from "../stores/report";
+import {
+  ImultilineTextInput,
+  ImultilineTextJson,
+  ImultilineTextJsonMap,
+  MultilineTextStore,
+  ImultilineTextStoreConstructor,
+} from "../stores/inputs/multiline-text";
 
 export type IinputType =
   | "string"
   | "single-select"
   | "single-signature"
   | "single-image"
-  | "compare-two-images";
+  | "compare-two-images"
+  |  "multiline-text"
 
 export type IinputStatus = "valid" | "untouched" | "warning" | "error";
 
@@ -66,33 +74,38 @@ export type Iinput =
   | IsingleSelectInput
   | IsingleSignatureInput
   | IsingleImageInput
-  | IcompareTwoImagesInput;
+  | IcompareTwoImagesInput
+  | ImultilineTextInput;
 
 export type IinputJson =
   | IstringInputJson
   | IsingleSelectJson
   | IsingleSignatureJson
-  | IcompareTwoImagesJson;
+  | IcompareTwoImagesJson
+  | ImultilineTextJson;
 
 export type IinputJsonMap =
   | IstringInputJsonMap
   | IsingleSelectJsonMap
   | IsingleSignatureJsonMap
-  | IcompareTwoImagesJsonMap;
+  | IcompareTwoImagesJsonMap
+  | ImultilineTextJsonMap;
 
 export type IinputStore =
   | StringStore
   | SingleSelectStore
   | SingleSignatureStore
   | SingleImageStore
-  | CompareTwoImagesStore;
+  | CompareTwoImagesStore
+  | MultilineTextStore;
 
 export type IinputStoreConstructor =
   | IstringStoreConstructor
   | IsingleSelectStoreConstructor
   | IsingleSignatureStoreConstructor
   | IsingleImageStoreConstructor
-  | IcompareTwoImagesStoreConstructor;
+  | IcompareTwoImagesStoreConstructor
+  | ImultilineTextStoreConstructor;
 
 export interface Isection {
   id: string;
@@ -108,6 +121,9 @@ export interface Itemplate {
   description: string;
   sections: Isection[];
   inputs: Iinput[];
+  creationDate: string;
+  author: string;
+  imgPath: string;
 }
 
 export interface IinputMap {
@@ -119,9 +135,9 @@ export interface ItemplateMap {
 }
 
 export interface Iarchive {
-  id : string;
-  stattus : IreportStatus;
-  pdfPath : string
+  id: string;
+  stattus: IreportStatus;
+  pdfPath: string;
 }
 
 export interface IarchiveMap {

@@ -1,4 +1,9 @@
-import { Itemplate, ItemplateMap, Isection, Iinput } from "./../models/template.model";
+import {
+  Itemplate,
+  ItemplateMap,
+  Isection,
+  Iinput,
+} from "./../models/template.model";
 import { observable, action } from "mobx";
 import { mapToArray } from "../services/app.service";
 import firebaseStore from "./firebaseStore";
@@ -46,6 +51,9 @@ export class TemplateStore {
     description: "",
     sections: [],
     inputs: [],
+    creationDate: new Date().toString(),
+    author: "Onino",
+    imgPath: "",
   };
 
   @action.bound
@@ -82,6 +90,9 @@ export class TemplateStore {
         licence: templates[key].licence,
         sections: mapToArray(templates[key].sections),
         inputs: mapToArray(templates[key].inputs),
+        creationDate: templates[key].creationDate,
+        author: templates[key].author,
+        imgPath: templates[key].imgPath,
       });
     });
   }
@@ -113,6 +124,9 @@ export class TemplateStore {
       licence: "",
       sections: [],
       inputs: [],
+      creationDate: new Date().toString(),
+      author: "Onino",
+      imgPath: "",
     };
     document.getElementById("new-template-preview")!.innerHTML = "";
     this.newTemplateFileName = "";
@@ -190,6 +204,10 @@ export class TemplateStore {
       .getElementsByTagName("svg");
     const svg = svgEls[0];
 
+    // TODO replace dataset with metadata
+    // const meta = svg.getElementsByTagName("metadata")[0];
+    // const title = meta.getElementsByTagName('dc:title')[0].innerHTML
+
     // @ts-ignore
     const dataset = svg.dataset;
     // Check ID
@@ -211,6 +229,7 @@ export class TemplateStore {
       }
     }
 
+    // Check for metadata
     if (!dataset) {
       this.addTemplateErrors(
         "Aucune méta donnée detectée dans ce document svg",
@@ -221,6 +240,7 @@ export class TemplateStore {
       });
       return;
     }
+    // Check for title
     if (!dataset.label) {
       this.addTemplateErrors("Le template n'a pas de nom");
       this.setNewTemplateStatus({
@@ -229,6 +249,7 @@ export class TemplateStore {
       });
     } else this.newTemplate.label = dataset.label;
 
+    // Check for licence
     if (!dataset.licence) {
       this.addTemplateErrors("Le template n'a pas de licence");
       this.setNewTemplateStatus({
@@ -237,17 +258,40 @@ export class TemplateStore {
       });
     } else this.newTemplate.licence = dataset.licence;
 
+    // Check for description
+    if (!dataset.description) {
+      this.addTemplateErrors("Le template n'a pas de description");
+      this.setNewTemplateStatus({
+        status: "error",
+        metadataStatus: "error",
+      });
+    } else this.newTemplate.description = dataset.description;
+
+    // Check for presentational image
+    const metaLayer = svg.getElementsByClassName("metadata")[0];
+    if (!metaLayer) {
+      this.addTemplateErrors("Le template n'a d'image de presentation");
+    } else {
+      const imgPresEl = metaLayer.getElementsByClassName("presentation-img")[0];
+      //@ts-ignore
+      const imgPres = imgPresEl.getAttribute("xlink:href");
+      this.newTemplate.imgPath = imgPres as string;
+    }
+    if (!dataset.description) {
+      this.addTemplateErrors("Le template n'a pas de description");
+      this.setNewTemplateStatus({
+        status: "error",
+        metadataStatus: "error",
+      });
+    } else this.newTemplate.description = dataset.description;
+
+    // Finish checking metada, return result
     if (this.newTemplateStatus.metadataStatus === "error") {
       return;
     } else {
       this.setNewTemplateStatus({ metadataStatus: "valid" });
       return;
     }
-    // The template has a name
-    // The template has a description
-    // The template has an author
-    // The template has an licence
-    // The template has tags
   };
 
   @action.bound
@@ -317,6 +361,7 @@ export class TemplateStore {
       this.buildInputs({
         elems: elems,
         sectionId: sectionId,
+        svg,
       });
 
       sections.push({
@@ -329,7 +374,7 @@ export class TemplateStore {
   }
 
   @action.bound
-  public buildInputs({ elems, sectionId }: any) {
+  public buildInputs({ elems, sectionId, svg }: any) {
     // for each input
     for (let i = 0; i < elems.length; i++) {
       //  determine type, section and subsection
@@ -337,50 +382,63 @@ export class TemplateStore {
       //@ts-ignore
       const id = el.id;
       //@ts-ignore
-      const type = el.dataset.type;
+      const dataset: any = el.dataset;
       //@ts-ignore
-      const label = el.dataset.label || "Label non défini";
+      const type = dataset.type;
+      //@ts-ignore
+      const label = dataset.label || "Label non défini";
+      //@ts-ignore
+      const descriptionId = dataset.descriptionId || null;
 
       // Build input object
-      const input : Iinput = {
+      const input: Iinput = {
         id,
         type,
         label,
         sectionId,
         value: "",
       };
+
+      // perform generic input build action
+      input.mandatory = dataset.optional ? false : true;
+      if (descriptionId) {
+        const descriptionEl = svg.getElementById(descriptionId)!;
+        const desType = descriptionEl.dataset.kind;
+        switch (desType) {
+          case "text":
+            input.description = descriptionEl.getElementsByTagName(
+              "tspan",
+            ).text;
+            break;
+          case "svg":
+            input.description = descriptionEl.outerHTML;
+            break;
+        }
+      }
+
+      // Perform custom input build action
       switch (type) {
         case "string":
-          //@ts-ignore
           input.value = "";
-          //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
-          if (el.dataset.list) {
-            //@ts-ignore
-            input.list = el.dataset.list
-                .split(",")
-                .map((item: string) => item.trim())
+          if (dataset.list) {
+            input.list = dataset.list
+              .split(",")
+              .map((item: string) => item.trim());
           }
+          //input.value = el.textContent;
+          break;
+        case "multiline-text":
+          input.value = "";
           //input.value = el.textContent;
           break;
         case "number":
           //@ts-ignore
           input.value = 0;
-          //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
           // input.value = Number(el.textContent);
           break;
         case "single-image":
           //@ts-ignore
           input.value = "";
-          //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
           //@ts-ignore
           // input.options = { height: el. };
           // input.value = el.getAttribute("xlink:href");
@@ -388,10 +446,6 @@ export class TemplateStore {
         case "single-image-editable":
           //@ts-ignore
           input.value = "";
-          //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
           //@ts-ignore
           input.options = {
             height: el.height.baseVal.value,
@@ -403,10 +457,6 @@ export class TemplateStore {
           //@ts-ignore
           input.value = "";
           //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
-          //@ts-ignore
           input.options = {
             height: el.height.baseVal.value,
             width: el.width.baseVal.value,
@@ -416,10 +466,6 @@ export class TemplateStore {
         case "compare-two-images":
           //@ts-ignore
           input.value = { before: "", after: "" };
-          //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
           const imgEl = el.getElementsByTagName("image")[0];
           //@ts-ignore
           input.options = {
@@ -440,10 +486,6 @@ export class TemplateStore {
           }
           //@ts-ignore
           input.value = "";
-          //@ts-ignore
-          input.mandatory = true;
-          //@ts-ignore
-          el.dataset.optional && (input.mandatory = false);
           //@ts-ignore
           input.values = values;
           break;

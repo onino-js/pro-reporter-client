@@ -1,3 +1,4 @@
+import { ImultilineTextJson, ImultilineTextInput, MultilineTextStore } from './inputs/multiline-text';
 import {
   IcompareTwoImagesInput,
   IcompareTwoImagesJson,
@@ -148,6 +149,16 @@ export class Report {
           }),
         );
         break;
+      case "multiline-text":
+        _input = input as ImultilineTextJson;
+        this.inputs.push(
+          new MultilineTextStore({
+            reportRef: this,
+            inputRef: inputRef as ImultilineTextInput,
+            value: _input ? _input.value : "",
+          }),
+        );
+        break;
       case "single-select":
         _input = input as IsingleSelectJson;
         this.inputs.push(
@@ -204,16 +215,16 @@ export class Report {
     }
   }
 
-  @action.bound
-  public createInputFromValue(input: any) {
-    //@ts-ignore
-    const Store = storeMapping[input.type];
-    this.inputs.push(
-      new Store({
-        reportRef: this,
-      }),
-    );
-  }
+  // @action.bound
+  // public createInputFromValue(input: any) {
+  //   //@ts-ignore
+  //   const Store = storeMapping[input.type];
+  //   this.inputs.push(
+  //     new Store({
+  //       reportRef: this,
+  //     }),
+  //   );
+  // }
 
   @action.bound
   public createSections(sections: any) {

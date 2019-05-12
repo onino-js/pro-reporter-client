@@ -23,7 +23,6 @@ const Container = styled.span<IContainerProps>`
   border-radius: 10px;
   font-size : 10px;
   font-weight : bolder;
-  /* border: 1px solid ${props => props.theme.primary}; */
   background-color: ${props => props.color};
   color : #FFF;
   margin-left: 5px;

@@ -13,6 +13,7 @@ import { SpiralSpinner } from "react-spinners-kit";
 import { mainTheme } from "../../assets/styles/_colors";
 import { StatusButton, ProDropdown } from "../../components/ui/Buttons";
 import { _measures } from "../../assets/styles/_measures";
+import { TemplateMenuItemSmall } from "../../components/items/TemplateMenuItemSmall";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -144,12 +145,12 @@ class EditorSidebar extends React.Component<Props> {
     const menu = (
       <Menu>
         {this.props.templateStore!.templates.map((template, index) => (
-          <MenuItem
+          <TemplateMenuItemSmall
             key={"template-choice-" + index}
+            title={template.label}
+            img={template.imgPath}
             onClick={() => this.selectTemplate(template)}
-          >
-            {template.label}
-          </MenuItem>
+          />
         ))}
       </Menu>
     );
