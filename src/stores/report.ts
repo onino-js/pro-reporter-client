@@ -1,5 +1,13 @@
-import { IsimpleDateJson, IsimpleDateInput, SimpleDateStore } from './inputs/simple-date';
-import { ImultilineTextJson, ImultilineTextInput, MultilineTextStore } from './inputs/multiline-text';
+import {
+  IsimpleDateJson,
+  IsimpleDateInput,
+  SimpleDateStore,
+} from "./inputs/simple-date";
+import {
+  ImultilineTextJson,
+  ImultilineTextInput,
+  MultilineTextStore,
+} from "./inputs/multiline-text";
 import {
   IcompareTwoImagesInput,
   IcompareTwoImagesJson,
@@ -30,6 +38,11 @@ import {
   IsingleSignatureJson,
 } from "./inputs/single-signature";
 import { CompareTwoImagesStore } from "./inputs/compare-two-images";
+import {
+  IsingleAddressJson,
+  IsingleAddressInput,
+  SingleAddressStore,
+} from "./inputs/single-address";
 
 export type IreportStatus = "valid" | "new" | "warning" | "error";
 
@@ -146,6 +159,16 @@ export class Report {
           new StringStore({
             reportRef: this,
             inputRef: inputRef as IstringInput,
+            value: _input ? _input.value : "",
+          }),
+        );
+        break;
+      case "single-address":
+        _input = input as IsingleAddressJson;
+        this.inputs.push(
+          new SingleAddressStore({
+            reportRef: this,
+            inputRef: inputRef as IsingleAddressInput,
             value: _input ? _input.value : "",
           }),
         );

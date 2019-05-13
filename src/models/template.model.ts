@@ -48,6 +48,7 @@ import {
   SimpleDateStore,
   IsimpleDateStoreConstructor,
 } from "../stores/inputs/simple-date";
+import { IsingleAddressInput, IsingleAddressJson, IsingleAddressJsonMap, SingleAddressStore, IsingleAddressStoreConstructor } from "../stores/inputs/single-address";
 
 export type IinputType =
   | "string"
@@ -56,7 +57,8 @@ export type IinputType =
   | "single-image"
   | "compare-two-images"
   | "multiline-text"
-  | "simple-date";
+  | "simple-date"
+  | "single-address"
 
 export type IinputStatus = "valid" | "untouched" | "warning" | "error";
 
@@ -84,7 +86,8 @@ export type Iinput =
   | IsingleImageInput
   | IcompareTwoImagesInput
   | ImultilineTextInput
-  | IsimpleDateInput;
+  | IsimpleDateInput
+  | IsingleAddressInput
 
 export type IinputJson =
   | IstringInputJson
@@ -92,7 +95,8 @@ export type IinputJson =
   | IsingleSignatureJson
   | IcompareTwoImagesJson
   | ImultilineTextJson
-  | IsimpleDateJson;
+  | IsimpleDateJson
+  | IsingleAddressJson
 
 export type IinputJsonMap =
   | IstringInputJsonMap
@@ -100,7 +104,8 @@ export type IinputJsonMap =
   | IsingleSignatureJsonMap
   | IcompareTwoImagesJsonMap
   | ImultilineTextJsonMap
-  | IsimpleDateJsonMap;
+  | IsimpleDateJsonMap
+  | IsingleAddressJsonMap
 
 export type IinputStore =
   | StringStore
@@ -109,7 +114,8 @@ export type IinputStore =
   | SingleImageStore
   | CompareTwoImagesStore
   | MultilineTextStore
-  | SimpleDateStore;
+  | SimpleDateStore
+  | SingleAddressStore
 
 export type IinputStoreConstructor =
   | IstringStoreConstructor
@@ -118,7 +124,8 @@ export type IinputStoreConstructor =
   | IsingleImageStoreConstructor
   | IcompareTwoImagesStoreConstructor
   | ImultilineTextStoreConstructor
-  | IsimpleDateStoreConstructor;
+  | IsimpleDateStoreConstructor
+  | IsingleAddressStoreConstructor;
 
 export interface Isection {
   id: string;

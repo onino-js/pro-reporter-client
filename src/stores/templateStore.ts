@@ -421,6 +421,7 @@ export class TemplateStore {
         case "string":
           input.value = "";
           if (dataset.list) {
+            //@ts-ignore
             input.list = dataset.list
               .split(",")
               .map((item: string) => item.trim());
@@ -429,6 +430,13 @@ export class TemplateStore {
           break;
         case "multiline-text":
           input.value = "";
+          //input.value = el.textContent;
+          break;
+        case "single-address":
+          input.value = "";
+          const addressType = dataset.addressType;
+          //@ts-ignore
+          input.addressType = addressType;
           //input.value = el.textContent;
           break;
         case "number":

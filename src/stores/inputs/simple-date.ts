@@ -67,7 +67,6 @@ export class SimpleDateStore {
 
   @action
   public retsoreValue = (): void => {
-    console.log(this.tempValue);
     this.setValue(this.tempValue);
   };
 

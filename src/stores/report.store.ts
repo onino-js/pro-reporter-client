@@ -314,6 +314,11 @@ export class ReportStore {
       el = document.getElementById(id).getElementsByTagName("tspan")[0];
       el && (el.textContent = value);
     }
+    if (type === "single-address") {
+      // @ts-ignore
+      el = document.getElementById(id).getElementsByTagName("tspan")[0];
+      el && (el.textContent = value);
+    }
     if (type === "multiline-text") {
       const values = value.split("\n");
       // @ts-ignore
@@ -328,7 +333,6 @@ export class ReportStore {
         .data(values)
         //.append("tspan")
         .text((d: any) => {
-          console.log(d);
           return d;
         });
       // el && (el.textContent = value);
