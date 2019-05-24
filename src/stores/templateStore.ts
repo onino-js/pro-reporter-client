@@ -7,6 +7,7 @@ import {
 import { observable, action } from "mobx";
 import { mapToArray } from "../services/app.service";
 import firebaseStore from "./firebaseStore";
+import { IinputDescriptionType } from "./ui.store";
 
 interface ItemplateError {
   msg: string;
@@ -403,7 +404,7 @@ export class TemplateStore {
       input.mandatory = dataset.optional ? false : true;
       if (descriptionId) {
         const descriptionEl = svg.getElementById(descriptionId)!;
-        const desType = descriptionEl.dataset.kind;
+        const desType: IinputDescriptionType = descriptionEl.dataset.kind;
         switch (desType) {
           case "text":
             input.description = descriptionEl.getElementsByTagName(
@@ -414,6 +415,7 @@ export class TemplateStore {
             input.description = descriptionEl.outerHTML;
             break;
         }
+        input.descriptionType=desType
       }
 
       // Perform custom input build action

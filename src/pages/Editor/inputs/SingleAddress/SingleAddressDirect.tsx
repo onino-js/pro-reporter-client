@@ -51,11 +51,17 @@ class SingleAddressDirect extends React.Component<Props> {
     this.props.input!.reset();
   };
   public geoloc = () => {
+    this.props.input!.setShowChoiceModal(true);
     this.props.input!.geoloc();
   };
   public closeChoiceModal = () => this.props.input!.setShowChoiceModal(false);
   public confirmAddressChoice = () => {
     this.props.input!.setShowChoiceModal(false);
+  };
+
+  public onSelect = (item: string) => {
+    this.props.input!.setValue(item);
+    this.closeChoiceModal();
   };
 
   public render() {
@@ -71,6 +77,7 @@ class SingleAddressDirect extends React.Component<Props> {
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
           status={input.status}
+          input={input}
         >
           <InputPrimitive
             type="text"
@@ -82,8 +89,9 @@ class SingleAddressDirect extends React.Component<Props> {
         <SingleAddressChoiceModal
           show={input.showChoiceModal}
           close={this.closeChoiceModal}
-          onOk={this.confirmAddressChoice}
           list={this.props.input!.foundAddresses}
+          onSelect={this.onSelect}
+          isPending={this.props.input!.isPending}
         />
       </InputContainer>
     );

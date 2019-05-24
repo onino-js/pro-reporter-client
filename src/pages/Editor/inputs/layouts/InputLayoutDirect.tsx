@@ -6,7 +6,8 @@ import {
   StatusButton,
   RefreshButton,
 } from "../../../../components/ui/Buttons";
-import { IinputStatus } from "../../../../models/template.model";
+import { IinputStatus, IinputStore } from "../../../../models/template.model";
+import InputDescriptionButton from "./InputDescriptionButton";
 
 interface Props {
   label: string;
@@ -15,6 +16,8 @@ interface Props {
   onCancel: () => void;
   status: IinputStatus;
   additionalInfos?: React.ReactChild;
+  description?: string;
+  input: IinputStore;
 }
 
 const Container = styled.div`
@@ -37,6 +40,9 @@ const InputLabel = styled.div`
   letter-spacing: 3px;
   font-size: 1.2em;
   color: ${({ theme }) => theme.secondary};
+  display: flex;
+  align-items: center;
+  /* justify-content : space-between; */
 `;
 
 const Footer = styled.div`
@@ -64,10 +70,14 @@ const StatusButtonBox = styled.div`
 
 class InputLayoutDirect extends React.Component<Props> {
   public render() {
+    const input= this.props.input
     return (
       <Container>
         <Header>
-          <InputLabel> {this.props.label}</InputLabel>
+          <InputLabel>
+            {this.props.description && <InputDescriptionButton input={input} />}
+            {this.props.label}
+          </InputLabel>
           <HeaderRight>
             <RefreshButton
               active={this.props.status !== "untouched"}

@@ -60,6 +60,7 @@ class StringInputDirect extends React.Component<Props> {
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
           status={input.status}
+          input={input}
         >
           <InputPrimitive
             type="text"

@@ -59,6 +59,7 @@ class SimpleDateDirect extends React.Component<Props> {
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
           status={input.status}
+          input={input}
         >
           <DatePicker
             onChange={this.setValue}

@@ -92,6 +92,7 @@ class SingleSignatureDirect extends React.Component<Props> {
             onCancel={this.onCancel}
             onRefresh={this.onRefresh}
             status={this.props.input!.status}
+            input={this.props.input}
           >
             <MiddleRow>
               {this.props.input.value !== "" ? (

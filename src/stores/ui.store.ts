@@ -7,6 +7,13 @@ interface IloadingState {
   archives: boolean;
 }
 
+export type IinputDescriptionType = "text" | "svg";
+
+export interface IinputDescription {
+  type: IinputDescriptionType;
+  content: string;
+}
+
 const initialLodingState: IloadingState = {
   templates: false,
   reports: false,
@@ -25,11 +32,16 @@ export class UiStore {
   @observable public showDeleteReportModal: boolean = false;
   @observable public showSyncModal: boolean = false;
   @observable public showInProgressModal: boolean = false;
+  @observable public showInputDesctiptionModal: boolean = false;
   @observable public isInputModalOpen: boolean = false;
 
   @observable public loadingState: IloadingState = initialLodingState;
   @observable public isTopMenuActive: boolean = false;
   @observable public inProgressMessage: string | React.ReactChild = "";
+  @observable public inputDescription: IinputDescription = {
+    type: "text",
+    content: "",
+  };
 
   @action.bound
   public showModal(modal: ImodalName) {
@@ -60,6 +72,9 @@ export class UiStore {
         break;
       case "in-progress":
         this.showInProgressModal = true;
+        break;
+      case "input-description":
+        this.showInputDesctiptionModal = true;
         break;
     }
   }
@@ -94,6 +109,9 @@ export class UiStore {
       case "in-progress":
         this.showInProgressModal = false;
         break;
+      case "input-description":
+        this.showInputDesctiptionModal = false;
+        break;
     }
   }
 
@@ -123,6 +141,13 @@ export class UiStore {
   @action.bound
   public setIsTopMenuActive = (payload: boolean): void => {
     this.isTopMenuActive = payload;
+  };
+
+  @action.bound
+  public setDescriptionInput = (
+    payload: IinputDescription,
+  ): void => {
+    this.inputDescription = payload;
   };
 }
 

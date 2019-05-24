@@ -5,15 +5,10 @@ import { InputPrimitive } from "../layouts/InputPrimitive";
 import { UiStore } from "../../../../stores/ui.store";
 
 import styled from "../../../../styled-components";
-import InputLayoutStandard from "../layouts/InputLayoutStandard";
-import { Col, Row } from "antd";
 import { ReportStore } from "../../../../stores/report.store";
-import { _measures } from "../../../../assets/styles/_measures";
 import {
   ActionButton,
   HiddenInputFile,
-  CancelButton,
-  OkButton,
 } from "../../../../components/ui/Buttons";
 import { SingleImageStore } from "../../../../stores/inputs/single-image";
 import InputLayoutDirect from "../layouts/InputLayoutDirect";
@@ -89,6 +84,7 @@ class SingleImageDirect extends React.Component<Props> {
             onCancel={this.onCancel}
             onRefresh={this.onRefresh}
             status={input.status}
+            input={this.props.input!}
           >
             <Body>
               <HiddenInputFile

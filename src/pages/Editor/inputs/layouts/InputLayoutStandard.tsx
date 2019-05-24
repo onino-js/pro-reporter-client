@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Row, Col, Dropdown, Menu, Popover } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Row, Col } from "antd";
 import styled from "../../../../styled-components";
 import { RefreshButton, StatusButton } from "../../../../components/ui/Buttons";
 import { IinputStore } from "../../../../models/template.model";
-import { InputList } from "./InputList";
+import InputDescriptionButton from "./InputDescriptionButton";
 
 interface Props {
   input: IinputStore;
@@ -22,6 +21,8 @@ const InputLabel = styled.div`
   letter-spacing: 3px;
   font-size: 0.8em;
   color: ${({ theme }) => theme.font_primary};
+  display: flex;
+  align-items: center;
 `;
 
 // Change button to div to enable antd dropdown
@@ -75,8 +76,11 @@ class InputLayoutStandard extends React.Component<Props> {
       <React.Fragment>
         <MyRow type="flex" align="middle">
           <Col {...col2}>
-            <InputLabel>{input.inputRef.label}</InputLabel>
-            {input.inputRef.description && (
+            <InputLabel>
+              {input.inputRef.description && <InputDescriptionButton input={input} />}
+              {input.inputRef.label}
+            </InputLabel>
+            {/* {input.inputRef.description && (
               <Popover
                 content={input.inputRef.description}
                 title={input.inputRef.label}
@@ -87,12 +91,10 @@ class InputLayoutStandard extends React.Component<Props> {
                   style={{ marginLeft: "10px" }}
                 />
               </Popover>
-            )}
+            )} */}
           </Col>
           {/* <Col {...col3}>{this.props.actions}</Col> */}
-          <Col {...col4}>
-            {this.props.children}
-          </Col>
+          <Col {...col4}>{this.props.children}</Col>
           <Col {...col5}>
             {this.props.input.status !== "untouched" && (
               <RefreshButton active={true} onClick={this.props.input.reset} />

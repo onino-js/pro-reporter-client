@@ -48,7 +48,14 @@ import {
   SimpleDateStore,
   IsimpleDateStoreConstructor,
 } from "../stores/inputs/simple-date";
-import { IsingleAddressInput, IsingleAddressJson, IsingleAddressJsonMap, SingleAddressStore, IsingleAddressStoreConstructor } from "../stores/inputs/single-address";
+import {
+  IsingleAddressInput,
+  IsingleAddressJson,
+  IsingleAddressJsonMap,
+  SingleAddressStore,
+  IsingleAddressStoreConstructor,
+} from "../stores/inputs/single-address";
+import { IinputDescriptionType } from "../stores/ui.store";
 
 export type IinputType =
   | "string"
@@ -58,7 +65,7 @@ export type IinputType =
   | "compare-two-images"
   | "multiline-text"
   | "simple-date"
-  | "single-address"
+  | "single-address";
 
 export type IinputStatus = "valid" | "untouched" | "warning" | "error";
 
@@ -69,6 +76,7 @@ export interface IinputBase {
   type: IinputType;
   mandatory?: boolean;
   description?: string;
+  descriptionType?: IinputDescriptionType;
 }
 
 export interface IinputJsonBase {
@@ -87,7 +95,7 @@ export type Iinput =
   | IcompareTwoImagesInput
   | ImultilineTextInput
   | IsimpleDateInput
-  | IsingleAddressInput
+  | IsingleAddressInput;
 
 export type IinputJson =
   | IstringInputJson
@@ -96,7 +104,7 @@ export type IinputJson =
   | IcompareTwoImagesJson
   | ImultilineTextJson
   | IsimpleDateJson
-  | IsingleAddressJson
+  | IsingleAddressJson;
 
 export type IinputJsonMap =
   | IstringInputJsonMap
@@ -105,7 +113,7 @@ export type IinputJsonMap =
   | IcompareTwoImagesJsonMap
   | ImultilineTextJsonMap
   | IsimpleDateJsonMap
-  | IsingleAddressJsonMap
+  | IsingleAddressJsonMap;
 
 export type IinputStore =
   | StringStore
@@ -115,7 +123,7 @@ export type IinputStore =
   | CompareTwoImagesStore
   | MultilineTextStore
   | SimpleDateStore
-  | SingleAddressStore
+  | SingleAddressStore;
 
 export type IinputStoreConstructor =
   | IstringStoreConstructor

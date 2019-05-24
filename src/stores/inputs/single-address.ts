@@ -38,6 +38,7 @@ export class SingleAddressStore {
   public inputRef: IsingleAddressInput;
   @observable showChoiceModal: boolean = false;
   @observable foundAddresses: any[] = [];
+  @observable isPending: boolean = false;
 
   @computed
   get status(): IinputStatus {
@@ -88,7 +89,13 @@ export class SingleAddressStore {
   }
 
   @action.bound
+  public setIsPending(payload: boolean) {
+    this.isPending = payload;
+  }
+
+  @action.bound
   public async geoloc() {
+    this.setIsPending(true);
     geocode(this.reverseGeoloc);
   }
 
@@ -105,22 +112,23 @@ export class SingleAddressStore {
           return fac ? fac.long_name : null;
         });
       // remove duplicate values
-      //const uniqueFa = Array.from(new Set(fa));
-      const uniqueFa: any[] = ["adrese1", "addresse2"];
+      const uniqueFa = Array.from(new Set(fa));
+      //const uniqueFa: any[] = ["adrese1", "addresse2"];
 
-      // handle single response
-      if (uniqueFa.length === 1) {
-        this.setValue(uniqueFa[0] as string);
-      }
+      // // handle single response
+      // if (uniqueFa.length === 1) {
+      //   this.setValue(uniqueFa[0] as string);
+      // }
       // handle empty response
-      else if (uniqueFa.length === 0 || !uniqueFa[0]) {
+      if (uniqueFa.length === 0 || !uniqueFa[0]) {
         message.error("aucune adresse n'a été trouvée");
       }
       // handle multiple responses
-      else if (uniqueFa.length > 1) {
+      else  {
         this.setFoundAddresses(uniqueFa);
         this.setShowChoiceModal(true);
       }
+      this.setIsPending(false);
     });
   }
 

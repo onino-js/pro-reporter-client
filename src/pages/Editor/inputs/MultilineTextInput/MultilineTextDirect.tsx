@@ -58,6 +58,7 @@ class MultilineTextDirect extends React.Component<Props> {
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
           status={input.status}
+          input={input}
         >
           <TextareaInput
             rows={4}

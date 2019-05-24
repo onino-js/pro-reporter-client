@@ -28,6 +28,7 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   height: 30px;
   z-index: 200;
+  flex-shrink: 0;
   @media (max-width: ${_measures.tablet}px) {
     font-size: 18px;
     height: 30px;
@@ -40,6 +41,7 @@ const ModalBody = styled.div`
   height: auto;
   margin: 0px 5px;
   display: flex;
+  overflow-y: auto;
   /* flex-shrink: 0; */
   /* overflow-y: auto; */
 `;
@@ -50,6 +52,7 @@ const ModalFooter = styled.div`
   justify-content: flex-end;
   width: 100%;
   padding: 5px;
+  flex-shrink: 0;
 `;
 
 const CloseBox = styled.span`
@@ -85,7 +88,7 @@ const ModalContent: any = styled.div.attrs({
   height: ${(props: IModalContent) =>
     props.height ? props.height[0] : DEFAULT_HEIGHT};
   /* max-width: 500px; */
-  min-width : 360px;
+  min-width: 360px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   animation-name: animatetop;
   animation-duration: 0.4s;

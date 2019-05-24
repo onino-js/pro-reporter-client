@@ -19,6 +19,7 @@ import LoadReportModal from "../../components/modals/LoadReportModal";
 import SyncModal from "../../components/modals/SyncModal";
 import DeleteReportModal from "../../components/modals/DeleteReportModal";
 import EditorStatusBar from "./EditorStatusBar/EditorStatusBar";
+import InputDescriptionModal from "../../components/modals/InputDescriptionModal";
 
 interface Props extends RouteComponentProps {
   uiStore?: UiStore;
@@ -83,6 +84,7 @@ class Editor extends React.Component<Props> {
             show={this.props.uiStore!.showLoadingModal}
             message="Création des nouveax rapports en cours, veuillez patienter"
           />
+          <InputDescriptionModal />
           {/* <LoadingModal
             show={true}
             message="Création des nouveax rapports en cours, veuillez patienter"

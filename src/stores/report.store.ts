@@ -165,7 +165,6 @@ export class ReportStore {
       const report = this.reportList.find(report => report.id === reportId)!;
       if (report) {
         const newReport = new Report(report);
-        console.log(newReport);
         this.reports.push(newReport);
       } else {
         // todo : manage error

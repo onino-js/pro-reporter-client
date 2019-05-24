@@ -7,11 +7,13 @@ import { ReportStore } from "../../../../stores/report.store";
 import { _measures } from "../../../../assets/styles/_measures";
 import { SelectButton } from "../../../../components/ui/Buttons";
 import InputLayoutDirect from "../layouts/InputLayoutDirect";
+import { IinputStore } from "../../../../models/template.model";
+import { SingleSelectStore } from "../../../../stores/inputs/single-select";
 
 interface Props {
   uiStore?: UiStore;
   inputId: string;
-  input?: any;
+  input?: SingleSelectStore;
   reportStore?: ReportStore;
 }
 
@@ -51,23 +53,23 @@ const InputContainer: any = styled.div`
 @observer
 class SingleSelectDirect extends React.Component<Props> {
   private setValue = (e: any) => {
-    this.props.input.setValue(e);
+    this.props.input!.setValue(e);
   };
   public onOk = () => {
-    this.props.input.confirmValue();
+    this.props.input!.confirmValue();
     this.props.uiStore!.setIsInputModalOpen(false);
     this.props.reportStore!.renderInput({
-      id: this.props.input.id,
-      type: this.props.input.type,
-      value: this.props.input.value,
+      id: this.props.input!.id,
+      type: this.props.input!.type,
+      value: this.props.input!.value,
     });
   };
   public onCancel = () => {
-    this.props.input.retsoreValue();
+    this.props.input!.retsoreValue();
     this.props.uiStore!.setIsInputModalOpen(false);
   };
   public onRefresh = () => {
-    this.props.input.reset();
+    this.props.input!.reset();
   };
   public render() {
     return (
@@ -81,12 +83,14 @@ class SingleSelectDirect extends React.Component<Props> {
           onCancel={this.onCancel}
           onRefresh={this.onRefresh}
           status={this.props.input!.status}
+          description={this.props.input!.inputRef.description}
+          input={this.props.input!}
         >
           {this.props.input!.inputRef.values.map((item: any, index: number) => (
             <SelectButton
               key={"single-select-input" + index}
               onClick={() => this.setValue(item)}
-              className={this.props.input.value === item ? "active" : ""}
+              className={this.props.input!.value === item ? "active" : ""}
             >
               {item}
             </SelectButton>
